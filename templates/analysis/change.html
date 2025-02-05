@@ -1,0 +1,10 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>Ustawienia analizy technicznej</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- renderuje formularz jako paragrafy -->
+    <button type="submit">Zapisz zmiany</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,136 @@
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
+import pandas as pd
+from binance.client import Client
+import os
+from ..utils.logging import logger
+from ..utils.exception_handlers import exception_handler
+
+load_dotenv()
+
+def get_binance_api_credentials():
+    """
+    Retrieves Binance API credentials from environment variables.
+
+    Returns:
+        tuple: A tuple containing the API key and API secret.
+    """
+    api_key = os.environ.get('BINANCE_GENERAL_API_KEY')
+    api_secret = os.environ.get('BINANCE_GENERAL_API_SECRET')
+    
+    return api_key, api_secret
+
+
+@exception_handler()
+def create_binance_client():
+    """
+    Creates a Binance client instance using the provided API credentials.
+
+    Args:
+        bot_id (str, optional): The bot identifier to retrieve specific API credentials.
+        testnet (bool, optional): Whether to use the testnet environment. Default is False.
+
+    Returns:
+        Client: The Binance client instance.
+    
+    Raises:
+        Exception: If there is an issue creating the client, an exception is logged and an email is sent to the admin.
+    """
+    api_key, api_secret = get_binance_api_credentials()
+    return Client(api_key, api_secret)
+
+
+@exception_handler()
+def fetch_data(symbol, interval='1h', lookback='5d', start_str=None, end_str=None):
+    """
+    Fetch historical kline (candlestick) data for a specific trading symbol.
+
+    Args:
+        symbol (str): The trading pair symbol (e.g., 'BTCUSDT').
+        interval (str, optional): The interval between each candlestick. Default is '1m'.
+        lookback (str, optional): The lookback period for historical data. Can be in hours (e.g., '4h'), days (e.g., '2d'), or minutes (e.g., '30m'). Default is '4h'.
+        start_str (str, optional): The start time for the historical data. If None, it uses the lookback period.
+        end_str (str, optional): The end time for the historical data. If None, it uses the current time.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the historical kline data.
+
+    Raises:
+        BinanceAPIException: If there is an error from the Binance API.
+        ConnectionError: If there is a connection error.
+        TimeoutError: If there is a timeout error.
+        ValueError: If an invalid lookback period format is provided.
+        Exception: For any other exception, an email is sent to the admin.
+    """
+    general_client = create_binance_client()
+    
+    klines = None
+    
+    if not start_str and not end_str:
+        if lookback[-1] == 'h':
+            hours = int(lookback[:-1])
+            start_time = datetime.utcnow() - timedelta(hours=hours)
+        elif lookback[-1] == 'd':
+            days = int(lookback[:-1])
+            start_time = datetime.utcnow() - timedelta(days=days)
+        elif lookback[-1] == 'm':
+            minutes = int(lookback[:-1])
+            start_time = datetime.utcnow() - timedelta(minutes=minutes)
+        else:
+            raise ValueError("Unsupported lookback period format.")
+        
+        start_str = start_time.strftime('%Y-%m-%d %H:%M:%S')
+        
+        klines = general_client.get_historical_klines(
+            symbol=symbol, 
+            interval=interval, 
+            start_str=start_str
+        )
+    else:
+        klines = general_client.get_historical_klines(
+            symbol=symbol, 
+            interval=interval, 
+            start_str=str(start_str), 
+            end_str=str(end_str)
+        )
+    
+    df = pd.DataFrame(
+        klines, 
+        columns=[
+            'open_time', 'open', 'high', 'low', 'close', 'volume', 
+            'close_time', 'quote_asset_volume', 'number_of_trades', 
+            'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 
+            'ignore'
+        ]
+    )
+    df['close'] = df['close'].astype(float)
+    df['high'] = df['high'].astype(float)
+    df['low'] = df['low'].astype(float)
+    
+    return df
+    
+
+@exception_handler()
+def fetch_system_status():
+    """
+    Fetches the current system status from the Binance API.
+
+    Returns:
+        dict: A dictionary containing the system status if the request is successful, otherwise returns None.
+    """
+    general_client = create_binance_client()
+    status = general_client.get_system_status()
+    return status
+
+
+@exception_handler()
+def fetch_server_time():
+    """
+    Fetches the current server time from the Binance API.
+
+    Returns:
+        dict: A dictionary containing the server time if the request is successful, otherwise returns None.
+    """
+    general_client = create_binance_client()
+    server_time = general_client.get_server_time()
+    return server_time

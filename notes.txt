@@ -1,0 +1,66 @@
+# tworzenie konta, logowanie użytkownika. zmiana hasła, zmiana emaila.
+# gmail user.
+  <a href="{% url 'socialaccount_signup' 'google' %}">Zaloguj się przez Google</a>
+# recaptcha.
+
+# prezentowanie analizy technicznej. zgdnie z ustawieniami. zmiana ustawień.
+
+# wysyłanie maili z sygnałami. bot co 1h, 14h i 1d
+
+# notatki.
+
+
+<function settings_updated at 0x7f4f1b29e660>
+settings_updated
+<function update_technical_analysis_settings at 0x7f4f37a396c0>
+update_technical_analysis_settings
+<function show_technical_analysis at 0x7f4f1aef5c60>
+show_technical_analysis
+<function View.as_view.<locals>.view at 0x7f4f3881f740>
+google_login_by_token
+<function OAuth2View.adapter_view.<locals>.view at 0x7f4f3881f2e0>
+google_callback
+<function OAuth2View.adapter_view.<locals>.view at 0x7f4f38e459e0>
+google_login
+<function View.as_view.<locals>.view at 0x7f4f366d7d80>
+<function View.as_view.<locals>.view at 0x7f4f366d7c40>
+<function View.as_view.<locals>.view at 0x7f4f366d7ce0>
+<function View.as_view.<locals>.view at 0x7f4f371e7ba0>
+<function View.as_view.<locals>.view at 0x7f4f366d8cc0>
+socialaccount_connections
+<function View.as_view.<locals>.view at 0x7f4f366d7e20>
+socialaccount_signup
+<function View.as_view.<locals>.view at 0x7f4f366d8c20>
+socialaccount_login_error
+<function View.as_view.<locals>.view at 0x7f4f366d8ae0>
+socialaccount_login_cancelled
+<function View.as_view.<locals>.view at 0x7f4f366d7600>
+account_confirm_login_code
+<function View.as_view.<locals>.view at 0x7f4f366d6020>
+account_reset_password_from_key_done
+<function View.as_view.<locals>.view at 0x7f4f366d5a80>
+account_reset_password_from_key
+<function View.as_view.<locals>.view at 0x7f4f37008d60>
+account_reset_password_done
+<function View.as_view.<locals>.view at 0x7f4f3700a480>
+account_reset_password
+<function View.as_view.<locals>.view at 0x7f4f366d5300>
+account_set_password
+<function View.as_view.<locals>.view at 0x7f4f366d4c20>
+account_change_password
+<function View.as_view.<locals>.view at 0x7f4f37008ea0>
+account_confirm_email
+<function email_verification_sent at 0x7f4f366d6980>
+account_email_verification_sent
+<function View.as_view.<locals>.view at 0x7f4f3700b7e0>
+account_email
+<function View.as_view.<locals>.view at 0x7f4f366d6480>
+account_reauthenticate
+<function View.as_view.<locals>.view at 0x7f4f370093a0>
+account_signup
+<function View.as_view.<locals>.view at 0x7f4f366d6340>
+account_inactive
+<function View.as_view.<locals>.view at 0x7f4f366d60c0>
+account_logout
+<function View.as_view.<locals>.view at 0x7f4f36fea7a0>
+account_login
