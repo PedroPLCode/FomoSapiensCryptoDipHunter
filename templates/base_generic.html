@@ -14,7 +14,7 @@
 <body>
 
     <!-- Nawigacja -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">DipHunter</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,21 +59,28 @@
     {% if messages %}
                 <div class="alert alert-info" role="alert">
                         {% for message in messages %}
-                            <p class="mb-1">{{ message }}</p>
+                            <p class="mb-1 text-center">{{ message }}</p>
                         {% endfor %}
                 </div>
             {% endif %}
             
     <!-- Główna sekcja -->
-    <main class="container my-4 d-flex flex-column justify-content-center aligh-items-center">
+    <main class="container my-4 d-flex flex-column justify-content-center align-items-center">
+
+        {% if user.is_authenticated %}
+        <p>user {{ user.username }} logged in {{ user.last_login }}</p>
+        {% else %}
+        <p>guest user</p>
+        {% endif %}
+
         {% block body %}
         {% endblock %}
     </main>
 
     <!-- Stopka -->
-    <footer class="bg-dark text-light py-4">
-        <div class="container text-center">
-            <p>&copy; 2025 DipHunter | CryptoTechnicalAnalysisLab</p>
+    <footer class="text-light py-4">
+        <div class="container text-center text-dark">
+            <p>DipHunterCryptoTechnicalAnalysisLab@gmail.com</p>
         </div>
     </footer>
 

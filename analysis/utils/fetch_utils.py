@@ -41,7 +41,7 @@ def create_binance_client():
 
 
 @exception_handler()
-def fetch_data(symbol, interval='1h', lookback='5d', start_str=None, end_str=None):
+def fetch_data(symbol, interval='1h', lookback='2d', start_str=None, end_str=None):
     """
     Fetch historical kline (candlestick) data for a specific trading symbol.
 
@@ -138,9 +138,15 @@ def fetch_server_time():
 
 @exception_handler()
 def fetch_and_save_df(user_ta_settings):
-    from datetime import datetime as dt
-    df_fetched = fetch_data(symbol=user_ta_settings.symbol, interval=user_ta_settings.interval, lookback=user_ta_settings.lookback)
+    from datetime import datetime as dt 
+    df_fetched = fetch_data(symbol=user_ta_settings.symbol, interval=user_ta_settings.interval, lookback=calculate_lookback_extended(user_ta_settings))
     json_data = df_fetched.to_json(orient='records')
     user_ta_settings.df = json_data
-    user_ta_settings.df_last_fetch_time = dt.now
+    user_ta_settings.df_last_fetch_time = dt.now()
     user_ta_settings.save()
+    
+    
+@exception_handler()
+def calculate_lookback_extended(settings):
+    lookback_extended = f'{int(settings.interval[:-1]) * 205}{settings.interval[-1:]}'
+    return lookback_extended

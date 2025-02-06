@@ -3,19 +3,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-@receiver(post_save, sender=User)
-def create_user_analysis_settings(sender, instance, created, **kwargs):
-    if created:
-        if instance.is_authenticated:
-            TechnicalAnalysisHunter.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_analysis_settings(sender, instance, **kwargs):
-    try:
-        instance.technicalanalysishunter.save()
-    except TechnicalAnalysisHunter.DoesNotExist:
-        pass
-
 class TechnicalAnalysisHunter(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

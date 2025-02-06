@@ -1,8 +1,7 @@
 from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
 from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
-from analysis.utils.calc_utils import calculate_ta_indicators
-from analysis.utils.fetch_utils import fetch_data
-from hunter.utils.calc_utils import calculate_ta_averages, check_ta_trend
+from analysis.utils.calc_utils import calculate_ta_indicators, calculate_ta_averages, check_ta_trend
+from analysis.utils.fetch_utils import fetch_data, calculate_lookback_extended
 from hunter.utils.sell_signals import check_classic_ta_sell_signal
 from hunter.utils.buy_signals import check_classic_ta_buy_signal
 from DipHunterCryptoTechnicalAnalysis.utils.email_utils import send_email
@@ -29,13 +28,12 @@ def run_single_hunter_logic(hunter_settings):
         symbol = hunter_settings.symbol
         interval = hunter_settings.interval
         lookback_period = hunter_settings.lookback_period
-        lookback_extended = f'{int(hunter_settings.interval[:-1]) * 205}{hunter_settings.interval[-1:]}'
         
         logger.trade(f'Bot {hunter_settings.id} {hunter_settings.strategy} Fetching data for {symbol} with interval {interval} and lookback {lookback_period}')
         df_fetched = fetch_data(
             symbol=symbol, 
             interval=interval, 
-            lookback=lookback_extended
+            lookback=calculate_lookback_extended(hunter_settings)
             )
         
         if df_fetched is None:

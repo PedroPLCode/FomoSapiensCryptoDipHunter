@@ -1,0 +1,16 @@
+{% extends 'base_generic.html' %}
+
+{% block body %}
+  <h4>home page</h4>
+  <p>server_time: {{ server_time.serverTime }}</p>
+  <p>system_status: {{ system_status.status }} {{ system_status.msg }}</p>
+  <p>User Agent: {{ user_agent }}</p>
+  <p>System Info: {{ system_info }}</p>
+  <p>Uptime: {{ system_uptime }}</p>
+  <p>Python Version: {{ python_version }}</p>
+  <p>Flask Version: {{ flask_version }}</p>
+  <p>NumPy Version: {{ numpy_version }}</p>
+  <p>Pandas Version: {{ pandas_version }}</p>
+  <p>DB Engine: {{ db_engine }}</p>
+
+{% endblock %}

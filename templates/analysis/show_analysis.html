@@ -22,7 +22,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="settings_id" value="{{ user_ta_settings.id }}">
             
-                <p class="text-muted m-0 p-0">Select Plot Indicators:</p>
+                <p class="text-muted m-0 p-0 text-center">Select Plot Indicators:</p>
             
                 <div class="grid-container">
                     {% for indicator in indicators %}

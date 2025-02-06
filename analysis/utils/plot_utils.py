@@ -12,7 +12,6 @@ from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_
 def plot_selected_ta_indicators(
     df, 
     settings, 
-    lookback=None
     ):
     """
     Plots selected technical analysis indicators on a chart, such as moving averages, RSI, MACD, and others.
@@ -33,9 +32,10 @@ def plot_selected_ta_indicators(
         print("DataFrame is empty, nothing to plot.")
         return None
 
-    if lookback is not None:
-        lookback_duration = parse_lookback(lookback)
+    if settings.lookback is not None:
+        lookback_duration = parse_lookback(settings.lookback)
         cutoff_time = df['open_time'].max() - lookback_duration
+        df_raw = df.copy()
         df = df[df['open_time'] >= cutoff_time]
         
     fig, ax = plt.subplots(figsize=(14, 10))
@@ -50,9 +50,9 @@ def plot_selected_ta_indicators(
         ax.plot(df['open_time'], df['ema_fast'], label='EMA Fast', color='green', linewidth=linw_width)
         ax.plot(df['open_time'], df['ema_slow'], label='EMA Slow', color='red', linewidth=linw_width)
     
-    if 'ma50' in indicators:
+    if 'ma_50' in indicators:
         ax.plot(df['open_time'], df['ma_50'], label='MA50', color='orange', linewidth=linw_width)
-    if 'ma200' in indicators:
+    if 'ma_200' in indicators:
         ax.plot(df['open_time'], df['ma_200'], label='MA200', color='purple', linewidth=linw_width)
 
     if 'macd' in indicators:
