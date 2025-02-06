@@ -1,0 +1,334 @@
+{% extends 'base_generic.html' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h4 class="text-center">Technical Analysis<br>Symbol: {{ user_ta_settings.symbol }}<br>Interval: {{ user_ta_settings.interval }}<br>General timeperiod: {{ user_ta_settings.general_timeperiod }}<br>Lookback period: {{ user_ta_settings.lookback }}<br>Fetched: {{ user_ta_settings.df_last_fetch_time }}</h4>
+
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% else %}
+            {% if plot_url %}
+                <div class="text-center">
+                    <img src="data:image/png;base64,{{ plot_url }}" alt="Technical Analysis Plot" class="img-fluid" style="max-height: 500px;">
+                </div>
+            {% else %}
+                <p class="text-center">No data available for Technical Analysis Plot.</p>
+            {% endif %}
+
+
+
+
+            <form method="POST" action="{% url 'show_technical_analysis' %}" class="border-bottom p-0">
+                {% csrf_token %}
+                <input type="hidden" name="settings_id" value="{{ user_ta_settings.id }}">
+            
+                <p class="text-muted m-0 p-0">Select Plot Indicators:</p>
+            
+                <div class="grid-container">
+                    {% for indicator in indicators %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="indicators" value="{{ indicator }}" style="display: none;" 
+                            {% if indicator in user_ta_settings.selected_plot_indicators %}checked{% endif %}
+                            id="indicator_{{ user_ta_settings.id }}_{{ indicator }}">
+                            <label class="form-check-label indicator-label" for="indicator_{{ user_ta_settings.id }}_{{ indicator }}">
+                                {{ indicator|capfirst }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            
+                <div class="text-center w-100 m-0 p-0 mt-1 mb-2">
+                    <button type="submit" class="btn btn-primary w-100">Update Plot</button>
+                </div>
+            </form>
+            
+
+            <div class="">
+                {% if selected_indicators_list and latest_data and previous_data %}
+                    
+                    {% for indicator in selected_indicators_list %}
+                        
+                        {% if indicator|slugify == 'close' %}
+                            <p>Typical Price:
+                               Latest: {{ latest_data.typical_price }},
+                               Previous: {{ previous_data.typical_price }},
+                                <span class="text {% if typical_price.open > previous_data.typical_price %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.typical_price > previous_data.typical_price %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p>Open: 
+                               Latest: {{ latest_data.open }}, 
+                               Previous: {{ previous_data.open }}, 
+                                <span class="text {% if latest_data.open > previous_data.open %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.open > previous_data.open %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p>High: 
+                               Latest: {{ latest_data.high }}, 
+                               Previous: {{ previous_data.high }},
+                                <span class="text {% if previous_data.high > previous_data.high %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.high > previous_data.high %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p>Low: 
+                               Latest: {{ latest_data.low }}, 
+                               Previous: {{ previous_data.low }},
+                                <span class="text {% if previous_data.low > previous_data.low %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.low > previous_data.low %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p class="border-bottom">Close:
+                               Latest: {{ latest_data.close }},
+                               Previous: {{ previous_data.close }}
+                               <span class="text {% if latest_data.close > previous_data.close %}text-success{% else %}text-danger{% endif %}">
+                                {% if latest_data.close > previous_data.close %} RISING {% else %} DROPPING {% endif %}
+                               </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'rsi' %}
+                            <p class="border-bottom">RSI({{ user_ta_settings.rsi_timeperiod }}, {{ user_ta_settings.rsi_buy }}/{{ user_ta_settings.rsi_sell }}): 
+                                Latest: {{ latest_data.rsi|default:"No RSI data" }}, 
+                                Previous: {{ previous_data.rsi|default:"No previous RSI data" }}
+                                <span class="text {% if latest_data.rsi > previous_data.rsi %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.rsi > previous_data.rsi %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'cci' %}
+                            <p class="border-bottom">CCI({{ user_ta_settings.cci_timeperiod }}, {{ user_ta_settings.cci_buy }}/{{ user_ta_settings.cci_sell }}): 
+                                Latest: {{ latest_data.cci|default:"No CCI data" }}, 
+                                Previous: {{ previous_data.cci|default:"No previous CCI data" }}
+                                <span class="text {% if latest_data.cci > previous_data.cci %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.cci > previous_data.cci %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'mfi' %}
+                            <p class="border-bottom">MFI({{ user_ta_settings.mfi_timeperiod }}, {{ user_ta_settings.mfi_buy }}/{{ user_ta_settings.mfi_sell }}): 
+                                Latest: {{ latest_data.mfi|default:"No MFI data" }}, 
+                                Previous: {{ previous_data.mfi|default:"No previous MFI data" }}
+                                <span class="text {% if latest_data.mfi > previous_data.mfi %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.mfi > previous_data.mfi %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'macd' %}
+                            <p>MACD({{ user_ta_settings.macd_timeperiod }}, {{ user_ta_settings.macd_signalperiod }}):</p>
+                            <p>MACD:
+                                Latest: {{ latest_data.macd|default:"No MACD data" }}, 
+                                Previous: {{ previous_data.macd|default:"No previous MACD data" }}
+                                <span class="text {% if latest_data.macd > previous_data.macd %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.macd > previous_data.macd %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p>MACD Signal: 
+                                Latest: {{ latest_data.macd_signal|default:"No MACD Signal data" }}, 
+                                Previous: {{ previous_data.macd_signal|default:"No previous MACD Signal data" }}
+                                <span class="text {% if latest_data.macd_signal > previous_data.macd_signal %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.macd_signal > previous_data.macd_signal %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p class="border-bottom">MACD Histogram: 
+                                Latest: {{ latest_data.macd_histogram|default:"No MACD Histogram data" }}, 
+                                Previous: {{ previous_data.macd_histogram|default:"No previous MACD Histogram data" }}
+                                <span class="text {% if latest_data.macd_histogram > previous_data.macd_histogram %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.macd_histogram > previous_data.macd_histogram %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'ema' %}
+                            <p>EMA Fast({{ user_ta_settings.ema_fast_timeperiod }}): 
+                                Latest: {{ latest_data.ema_fast|default:"No EMA Fast data" }}, 
+                                Previous: {{ previous_data.ema_fast|default:"No previous EMA Fast data" }}
+                                <span class="text {% if latest_data.ema_fast > previous_data.ema_fast %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.ema_fast > previous_data.ema_fast %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p class="border-bottom">EMA Slow({{ user_ta_settings.ema_slow_timeperiod }}): 
+                                Latest: {{ latest_data.ema_slow|default:"No EMA Slow data" }}, 
+                                Previous: {{ previous_data.ema_slow|default:"No previous EMA Slow data" }}
+                                <span class="text {% if latest_data.ema_slow > previous_data.ema_slow %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.ema_slow > previous_data.ema_slow %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+
+                        {% if indicator|slugify == 'boll' %}
+                            <p>Bollinger({{ user_ta_settings.bollinger_timeperiod }}, {{ user_ta_settings.bollinger_nbdev }}):</p>
+                            <p>Upper Band: 
+                                Latest: {{ latest_data.upper_band|default:"No Bollinger data" }}, 
+                                Previous: {{ previous_data.upper_band|default:"No previous Bollinger data" }}
+                                <span class="text {% if latest_data.upper_band > previous_data.upper_band %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.upper_band > previous_data.upper_band %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        
+                            <p>Middle Band: 
+                                Latest: {{ latest_data.middle_band|default:"No Bollinger data" }},
+                                Previous: {{ previous_data.middle_band|default:"No previous Bollinger data" }}
+                                <span class="text {% if latest_data.middle_band > previous_data.middle_band %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.middle_band > previous_data.middle_band %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        
+                            <p class="border-bottom">Lower Band: 
+                                Latest: {{ latest_data.lower_band|default:"No Bollinger data" }},
+                                Previous: {{ previous_data.lower_band|default:"No previous Bollinger data" }}
+                                <span class="text {% if latest_data.lower_band > previous_data.lower_band %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.lower_band > previous_data.lower_band %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+                    
+                        {% if indicator|slugify == 'stoch' %}
+                            <p>Stochastic({{ user_ta_settings.stoch_k_timeperiod }}, {{ user_ta_settings.stoch_d_timeperiod }}):</p>
+                            <p>Stochastic %K: 
+                                Latest: {{ latest_data.stoch_k|default:"No Stoch K data" }},
+                                Previous: {{ previous_data.stoch_k|default:"No previous Stoch K data" }}
+                                <span class="text {% if latest_data.stoch_k > previous_data.stoch_k %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.stoch_k > previous_data.stoch_k %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+
+                            <p class="border-bottom">Stochastic %D: 
+                                Latest: {{ latest_data.stoch_d|default:"No Stoch D data" }},
+                                Previous: {{ previous_data.stoch_d|default:"No previous Stoch D data" }}
+                                <span class="text {% if latest_data.stoch_d > previous_data.stoch_d %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.stoch_d > previous_data.stoch_d %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+
+                        {% if indicator|slugify == 'stoch_rsi' %}
+                            <p>StochasticRSI({{ user_ta_settings.stoch_rsi_k_timeperiod }}, {{ user_ta_settings.stoch_rsi_d_timeperiod }}):</p>
+                            <p>StochasticRSI: 
+                                Latest: {{ latest_data.stoch_rsi|default:"No Stoch RSI data" }},
+                                Previous: {{ previous_data.stoch_rsi|default:"No previous Stoch RSI data" }}
+                                <span class="text {% if latest_data.stoch_rsi > previous_data.stoch_rsi %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.stoch_rsi > previous_data.stoch_rsi %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+
+                            <p>StochasticRSI %K: 
+                                Latest: {{ latest_data.stoch_rsi_k|default:"No Stoch RSI K data" }},
+                                Previous: {{ previous_data.stoch_rsi_k|default:"No previous Stoch RSI K data" }}
+                                <span class="text {% if latest_data.stoch_rsi_k > previous_data.stoch_rsi_k %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.stoch_rsi_k > previous_data.stoch_rsi_k %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+
+                            <p class="border-bottom">StochasticRSI %D: 
+                                Latest: {{ latest_data.stoch_rsi_d|default:"No Stoch RSI D data" }},
+                                Previous: {{ previous_data.stoch_rsi_d|default:"No previous Stoch RSI D data" }}
+                                <span class="text {% if latest_data.stoch_rsi_d > previous_data.stoch_rsi_d %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.stoch_rsi_d > previous_data.stoch_rsi_d %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'ma_200' %}
+                            <p class="border-bottom">MA 200: 
+                                Latest: {{ latest_data.ma_200|default:"No MA 200 data" }}, 
+                                Previous: {{ previous_data.ma_200|default:"No previous MA 200 data" }}
+                                <span class="text {% if latest_data.ma_200 > previous_data.ma_200 %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.ma_200 > previous_data.ma_200 %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'ma_50' %}
+                            <p class="border-bottom">MA 50: 
+                                Latest: {{ latest_data.ma_50|default:"No MA 50 data" }}, 
+                                Previous: {{ previous_data.ma_50|default:"No previous MA 50 data" }}
+                                <span class="text {% if latest_data.ma_50 > previous_data.ma_50 %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.ma_50 > previous_data.ma_50 %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+
+                        {% if indicator|slugify == 'adx' %}
+                            <p class="border-bottom">ADX({{ user_ta_settings.adx_timeperiod }}): 
+                                Latest: {{ latest_data.adx|default:"No ADX data" }},
+                                Previous: {{ previous_data.adx|default:"No previous ADX data" }}
+                                <span class="text {% if latest_data.adx > previous_data.adx %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.adx > previous_data.adx %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+
+                        {% if indicator|slugify == 'atr' %}
+                            <p class="border-bottom">ATR({{ user_ta_settings.atr_timeperiod }}): 
+                                Latest: {{ latest_data.atr|default:"No ATR data" }}, 
+                                Previous: {{ previous_data.atr|default:"No previous ATR data" }}
+                                <span class="text {% if latest_data.atr > previous_data.atr %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.atr > previous_data.atr %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'psar' %}
+                            <p class="border-bottom">PSAR({{ user_ta_settings.psar_acceleration }}, {{ user_ta_settings.psar_maximum }}): 
+                                Latest: {{ latest_data.psar|default:"No PSAR data" }}, 
+                                Previous: {{ previous_data.psar|default:"No previous PSAR data" }}
+                                <span class="text {% if latest_data.psar > previous_data.psar %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.psar > previous_data.psar %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+
+                        {% if indicator|slugify == 'vwap' %}
+                            <p class="border-bottom">VWAP: 
+                                Latest: {{ latest_data.vwap|default:"No VWAP data" }},
+                                Previous: {{ previous_data.vwap|default:"No previous VWAP data" }}
+                                <span class="text {% if latest_data.vwap > previous_data.vwap %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.vwap > previous_data.vwap %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+            
+                        {% if indicator|slugify == 'di' %}
+                            <p>+DI({{ user_ta_settings.di_timeperiod }}): 
+                                Latest: {{ latest_data.plus_di|default:"No +DI data" }}, 
+                                Previous: {{ previous_data.plus_di|default:"No previous +DI data" }}
+                                <span class="text {% if latest_data.plus_di > previous_data.plus_di %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.plus_di > previous_data.plus_di %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                            <p class="border-bottom">-DI({{ user_ta_settings.di_timeperiod }}): 
+                                Latest: {{ latest_data.minus_di|default:"No -DI data" }}, 
+                                Previous: {{ previous_data.minus_di|default:"No previous -DI data" }}
+                                <span class="text {% if latest_data.minus_di > previous_data.minus_di %}text-success{% else %}text-danger{% endif %}">
+                                    {% if latest_data.minus_di > previous_data.minus_di %} RISING {% else %} DROPPING {% endif %}
+                                </span>
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+            
+                    <p>Volume: 
+                       Latest: {{ latest_data.volume }},
+                       Previous: {{ previous_data.volume }}
+                       <span class="text {% if latest_data.volume > previous_data.volume %}text-success{% else %}text-danger{% endif %}">
+                        {% if latest_data.volume > previous_data.volume %} RISING {% else %} DROPPING {% endif %}
+                        </span>
+                    </p>
+                {% endif %}
+            </div>
+            
+            
+            
+
+
+
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary">Refresh Data</a>
+            <a href="{% url 'update_technical_analysis_settings' %}" class="btn btn-primary">Settings</a>
+        </div>
+    </div>
+{% endblock %}

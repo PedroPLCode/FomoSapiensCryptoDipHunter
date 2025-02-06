@@ -19,6 +19,5 @@ from . import views
 
 urlpatterns = [
     path('', views.show_technical_analysis, name='show_technical_analysis'),
-    path('change/', views.update_technical_analysis_settings, name='update_technical_analysis_settings'),
-    path('updated/', views.settings_updated, name='settings_updated'),
+    path('settings/', views.update_technical_analysis_settings, name='update_technical_analysis_settings'),
 ]

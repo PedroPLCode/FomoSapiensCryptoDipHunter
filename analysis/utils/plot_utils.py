@@ -5,8 +5,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-from .logging import logger
-from ..utils.exception_handlers import exception_handler
+from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
+from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
 
 @exception_handler()
 def plot_selected_ta_indicators(

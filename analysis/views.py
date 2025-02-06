@@ -1,52 +1,69 @@
 from django.shortcuts import render, redirect
-from .forms import UserTechnicalAnalysisSettingsForm
-from .models import User, UserTechnicalAnalysisSettings
-from. utils.logging import logger
-from .utils.api_utils import fetch_data
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.signals import user_logged_in
+from django.dispatch import receiver
+from django.contrib import messages
+import pandas as pd
+from .forms import TechnicalAnalysisSettingsForm
+from .models import User, TechnicalAnalysisSettings
+from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
+from .utils.fetch_utils import fetch_and_save_df
 from .utils.calc_utils import calculate_ta_indicators
 from .utils.plot_utils import plot_selected_ta_indicators
 
+@login_required
 def update_technical_analysis_settings(request):
 
-    user_settings, created = UserTechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
-        form = UserTechnicalAnalysisSettingsForm(request.POST, instance=user_settings)
+        form = TechnicalAnalysisSettingsForm(request.POST, instance=user_ta_settings)
         if form.is_valid():
             form.save()
-            return redirect('settings_updated')
+            messages.success(request, 'Twoje ustawienia zostały zapisane!')
+            return redirect('show_technical_analysis')
     else:
-        form = UserTechnicalAnalysisSettingsForm(instance=user_settings)
+        form = TechnicalAnalysisSettingsForm(instance=user_ta_settings)
 
-    return render(request, 'analysis/change.html', {'form': form})
-
-
-def settings_updated(request):
-    return render(request, 'analysis/updated.html')
+    return render(request, 'analysis/change_settings.html', {'form': form})
 
 
 def show_technical_analysis(request):
     """Widok analizy technicznej dostępny zarówno dla gości, jak i dla zalogowanych użytkowników."""
 
     if request.user.is_authenticated:
-        user_settings, created = UserTechnicalAnalysisSettings.objects.get_or_create(
-            user=request.user,
-        )
+        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
     else:
         guest_user = User.objects.get(username='guest')
-        user_settings, created = UserTechnicalAnalysisSettings.objects.get_or_create(
-            user=guest_user,
-        )
+        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=guest_user)
+        fetch_and_save_df(user_ta_settings)
 
-    df_fetched = fetch_data(symbol=user_settings.symbol, interval=user_settings.interval, lookback=user_settings.lookback)
-    if df_fetched is None or df_fetched.empty:
+    indicators_list = ['close', 'rsi', 'cci', 'mfi', 'macd', 'ema', 'boll', 'stoch', 'stoch_rsi', 
+                       'ma_50', 'ma_200', 'adx', 'atr', 'psar', 'vwap', 'di']
+
+    if request.method == 'POST':
+        selected_indicators = request.POST.getlist('indicators')
+        user_ta_settings.selected_plot_indicators = ','.join(selected_indicators)
+        user_ta_settings.save()
+
+    df_loaded = pd.read_json(user_ta_settings.df)
+    if df_loaded is None or df_loaded.empty:
         return render(request, 'analysis/show.html', {'error': 'Nie udało się pobrać danych'})
 
-    df_calculated = calculate_ta_indicators(df_fetched, user_settings)
+    df_calculated = calculate_ta_indicators(df_loaded, user_ta_settings)
     if df_calculated is None or df_calculated.empty:
         return render(request, 'analysis/show.html', {'error': 'Nie udało się obliczyć analizy technicznej'})
-    
-    latest_data = df_calculated.iloc[-1].to_dict
-    plot_url = plot_selected_ta_indicators(df_calculated, user_settings)
 
-    return render(request, 'analysis/show.html', {'user_settings': user_settings, 'latest_data': latest_data, 'plot_url': plot_url})
+    latest_data = df_calculated.iloc[-1].to_dict()
+    previous_data = df_calculated.iloc[-2].to_dict()
+    selected_indicators_list = user_ta_settings.selected_plot_indicators.split(',')
+    plot_url = plot_selected_ta_indicators(df_calculated, user_ta_settings)
+
+    return render(request, 'analysis/show_analysis.html', {
+        'user_ta_settings': user_ta_settings,
+        'latest_data': latest_data,
+        'previous_data': previous_data,
+        'plot_url': plot_url,
+        'selected_indicators_list': selected_indicators_list,
+        'indicators': indicators_list 
+    })

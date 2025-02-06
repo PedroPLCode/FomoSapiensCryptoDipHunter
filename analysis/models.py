@@ -2,21 +2,28 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime as dt
 
 @receiver(post_save, sender=User)
 def create_user_analysis_settings(sender, instance, created, **kwargs):
     if created:
         if instance.is_authenticated:
-            UserTechnicalAnalysisSettings.objects.create(user=instance)
+            TechnicalAnalysisSettings.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_analysis_settings(sender, instance, **kwargs):
-    instance.usertechnicalanalysissettings.save()
+    instance.technicalanalysissettings.save()
     
 def default_plot_indicators():
     return ['rsi', 'macd']
 
-class UserTechnicalAnalysisSettings(models.Model):
+def default_df():
+    from .utils.fetch_utils import fetch_data
+    df_fetched = fetch_data('BTCUSDC')
+    json_data = df_fetched.to_json(orient='records')
+    return json_data
+
+class TechnicalAnalysisSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     
     symbol = models.TextField(default='ETHUSDC')
@@ -52,6 +59,9 @@ class UserTechnicalAnalysisSettings(models.Model):
     mfi_sell = models.IntegerField(default=70)
     
     selected_plot_indicators = models.JSONField(default=default_plot_indicators)
+    
+    df = models.JSONField(default=default_df)
+    df_last_fetch_time = models.DateTimeField(default=dt.now)
 
     def __str__(self):
         return f"Ustawienia analizy dla {self.user.username}"

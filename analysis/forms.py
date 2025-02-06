@@ -1,11 +1,12 @@
 from django import forms
-from .models import UserTechnicalAnalysisSettings
+from .models import TechnicalAnalysisSettings
 
-class UserTechnicalAnalysisSettingsForm(forms.ModelForm):
+class TechnicalAnalysisSettingsForm(forms.ModelForm):
     class Meta:
-        model = UserTechnicalAnalysisSettings
+        model = TechnicalAnalysisSettings
         fields = ['symbol',
                   'interval',
+                  'lookback',
                   'general_timeperiod',
                   'rsi_timeperiod',
                   'cci_timeperiod',

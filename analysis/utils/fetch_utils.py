@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 import pandas as pd
 from binance.client import Client
 import os
-from ..utils.logging import logger
-from ..utils.exception_handlers import exception_handler
+from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
+from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
 
 load_dotenv()
 
@@ -134,3 +134,13 @@ def fetch_server_time():
     general_client = create_binance_client()
     server_time = general_client.get_server_time()
     return server_time
+
+
+@exception_handler()
+def fetch_and_save_df(user_ta_settings):
+    from datetime import datetime as dt
+    df_fetched = fetch_data(symbol=user_ta_settings.symbol, interval=user_ta_settings.interval, lookback=user_ta_settings.lookback)
+    json_data = df_fetched.to_json(orient='records')
+    user_ta_settings.df = json_data
+    user_ta_settings.df_last_fetch_time = dt.now
+    user_ta_settings.save()

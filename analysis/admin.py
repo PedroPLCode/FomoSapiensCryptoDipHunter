@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import UserTechnicalAnalysisSettings
+from .models import TechnicalAnalysisSettings
 
-admin.site.register(UserTechnicalAnalysisSettings)
+admin.site.register(TechnicalAnalysisSettings)

@@ -1,7 +1,7 @@
 import talib
 import pandas as pd
-from ..utils.logging import logger
-from ..utils.exception_handlers import exception_handler
+from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
+from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
 
 @exception_handler(default_return=False)
 def handle_ta_df_initial_praparation(df, user_settings):
