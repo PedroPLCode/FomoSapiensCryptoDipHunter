@@ -1,0 +1,17 @@
+{% extends 'base_generic.html' %}
+
+{% block body %}
+  <h2>Twoje Huntery</h2>
+  <ul>
+    {% for hunter in hunters %}
+      <li>
+        <a href="{% url 'hunter:hunter_edit' hunter.id %}">{{ hunter.symbol }}</a> - {{ hunter.comment }}
+        <a href="{% url 'hunter:hunter_edit' hunter.id %}">Edytuj</a>
+        <a href="{% url 'hunter:hunter_delete' hunter.id %}">Usuń</a>
+      </li>
+    {% empty %}
+      <p>Nie masz żadnych hunterów.</p>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'hunter:hunter_create' %}">Dodaj nowego huntera</a>
+{% endblock %}
