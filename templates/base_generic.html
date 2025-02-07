@@ -1,5 +1,6 @@
 <!-- base_generic.html -->
 {% load static %}
+{% load zen.custom_filters %}
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -16,43 +17,48 @@
     <!-- Nawigacja -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">DipHunter</a>
+            <div class="d-flex flex-column justify-content-center align-item-center">
+                <a class="navbar-brand" href="/">ZenCryptoDipHunter</a>
+                {% if user.is_authenticated %}
+                    <p class='text-white'>{{ user.username }} logged in {{ user.last_login }}</p>
+                    {% else %}
+                    <p class='text-white'>guest user</p>
+                    {% endif %}
+            </div>       
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="/">Home</a>
                     </li>
-
+            
                     <li class="nav-item">
-                        <a class="nav-link" href="/analysis/">Analiza</a>
+                        <a class="nav-link {% if request.path|startswith:'/analysis/' %}active{% endif %}" href="/analysis/">Analiza</a>
                     </li>
-
+            
                     <li class="nav-item">
-                        <a class="nav-link" href="/hunter/">Hunter</a>
+                        <a class="nav-link {% if request.path|startswith:'/hunter/' %}active{% endif %}" href="/hunter/">Hunter</a>
                     </li>
-
+            
                     {% if user.is_superuser %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/">Admin</a>
+                        <a class="nav-link {% if request.path|startswith:'/admin/' %}active{% endif %}" href="/admin/">Admin</a>
                     </li>
                     {% endif %}
-
+            
                     <li class="nav-item">
-                        <a class="nav-link" href="/accounts/">
+                        <a class="nav-link {% if request.path|startswith:'/accounts/' %}active{% endif %}" href="/accounts/">
                             {% if user.is_authenticated %}
                               Account
                             {% else %}
                               Login
                             {% endif %}
-                          </a>
-                          
+                        </a>
                     </li>
                 </ul>
-            </div>
+            </div>            
         </div>
     </nav>
 
@@ -66,21 +72,14 @@
             
     <!-- Główna sekcja -->
     <main class="container my-4 d-flex flex-column justify-content-center align-items-center">
-
-        {% if user.is_authenticated %}
-        <p>user {{ user.username }} logged in {{ user.last_login }}</p>
-        {% else %}
-        <p>guest user</p>
-        {% endif %}
-
         {% block body %}
         {% endblock %}
     </main>
 
     <!-- Stopka -->
-    <footer class="text-light py-4">
+    <footer class="text-light pb-4">
         <div class="container text-center text-dark">
-            <p>DipHunterCryptoTechnicalAnalysisLab@gmail.com</p>
+            <a href="mailto:ZenCryptoDipHunter@gmail.com">ZenCryptoDipHunter@gmail.com</a>
         </div>
     </footer>
 

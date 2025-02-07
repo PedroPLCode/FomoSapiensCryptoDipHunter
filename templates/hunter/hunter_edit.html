@@ -1,11 +1,17 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-  <h2>Edytuj Huntera: {{ hunter.symbol }}</h2>
-  <form method="post">
+
+<div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center bg-secondary">
+  <h4>{{ title }}</h4>
+  <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Zapisz</button>
+    <div class="w-100 d-flex flex-column gap-3 justify-content-center align-item-center">
+      <button type="submit" class="w-100 btn btn-primary">Save changes</button>
+      <a href="{% url 'hunter:hunter_list' %}" class="w-100 btn btn-primary">Back to hunters</a>
+    </div> 
   </form>
-  <a href="{% url 'hunter:hunter_list' %}">Powrót do listy</a>
+</div>
+
 {% endblock %}

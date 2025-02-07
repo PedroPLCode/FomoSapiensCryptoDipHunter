@@ -6,4 +6,4 @@ class AnalysisConfig(AppConfig):
     name = 'analysis'
 
     def ready(self):
-        import DipHunterCryptoTechnicalAnalysis.utils.signals  # Importujemy sygnały
+        import zen.utils.signals  # Importujemy sygnały

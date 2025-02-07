@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 import pandas as pd
 from binance.client import Client
 import os
-from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
-from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
+from zen.utils.logging import logger
+from zen.utils.exception_handlers import exception_handler
 
 load_dotenv()
 

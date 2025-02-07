@@ -13,6 +13,7 @@ class TechnicalAnalysisHunter(models.Model):
     running = models.BooleanField(default=False)
 
     trend_signals = models.BooleanField(default=False)
+    price_signals = models.BooleanField(default=True)
     rsi_signals = models.BooleanField(default=True)
     rsi_divergence_signals = models.BooleanField(default=False)
     vol_signals = models.BooleanField(default=True)

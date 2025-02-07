@@ -1,10 +1,12 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-  <h2>Usunąć huntera: {{ hunter.symbol }}?</h2>
+<div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center bg-secondary">
+  <h4 class="text-center">Delete this hunter?<br>{{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }}<br>{{ hunter.comment }}</h4>
   <form method="post">
     {% csrf_token %}
-    <button type="submit">Tak, usuń</button>
+    <button type="submit" class="w-100 btn btn-danger mb-3">Yes, delete</button>
   </form>
-  <a href="{% url 'hunter:hunter_list' %}">Anuluj</a>
+  <a href="{% url 'hunter:hunter_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
+</div>
 {% endblock %}

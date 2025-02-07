@@ -26,9 +26,9 @@ def default_df():
 class TechnicalAnalysisSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     
-    symbol = models.TextField(default='ETHUSDC')
-    interval = models.TextField(default='1h')
-    lookback = models.TextField(default='5d')
+    symbol = models.CharField(max_length=10, default='BTCUSDC')
+    interval = models.CharField(max_length=10, default='1h')
+    lookback = models.CharField(max_length=10, default='1d')
     
     general_timeperiod = models.IntegerField(default=14)
     di_timeperiod = models.IntegerField(default=14)

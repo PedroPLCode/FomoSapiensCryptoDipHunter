@@ -1,5 +1,5 @@
-from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
-from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
+from zen.utils.logging import logger
+from zen.utils.exception_handlers import exception_handler
 
 @exception_handler(default_return=False)
 def trend_buy_signal(trend, hunter_settings):
@@ -464,9 +464,7 @@ def check_classic_ta_buy_signal(
     Returns:
         bool: True if a buy signal is triggered, otherwise False.
     """
-    from .logic_utils import is_df_valid
-    
-    if not is_df_valid(df, hunter_settings.id):
+    if df is None or df.empty():
         return False
     
     latest_data = df.iloc[-1]

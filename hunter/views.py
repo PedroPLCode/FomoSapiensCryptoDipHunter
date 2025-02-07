@@ -11,6 +11,7 @@ def hunter_list(request):
 
 @login_required
 def hunter_create(request):
+    title = 'Create New Hunter:'
     if request.method == "POST":
         form = TechnicalAnalysisHunterForm(request.POST)
         if form.is_valid():
@@ -21,11 +22,12 @@ def hunter_create(request):
     else:
         form = TechnicalAnalysisHunterForm()
 
-    return render(request, 'hunter/hunter_create.html', {'form': form})
+    return render(request, 'hunter/hunter_edit.html', {'form': form, 'title': title})
 
 
 @login_required
 def hunter_edit(request, pk):
+    title = 'Selected Hunter Settings:'
     hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
 
     if request.method == 'POST':
@@ -35,7 +37,7 @@ def hunter_edit(request, pk):
             return redirect('hunter:hunter_list')
     else:
         form = TechnicalAnalysisHunterForm(instance=hunter)
-    return render(request, 'hunter/hunter_edit.html', {'form': form, 'hunter': hunter})
+    return render(request, 'hunter/hunter_edit.html', {'form': form, 'hunter': hunter, 'title': title})
 
 
 @login_required

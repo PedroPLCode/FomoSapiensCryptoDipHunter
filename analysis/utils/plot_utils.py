@@ -5,8 +5,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
-from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
+from zen.utils.logging import logger
+from zen.utils.exception_handlers import exception_handler
 import plotly.graph_objects as go
 import plotly.io as pio
 import base64
@@ -129,7 +129,21 @@ def plot_selected_ta_indicators(df, settings):
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['plus_di'], name='+DI', line=dict(color='green')))
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['minus_di'], name='-DI', line=dict(color='red')))
     
-    fig.update_layout(title='Technical Indicators', xaxis_title='Time', yaxis_title='Value', legend_title='Indicators')
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        title="",
+        xaxis_title="",
+        yaxis_title="",
+        showlegend=False,
+        #autosize=True,
+        width=1000,  # Szerokość wykresu
+        height=800,  # Wysokość wykresu
+        xaxis_showgrid=False,
+        yaxis_showgrid=False,
+        xaxis_visible=False,
+        yaxis_visible=False,
+    )
     
     img = BytesIO()
     pio.write_image(fig, img, format='png')

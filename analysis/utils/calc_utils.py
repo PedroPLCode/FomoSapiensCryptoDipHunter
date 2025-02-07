@@ -1,7 +1,7 @@
 import talib
 import pandas as pd
-from DipHunterCryptoTechnicalAnalysis.utils.logging import logger
-from DipHunterCryptoTechnicalAnalysis.utils.exception_handlers import exception_handler
+from zen.utils.logging import logger
+from zen.utils.exception_handlers import exception_handler
 
 @exception_handler(default_return=False)
 def handle_ta_df_initial_praparation(df, user_settings):
@@ -389,7 +389,7 @@ def handle_ta_df_final_cleaning(df, columns_to_check, user_settings):
         DataFrame: The cleaned DataFrame.
         bool: False if an error occurs during cleaning.
     """
-    df.dropna(subset=columns_to_check, inplace=True)
+    df[columns_to_check] = df[columns_to_check].fillna(0)
     
     return df
 
@@ -431,18 +431,7 @@ def calculate_ta_indicators(df, user_settings):
     calculate_ta_adx(df, user_settings)
     calculate_ta_di(df, user_settings)
     
-    columns_to_check = [
-        'macd', 
-        'macd_signal', 
-        'cci', 
-        'upper_band', 
-        'lower_band', 
-        'mfi', 
-        'atr', 
-        'stoch_k', 
-        'stoch_d', 
-        'psar'
-    ]
+    columns_to_check = []
     handle_ta_df_final_cleaning(df, columns_to_check, user_settings)
 
     return df

@@ -2,12 +2,16 @@
 
 {% block body %}
 
-  <h1>Ustawienia analizy technicznej</h1>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}  <!-- renderuje formularz jako paragrafy -->
-    <button type="submit">Zapisz zmiany</button>
-    <a href="/analysis/" class="btn btn-primary">back</a>
-  </form>
+  <div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center bg-secondary">
+    <h4>Technical Analysis Settings</h1>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="w-100 d-flex flex-column gap-3 justify-content-center align-item-center">
+        <button type="submit" class="w-100 btn btn-primary">Save changes</button>
+        <a href="/analysis/" class="w-100 btn btn-primary">Back to analysis</a>
+      </div>       
+    </form>
+  </div>
 
 {% endblock %}
