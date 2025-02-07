@@ -36,6 +36,8 @@ conda-libmamba-solver @ file:///croot/conda-libmamba-solver_1727775630457/work/s
 conda-package-handling @ file:///croot/conda-package-handling_1731369017509/work
 conda_package_streaming @ file:///croot/conda-package-streaming_1731366181659/work
 contourpy==1.3.0
+crispy-bootstrap4==2024.10
+crispy-bootstrap5==2024.10
 cryptography @ file:///croot/cryptography_1732129644106/work
 cycler==0.12.1
 dateparser==1.2.0
@@ -47,6 +49,7 @@ distlib==0.3.9
 distro @ file:///croot/distro_1714488253808/work
 Django==5.1.5
 django-allauth==65.3.1
+django-crispy-forms==2.3
 django-recaptcha==4.0.0
 dnspython==2.6.1
 email_validator==2.2.0
@@ -105,6 +108,7 @@ jupyterlab @ file:///croot/jupyterlab_1725895214311/work
 jupyterlab-pygments @ file:///tmp/build/80754af9/jupyterlab_pygments_1601490720602/work
 jupyterlab_server @ file:///croot/jupyterlab_server_1725865349919/work
 jupyterlab_widgets @ file:///croot/jupyterlab_widgets_1733440870459/work
+kaleido==0.2.1
 keras==3.6.0
 kiwisolver==1.4.7
 libclang==18.1.1
@@ -127,6 +131,7 @@ mkl_random @ file:///io/mkl313/mkl_random_1730823916628/work
 ml-dtypes==0.4.1
 multidict==6.1.0
 namex==0.0.8
+narwhals==1.25.2
 nbclient @ file:///work/perseverance-python-buildout/croot/nbclient_1701731912506/work
 nbconvert @ file:///croot/nbconvert_1728049414448/work
 nbformat @ file:///croot/nbformat_1728049424075/work
@@ -148,6 +153,7 @@ parso @ file:///croot/parso_1733963305961/work
 pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
 pillow @ file:///croot/pillow_1734430590456/work
 platformdirs @ file:///work/perseverance-python-buildout/croot/platformdirs_1701732573265/work
+plotly==6.0.0
 pluggy @ file:///croot/pluggy_1733169602837/work
 ply @ file:///work/perseverance-python-buildout/croot/ply_1698846188635/work
 prometheus_client @ file:///croot/prometheus_client_1731953121795/work
