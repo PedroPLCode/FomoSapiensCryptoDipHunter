@@ -1,7 +1,7 @@
 import talib
 import pandas as pd
-from FomoSapiensCryptoDipHunter.utils.logging import logger
-from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.logging import logger
+from fomo_sapiens.utils.exception_handlers import exception_handler
 
 @exception_handler(default_return=False)
 def handle_ta_df_initial_praparation(df, user_settings):

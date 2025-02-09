@@ -7,7 +7,7 @@ from io import StringIO
 import pandas as pd
 from .forms import TechnicalAnalysisSettingsForm
 from .models import User, TechnicalAnalysisSettings
-from FomoSapiensCryptoDipHunter.utils.logging import logger
+from fomo_sapiens.utils.logging import logger
 from .utils.fetch_utils import fetch_and_save_df
 from .utils.calc_utils import calculate_ta_indicators
 from .utils.plot_utils import plot_selected_ta_indicators, prepare_selected_indicators_list

@@ -5,8 +5,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-from FomoSapiensCryptoDipHunter.utils.logging import logger
-from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.logging import logger
+from fomo_sapiens.utils.exception_handlers import exception_handler
 import plotly.graph_objects as go
 import plotly.io as pio
 import base64

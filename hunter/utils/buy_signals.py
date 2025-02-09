@@ -1,5 +1,5 @@
-from FomoSapiensCryptoDipHunter.utils.logging import logger
-from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.logging import logger
+from fomo_sapiens.utils.exception_handlers import exception_handler
 from hunter_logic import get_latest_and_previus_data
 
 @exception_handler(default_return=False)

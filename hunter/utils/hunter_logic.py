@@ -1,13 +1,13 @@
 from datetime import datetime as dt
-from FomoSapiensCryptoDipHunter.utils.logging import logger
-from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.logging import logger
+from fomo_sapiens.utils.exception_handlers import exception_handler
 from analysis.utils.calc_utils import calculate_ta_indicators, calculate_ta_averages, check_ta_trend
 from analysis.utils.fetch_utils import fetch_data, calculate_lookback_extended
 from hunter.utils.sell_signals import check_classic_ta_sell_signal
 from hunter.utils.buy_signals import check_classic_ta_buy_signal
 from report_utils import generate_hunter_signal_email
 from hunter.models import TechnicalAnalysisHunter
-from FomoSapiensCryptoDipHunter.utils.email_utils import send_email
+from fomo_sapiens.utils.email_utils import send_email
 
 def run_all_1h_hunters():
     run_selected_hunters('1h`')

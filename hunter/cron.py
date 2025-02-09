@@ -1,5 +1,5 @@
 from django_cron import CronJobBase, Schedule
-from FomoSapiensCryptoDipHunter.utils.logs_utils import (
+from fomo_sapiens.utils.logs_utils import (
     send_daily_logs,
     clear_logs
 )

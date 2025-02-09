@@ -1,6 +1,6 @@
 
 from datetime import datetime as dt
-from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.exception_handlers import exception_handler
 from hunter_logic import get_latest_and_previus_data
 
 @exception_handler
