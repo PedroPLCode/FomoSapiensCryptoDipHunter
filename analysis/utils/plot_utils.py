@@ -5,19 +5,19 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-from zen.utils.logging import logger
-from zen.utils.exception_handlers import exception_handler
+from FomoSapiensCryptoDipHunter.utils.logging import logger
+from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
 import plotly.graph_objects as go
 import plotly.io as pio
 import base64
 from io import BytesIO
 
-@exception_handler()
+@exception_handler(default_return=None)
 def plot_selected_ta_indicators(df, settings):
     """
     Generates an interactive Plotly chart with selected technical analysis indicators.
     """
-    indicators = settings.selected_plot_indicators
+    indicators = prepare_selected_indicators_list(settings.selected_plot_indicators)
     validate_indicators(df, indicators)
     
     if df.empty:
@@ -30,130 +30,110 @@ def plot_selected_ta_indicators(df, settings):
         df = df[df['open_time'] >= cutoff_time]
     
     fig = go.Figure()
+    add_price_traces(fig, df, indicators)
+    add_ta_traces(fig, df, indicators, settings)
+    format_chart(fig)
     
+    return generate_plot_image(fig)
+
+@exception_handler(default_return=False)
+def add_price_traces(fig, df, indicators):
+    """Adds price-related traces to the figure."""
     if 'close' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['close'], name='Close Price', line=dict(color='blue')))
-    
     if 'ema' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ema_fast'], name='EMA Fast', line=dict(color='green')))
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ema_slow'], name='EMA Slow', line=dict(color='red')))
-    
     if 'ma_50' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ma_50'], name='MA50', line=dict(color='orange')))
     if 'ma_200' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ma_200'], name='MA200', line=dict(color='purple')))
-    
-    if 'macd' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['macd'], name='MACD', line=dict(color='blue')))
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['macd_signal'], name='MACD Signal', line=dict(color='orange')))
-        fig.add_trace(go.Bar(x=df['open_time'], y=df['macd_histogram'], name='MACD Histogram', marker_color='grey'))
-    
-    if 'boll' in indicators:
-        fig.add_trace(go.Scatter(
-            x=df['open_time'], 
-            y=df['upper_band'], 
-            name='Upper Band', 
-            line=dict(color='green')
-        ))
-        
-        fig.add_trace(go.Scatter(
-            x=df['open_time'], 
-            y=df['lower_band'], 
-            name='Lower Band', 
-            line=dict(color='red'), 
-            fill='tonexty',  # Wypełnienie między liniami
-            fillcolor='rgba(128, 128, 128, 0.2)'  # Kolor wypełnienia z przezroczystością
-        ))
 
-    if 'rsi' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['rsi'], name='RSI', line=dict(color='purple')))
-        fig.add_shape(type="line",
-                  x0=df['open_time'].min(), x1=df['open_time'].max(),
-                  y0=settings.rsi_sell, y1=settings.rsi_sell,
-                  line=dict(color="red", width=2, dash="dash"),
-                  name="RSI Max")
 
-        fig.add_shape(type="line",
-                    x0=df['open_time'].min(), x1=df['open_time'].max(),
-                    y0=settings.rsi_buy, y1=settings.rsi_buy,
-                    line=dict(color="green", width=2, dash="dash"),
-                    name="RSI Min")
-        
-    if 'atr' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['atr'], name='ATR', line=dict(color='blue')))
+@exception_handler(default_return=False)
+def add_ta_traces(fig, df, indicators, settings):
+    """Adds technical analysis indicator traces to the figure."""
+    ta_mappings = {
+        'macd': [('macd', 'blue'), ('macd_signal', 'orange'), ('macd_histogram', 'grey', 'lines')],
+        'boll': [('upper_band', 'green'), ('lower_band', 'red', None, 'rgba(128, 128, 128, 0.2)')],
+        'rsi': [('rsi', 'purple', None, None, [(settings.rsi_sell, 'red'), (settings.rsi_buy, 'green')])],
+        'cci': [('cci', 'brown', None, None, [(settings.cci_sell, 'red'), (settings.cci_buy, 'green')])],
+        'mfi': [('mfi', 'orange', None, None, [(settings.mfi_sell, 'red'), (settings.mfi_buy, 'green')])],
+        'stoch': [('stoch_k', 'blue'), ('stoch_d', 'orange')],
+        'stoch_rsi': [('stoch_rsi_k', 'blue'), ('stoch_rsi_d', 'orange')],
+        'psar': [('psar', 'red', 'markers')],
+        'vwap': [('vwap', 'red', 'markers')],
+        'adx': [('adx', 'purple')],
+        'atr': [('atr', 'purple')],
+        'di': [('plus_di', 'green'), ('minus_di', 'red')]
+    }
     
-    if 'cci' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['cci'], name='CCI', line=dict(color='brown')))
-        fig.add_shape(type="line",
-                x0=df['open_time'].min(), x1=df['open_time'].max(),
-                y0=settings.cci_sell, y1=settings.cci_sell,
-                line=dict(color="red", width=2, dash="dash"),
-                name="cci Max")
+    for indicator, traces in ta_mappings.items():
+        if indicator in indicators:
+            for trace in traces:
+                add_trace(fig, df, *trace)
 
-        fig.add_shape(type="line",
-                    x0=df['open_time'].min(), x1=df['open_time'].max(),
-                    y0=settings.cci_buy, y1=settings.cci_buy,
-                    line=dict(color="green", width=2, dash="dash"),
-                    name="cci Min")
-    if 'mfi' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['mfi'], name='MFI', line=dict(color='orange')))
-        fig.add_shape(type="line",
-                  x0=df['open_time'].min(), x1=df['open_time'].max(),
-                  y0=settings.mfi_sell, y1=settings.mfi_sell,
-                  line=dict(color="red", width=2, dash="dash"),
-                  name="mfi Max")
 
-        fig.add_shape(type="line",
-                    x0=df['open_time'].min(), x1=df['open_time'].max(),
-                    y0=settings.mfi_buy, y1=settings.mfi_buy,
-                    line=dict(color="green", width=2, dash="dash"),
-                    name="mfi Min")
-    if 'stoch' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['stoch_k'], name='Stoch %K', line=dict(color='blue')))
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['stoch_d'], name='Stoch %D', line=dict(color='orange')))
+@exception_handler(default_return=False)
+def add_trace(fig, df, column, color, mode='lines', fillcolor=None, horizontal_lines=None):
+    """Adds a single trace to the figure."""
+    if column in df:
+        fig.add_trace(go.Scatter(x=df['open_time'], y=df[column], name=column.upper(), line=dict(color=color), mode=mode))
     
-    if 'stoch_rsi' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['stoch_rsi_k'], name='Stoch RSI %K', line=dict(color='blue')))
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['stoch_rsi_d'], name='Stoch RSI %D', line=dict(color='orange')))
+    if fillcolor:
+        fig.add_trace(go.Scatter(x=df['open_time'], y=df[column], fill='tonexty', fillcolor=fillcolor, line=dict(color=color)))
     
-    if 'psar' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['psar'], name='PSAR', mode='markers', marker=dict(color='red')))
-    
-    if 'vwap' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['vwap'], name='VWAP', mode='markers', marker=dict(color='red')))
-    
-    if 'adx' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['adx'], name='ADX', line=dict(color='purple')))
-    
-    if 'di' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['plus_di'], name='+DI', line=dict(color='green')))
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['minus_di'], name='-DI', line=dict(color='red')))
-    
+    if horizontal_lines:
+        for y_val, h_color in horizontal_lines:
+            fig.add_shape(type="line", x0=df['open_time'].min(), x1=df['open_time'].max(), y0=y_val, y1=y_val,
+                          line=dict(color=h_color, width=2, dash="dash"))
+
+
+@exception_handler(default_return=False)
+def format_chart(fig):
+    """Applies formatting to the figure."""
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
-        title="",
-        xaxis_title="",
-        yaxis_title="",
-        showlegend=False,
-        #autosize=True,
-        width=1000,  # Szerokość wykresu
-        height=800,  # Wysokość wykresu
-        xaxis_showgrid=False,
-        yaxis_showgrid=False,
-        xaxis_visible=False,
-        yaxis_visible=False,
+        width=1000,
+        height=800,
+        xaxis_showgrid=True,
+        yaxis_showgrid=True,
+        xaxis_visible=True,
+        yaxis_visible=True,
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=1.1,
+            xanchor="center",
+            x=0.5,
+            font=dict(
+                size=26
+            )
+        ),
+        xaxis=dict(
+            tickfont=dict(
+                size=26
+            )
+        ),
+        yaxis=dict(
+            tickfont=dict(
+                size=26
+            )
+        )
     )
-    
+
+
+@exception_handler(default_return=None)
+def generate_plot_image(fig):
+    """Generates a base64-encoded PNG image from the figure."""
     img = BytesIO()
     pio.write_image(fig, img, format='png')
     img.seek(0)
-    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
-    
-    return plot_url
+    return base64.b64encode(img.getvalue()).decode('utf8')
 
 
-@exception_handler()
+@exception_handler(default_return=False)
 def parse_lookback(lookback):
     """
     Parses a lookback period string (e.g., '10d', '3h', '5m') into a timedelta object.
@@ -185,7 +165,7 @@ def parse_lookback(lookback):
         raise TypeError("Lookback must be a string in the format 'Xd', 'Xh', or 'Xm'.")
 
 
-@exception_handler()
+@exception_handler(default_return=False)
 def validate_indicators(df, indicators):
     """
     Validates that the required columns for the selected indicators are present in the DataFrame.
@@ -209,7 +189,7 @@ def validate_indicators(df, indicators):
         'cci': ['cci'],
         'mfi': ['mfi'],
         'stoch': ['stoch_k', 'stoch_d'],
-        'st_rsi': ['stoch_rsi_k', 'stoch_rsi_d'],
+        'stoch_rsi': ['stoch_rsi_k', 'stoch_rsi_d'],
         'psar': ['psar'],
         'vwap': ['vwap'],
         'adx': ['adx'],
@@ -223,3 +203,7 @@ def validate_indicators(df, indicators):
                 raise ValueError(f"Missing required columns for indicator {indicator}: {', '.join(missing_columns)}")
         else:
             raise ValueError(f"Unknown indicator: {indicator}")
+        
+        
+def prepare_selected_indicators_list(indicators_list):
+    return [indicator.strip() for indicator in indicators_list.split(',')]

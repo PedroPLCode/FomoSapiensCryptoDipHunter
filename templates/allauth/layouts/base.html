@@ -15,73 +15,75 @@
     </head>
     <body>
         {% block body %}
-            <div class="container d-flex flex-column justify-content-center align-items-center">
-                <ul>
-                    {% if user.is_authenticated %}
+            <div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center bg-secondary">
+                <div class="container d-flex flex-column justify-content-center align-items-center">
+                    <ul class="d-flex flex-column justify-content-center align-items-center">
+                        {% if user.is_authenticated %}
 
-                    <h4>User account panel</h4>
-                    <p>Username: {{ user.username }}</p>
-                    <p>Email: {{ user.email }}</p>
-                    <p>Superuser: {{ user.is_superuser }}</p>
-                    <p>Last login: {{ user.last_login }}</p>
-                    <p>Date joined: {{ user.date_joined }}</p>
+                        <h4 class="text-center text-white">User account panel</h4>
+                        <p class="text-center text-white p-0 m-0">Username: {{ user.username }}</p>
+                        <p class="text-center text-white p-0 m-0">Email: {{ user.email }}</p>
+                        <p class="text-center text-white p-0 m-0">Superuser: {{ user.is_superuser }}</p>
+                        <p class="text-center text-white p-0 m-0">Last login: {{ user.last_login }}</p>
+                        <p class="text-center text-white p-0 m-0 mb-2">Date joined: {{ user.date_joined }}</p>
 
-                        {% url 'account_email' as email_url_ %}
-                        {% if email_url_ %}
-                            <li>
-                                <a href="{{ email_url_ }}">{% trans "Change Email" %}</a>
-                            </li>
+                            {% url 'account_email' as email_url_ %}
+                            {% if email_url_ %}
+                                <li>
+                                    <a class="text-center text-white p-0 m-0" href="{{ email_url_ }}">{% trans "Change Email" %}</a>
+                                </li>
+                            {% endif %}
+                            {% url 'account_change_password' as change_password_url_ %}
+                            {% if change_password_url_ %}
+                                <li>
+                                    <a class="text-center text-white p-0 m-0" href="{{ change_password_url_ }}">{% trans "Change Password" %}</a>
+                                </li>
+                            {% endif %}
+                            {% url 'socialaccount_connections' as connections_url_ %}
+                            {% url 'mfa_index' as mfa_url_ %}
+                            {% if mfa_url_ %}
+                                <li>
+                                    <a href="{{ mfa_url_ }}">{% trans "Two-Factor Authentication" %}</a>
+                                </li>
+                            {% endif %}
+                            {% url 'usersessions_list' as usersessions_list_url_ %}
+                            {% if usersessions_list_url_ %}
+                                <li>
+                                    <a class="text-center text-white p-0 m-0" href="{{ usersessions_list_url_ }}">{% trans "Sessions" %}</a>
+                                </li>
+                            {% endif %}
+                            {% url 'account_logout' as logout_url_ %}
+                            {% if logout_url_ %}
+                                <li>
+                                    <a class="text-center text-white p-0 m-0" href="{{ logout_url_ }}">{% trans "Sign Out" %}</a>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            {% url 'account_login' as login_url_ %}
+                            {% if login_url_ %}
+                                <li>
+                                    <a class="text-center text-white p-0 m-0" href="{{ login_url_ }}">{% trans "Sign In" %}</a>
+                                </li>
+                            {% endif %}
+                            {% url 'account_signup' as signup_url_ %}
+                            {% if signup_url_ %}
+                                <li>
+                                    <a class="text-center text-white p-0 m-0" href="{{ signup_url_ }}">{% trans "Sign Up" %}</a>
+                                </li>
+                            {% endif %}
                         {% endif %}
-                        {% url 'account_change_password' as change_password_url_ %}
-                        {% if change_password_url_ %}
-                            <li>
-                                <a href="{{ change_password_url_ }}">{% trans "Change Password" %}</a>
-                            </li>
-                        {% endif %}
-                        {% url 'socialaccount_connections' as connections_url_ %}
-                        {% url 'mfa_index' as mfa_url_ %}
-                        {% if mfa_url_ %}
-                            <li>
-                                <a href="{{ mfa_url_ }}">{% trans "Two-Factor Authentication" %}</a>
-                            </li>
-                        {% endif %}
-                        {% url 'usersessions_list' as usersessions_list_url_ %}
-                        {% if usersessions_list_url_ %}
-                            <li>
-                                <a href="{{ usersessions_list_url_ }}">{% trans "Sessions" %}</a>
-                            </li>
-                        {% endif %}
-                        {% url 'account_logout' as logout_url_ %}
-                        {% if logout_url_ %}
-                            <li>
-                                <a href="{{ logout_url_ }}">{% trans "Sign Out" %}</a>
-                            </li>
-                        {% endif %}
-                    {% else %}
-                        {% url 'account_login' as login_url_ %}
-                        {% if login_url_ %}
-                            <li>
-                                <a href="{{ login_url_ }}">{% trans "Sign In" %}</a>
-                            </li>
-                        {% endif %}
-                        {% url 'account_signup' as signup_url_ %}
-                        {% if signup_url_ %}
-                            <li>
-                                <a href="{{ signup_url_ }}">{% trans "Sign Up" %}</a>
-                            </li>
-                        {% endif %}
-                    {% endif %}
-                </ul>
-            </div>
+                    </ul>
+                </div>
 
-            <div class="container d-flex flex-column justify-content-center align-items-center">
-            {% block content %}
-            {% endblock content %}
+                <div class="container text-center text-white d-flex flex-column justify-content-center align-items-center">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+
+            {% load socialaccount %}
+
         </div>
 
-        {% load socialaccount %}
-
-        
         {% endblock body %}
         {% block extra_body %}
         {% endblock extra_body %}

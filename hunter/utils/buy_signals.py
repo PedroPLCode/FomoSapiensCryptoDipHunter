@@ -1,5 +1,6 @@
-from zen.utils.logging import logger
-from zen.utils.exception_handlers import exception_handler
+from FomoSapiensCryptoDipHunter.utils.logging import logger
+from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
+from hunter_logic import get_latest_and_previus_data
 
 @exception_handler(default_return=False)
 def trend_buy_signal(trend, hunter_settings):
@@ -467,8 +468,7 @@ def check_classic_ta_buy_signal(
     if df is None or df.empty():
         return False
     
-    latest_data = df.iloc[-1]
-    previous_data = df.iloc[-2]
+    latest_data, previous_data = get_latest_and_previus_data(df)
     
     if trend == 'downtrend':
         return False

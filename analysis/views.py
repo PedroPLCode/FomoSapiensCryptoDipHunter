@@ -3,13 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.contrib import messages
+from io import StringIO
 import pandas as pd
 from .forms import TechnicalAnalysisSettingsForm
 from .models import User, TechnicalAnalysisSettings
-from zen.utils.logging import logger
+from FomoSapiensCryptoDipHunter.utils.logging import logger
 from .utils.fetch_utils import fetch_and_save_df
 from .utils.calc_utils import calculate_ta_indicators
-from .utils.plot_utils import plot_selected_ta_indicators
+from .utils.plot_utils import plot_selected_ta_indicators, prepare_selected_indicators_list
 
 @login_required
 def update_technical_analysis_settings(request):
@@ -46,7 +47,7 @@ def show_technical_analysis(request):
         user_ta_settings.selected_plot_indicators = ','.join(selected_indicators)
         user_ta_settings.save()
 
-    df_loaded = pd.read_json(user_ta_settings.df)
+    df_loaded = pd.read_json(StringIO(user_ta_settings.df))
     if df_loaded is None or df_loaded.empty:
         return render(request, 'analysis/show.html', {'error': 'Nie udało się pobrać danych'})
 
@@ -56,9 +57,10 @@ def show_technical_analysis(request):
 
     latest_data = df_calculated.iloc[-1].to_dict()
     previous_data = df_calculated.iloc[-2].to_dict()
-    selected_indicators_list = user_ta_settings.selected_plot_indicators.split(',')
+    
+    selected_indicators_list = prepare_selected_indicators_list(user_ta_settings.selected_plot_indicators)
     plot_url = plot_selected_ta_indicators(df_calculated, user_ta_settings)
-
+    
     return render(request, 'analysis/show_analysis.html', {
         'user_ta_settings': user_ta_settings,
         'latest_data': latest_data,

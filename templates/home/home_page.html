@@ -1,16 +1,31 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-  <h4>home page</h4>
-  <p>server_time: {{ server_time.serverTime }}</p>
-  <p>system_status: {{ system_status.status }} {{ system_status.msg }}</p>
-  <p>User Agent: {{ user_agent }}</p>
-  <p>System Info: {{ system_info }}</p>
-  <p>Uptime: {{ system_uptime }}</p>
-  <p>Python Version: {{ python_version }}</p>
-  <p>Flask Version: {{ flask_version }}</p>
-  <p>NumPy Version: {{ numpy_version }}</p>
-  <p>Pandas Version: {{ pandas_version }}</p>
-  <p>DB Engine: {{ db_engine }}</p>
+
+  <div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center bg-secondary">
+    
+    <h4 class="text-center text-white">FomoSapiensCryptoDipHunter</h4>
+    <h5 class="text-center text-white">
+      <a href="{% url 'account_login' %}" class="text-white">Sign In</a> to enjoy 
+      <a href="{% url 'show_technical_analysis' %}" class="text-white">analysis</a> and 
+      <a href="/hunter/" class="text-white">hunters</a>
+    </h5>
+
+    <p class="text-center text-white p-0 m-0">Current Time: {{ date_and_time }}</p>
+    <p class="text-center text-white p-0 m-0">Binance Server time: {{ server_time.serverTime }}</p>
+    <p class="text-center text-white p-0 m-0">Binance System status: {{ system_status.status }} {{ system_status.msg }}</p>
+    <p class="text-center text-white p-0 m-0">User Agent: {{ user_agent }}</p>
+
+    {% if user.is_superuser %}
+      <p class="text-center text-white p-0 m-0">System Info: {{ system_info }}</p>
+      <p class="text-center text-white p-0 m-0">System Uptime: {{ system_uptime }}</p>
+      <p class="text-center text-white p-0 m-0">Python Version: {{ python_version }}</p>
+      <p class="text-center text-white p-0 m-0">Django Version: {{ django_version }}</p>
+      <p class="text-center text-white p-0 m-0">NumPy Version: {{ numpy_version }}</p>
+      <p class="text-center text-white p-0 m-0">Pandas Version: {{ pandas_version }}</p>
+      <p class="text-center text-white p-0 m-0">DB Engine: {{ db_engine }}</p>
+    {% endif %}
+
+  </div>
 
 {% endblock %}

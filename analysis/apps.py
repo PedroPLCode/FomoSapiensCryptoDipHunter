@@ -6,4 +6,4 @@ class AnalysisConfig(AppConfig):
     name = 'analysis'
 
     def ready(self):
-        import zen.utils.signals  # Importujemy sygnały
+        import FomoSapiensCryptoDipHunter.utils.signals  # Importujemy sygnały

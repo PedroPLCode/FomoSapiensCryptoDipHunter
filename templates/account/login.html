@@ -5,12 +5,12 @@
     {% trans "Sign In" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
-        {% trans "Sign In" %}
-    {% endelement %}
+<h4 class="text-center">
+    {% trans "Sign In" %}
+</h4>
     {% if not SOCIALACCOUNT_ONLY %}
         {% setvar link %}
-            <a href="{{ signup_url }}">
+            <a class="text-white" href="{{ signup_url }}">
             {% endsetvar %}
             {% setvar end_link %}
             </a>
@@ -27,9 +27,10 @@
                 {{ redirect_field }}
             {% endslot %}
             {% slot actions %}
-                {% element button type="submit" tags="prominent,login" %}
+                {% element button type="submit" tags="prominent,login" class="btn btn-primary" %}
                     {% trans "Sign In" %}
                 {% endelement %}
+                <a class="text-white mt-2" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
             {% endslot %}
         {% endelement %}
     {% endif %}
@@ -38,12 +39,12 @@
         {% endelement %}
         {% element button_group vertical=True %}
             {% if PASSKEY_LOGIN_ENABLED %}
-                {% element button type="submit" form="mfa_login" id="passkey_login" tags="prominent,login,outline,primary" %}
+                {% element button type="submit" form="mfa_login" id="passkey_login" tags="prominent,login,outline,primary" class="btn btn-primary" %}
                     {% trans "Sign in with a passkey" %}
                 {% endelement %}
             {% endif %}
             {% if LOGIN_BY_CODE_ENABLED %}
-                {% element button href=request_login_code_url tags="prominent,login,outline,primary" %}
+                {% element button href=request_login_code_url tags="prominent,login,outline,primary" class="btn btn-primary"  %}
                     {% trans "Mail me a sign-in code" %}
                 {% endelement %}
             {% endif %}
@@ -56,6 +57,6 @@
 {% block extra_body %}
     {{ block.super }}
     {% if PASSKEY_LOGIN_ENABLED %}
-        {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
+        {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" class="btn btn-primary" %}
     {% endif %}
 {% endblock %}

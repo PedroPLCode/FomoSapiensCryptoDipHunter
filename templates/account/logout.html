@@ -4,9 +4,9 @@
     {% trans "Sign Out" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
-        {% trans "Sign Out" %}
-    {% endelement %}
+<h4 class="text-center">
+    {% trans "Sign Out" %}
+</h4>
     {% element p %}
         {% trans 'Are you sure you want to sign out?' %}
     {% endelement %}
@@ -17,7 +17,7 @@
             {{ redirect_field }}
         {% endslot %}
         {% slot actions %}
-            {% element button type="submit" %}
+            {% element button type="submit" class="btn btn-danger" %}
                 {% trans 'Sign Out' %}
             {% endelement %}
         {% endslot %}

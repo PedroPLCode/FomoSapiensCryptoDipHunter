@@ -1,12 +1,13 @@
 from datetime import datetime as dt
-from zen.utils.logging import logger
-from zen.utils.exception_handlers import exception_handler
+from FomoSapiensCryptoDipHunter.utils.logging import logger
+from FomoSapiensCryptoDipHunter.utils.exception_handlers import exception_handler
 from analysis.utils.calc_utils import calculate_ta_indicators, calculate_ta_averages, check_ta_trend
 from analysis.utils.fetch_utils import fetch_data, calculate_lookback_extended
 from hunter.utils.sell_signals import check_classic_ta_sell_signal
 from hunter.utils.buy_signals import check_classic_ta_buy_signal
+from report_utils import generate_hunter_signal_email
 from hunter.models import TechnicalAnalysisHunter
-from zen.utils.email_utils import send_email
+from FomoSapiensCryptoDipHunter.utils.email_utils import send_email
 
 def run_all_1h_hunters():
     run_selected_hunters('1h`')
@@ -59,8 +60,8 @@ def run_single_hunter_logic(hunter):
         symbol = hunter.symbol
         interval = hunter.interval
         lookback_period = hunter.lookback_period
+        signal = 'no'
         
-        logger.info(f'Hunter {hunter.id} {hunter.strategy} Fetching data for {symbol} with interval {interval} and lookback {lookback_period}')
         df_fetched = fetch_data(
             symbol=symbol, 
             interval=interval, 
@@ -99,23 +100,17 @@ def run_single_hunter_logic(hunter):
             averages, 
             )
         
-        if buy_singal: 
-            send_email(hunter.user.email, 'subject', 'tresc')
-        if sell_singal:
-            send_email(hunter.user.email, 'subject', 'tresc')
+        if buy_singal or sell_singal: 
+            signal = 'buy' if buy_singal else 'sell'
+            email = hunter.user.email
+            subject, content = generate_hunter_signal_email(signal, hunter, df_calculated, trend, averages)
+            send_email(email, subject, content)
             
+        logger.info(f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.period} {hunter.comment} {signal.upper()} signal.')
             
-def generate_hunter_email(signal, hunter):
-    now = dt.now()
-    formatted_now = now.strftime('%Y-%m-%d %H:%M:%S')
-    subject = f'Hunter {hunter.id} {signal.upper()} signal'
-    tresc = (f'Hunter {hunter.id} interval {hunter.interval} lookback {hunter.lookback}\n'
-             f'Comment: {hunter.comment}\n'
-             f'Recent {signal.upper()} signal\n'
-             f'{formatted_now}\n\n'
-             f'Hunter settings:\n'
-             f'{hunter.trend_signals} {signal.upper()}\n'
-             f'Hunter {hunter.price_signals} {signal.upper()}\n'
-             f'Hunter {hunter.rsi_signals} {signal.rsi_divergence_signals} signal\n'
-             f'Hunter {hunter.id} {signal.upper()} signal\n'
-    )
+
+@exception_handler(default_return=(None, None))
+def get_latest_and_previus_data(df):
+    latest_data = df.iloc[-1]
+    previous_data = df.iloc[-2]
+    return latest_data, previous_data
