@@ -28,5 +28,5 @@ urlpatterns = [
 ]
 
 handler404 = "fomo_sapiens.views.custom_404_view"
-cron_manager = CronJobManager()
-cron_manager.run()
+#cron_manager = CronJobManager()
+#cron_manager.run()

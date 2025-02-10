@@ -7,6 +7,7 @@ from io import BytesIO
 import base64
 from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
+from analysis.utils.calc_utils import is_df_valid
 import plotly.graph_objects as go
 import plotly.io as pio
 import base64
@@ -20,8 +21,7 @@ def plot_selected_ta_indicators(df, settings):
     indicators = prepare_selected_indicators_list(settings.selected_plot_indicators)
     validate_indicators(df, indicators)
     
-    if df.empty:
-        print("DataFrame is empty, nothing to plot.")
+    if not is_df_valid(df):
         return None
     
     if settings.lookback is not None:

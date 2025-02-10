@@ -1,6 +1,7 @@
 from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from hunter_logic import get_latest_and_previus_data
+from analysis.utils.calc_utils import is_df_valid
 
 @exception_handler(default_return=False)
 def trend_sell_signal(trend, hunter_settings):
@@ -445,7 +446,7 @@ def check_classic_ta_sell_signal(
 
     Sends an email notification to the admin in case of an error.
     """
-    if df is None or df.empty():
+    if not is_df_valid(df):
         return False
     
     latest_data, previous_data = get_latest_and_previus_data(df)

@@ -1,4 +1,3 @@
-
 from datetime import datetime as dt
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from hunter_logic import get_latest_and_previus_data

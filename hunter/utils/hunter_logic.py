@@ -8,24 +8,10 @@ from hunter.utils.buy_signals import check_classic_ta_buy_signal
 from report_utils import generate_hunter_signal_email
 from hunter.models import TechnicalAnalysisHunter
 from fomo_sapiens.utils.email_utils import send_email
-
-def run_all_1h_hunters():
-    run_selected_hunters('1h`')
-    logger.info('1h interval hunters run completed.')
-    
-    
-def run_all_4h_hunters():
-    run_selected_hunters('4h')
-    logger.info('4h interval hunters run completed.')
-    
-    
-def run_all_1d_hunters():
-    run_selected_hunters('1d')
-    logger.info('1d interval hunters run completed.')
-    
+from analysis.utils.calc_utils import is_df_valid
 
 @exception_handler()
-def run_selected_hunters(interval):
+def run_selected_interval_hunters(interval):
     all_selected_hunters = TechnicalAnalysisHunter.query.filter_by(interval=interval).all()
     
     if not all_selected_hunters:
@@ -59,7 +45,6 @@ def run_single_hunter_logic(hunter):
         
         symbol = hunter.symbol
         interval = hunter.interval
-        lookback_period = hunter.lookback_period
         signal = 'no'
         
         df_fetched = fetch_data(
@@ -68,7 +53,7 @@ def run_single_hunter_logic(hunter):
             lookback=calculate_lookback_extended(hunter)
             )
         
-        if df_fetched is None:
+        if not is_df_valid(df_fetched):
             return
         
         df_calculated = calculate_ta_indicators(

@@ -3,6 +3,27 @@ import pandas as pd
 from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
 
+@exception_handler()
+def is_df_valid(df):
+    """
+    Checks if a DataFrame is valid for use in the bot's trading logic.
+
+    This function validates that the provided DataFrame is not empty, has at least two rows, 
+    and is not None. If the DataFrame fails these conditions, it logs a message and returns False.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to validate, containing market data.
+        bot_id (int): The ID of the bot, used for logging purposes.
+
+    Returns:
+        bool: True if the DataFrame is valid, False otherwise.
+    """
+    if df is None or df.empty:
+        logger.error(f'DataFrame is empty.')
+        return False
+    return True
+
+
 @exception_handler(default_return=False)
 def handle_ta_df_initial_praparation(df, user_settings):
     """
@@ -410,8 +431,7 @@ def calculate_ta_indicators(df, user_settings):
     Returns:
         pandas.DataFrame: The updated DataFrame with calculated technical indicators, or False if an error occurs.
     """
-    if df.empty:
-        logger.error('DataFrame is empty, cannot calculate indicators.')
+    if not is_df_valid(df):
         return df
 
     handle_ta_df_initial_praparation(df, user_settings)

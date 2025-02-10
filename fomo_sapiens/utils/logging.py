@@ -1,6 +1,6 @@
 import logging
 
-app_log_filename = 'app.log'
+app_log_filename = 'django.log'
 gunicorn_log_filename = 'gunicorn.log'
 logs = [app_log_filename, gunicorn_log_filename]
 
