@@ -29,18 +29,25 @@ def update_technical_analysis_settings(request):
     return render(request, 'analysis/change_settings.html', {'form': form})
 
 
+@login_required
+def refresh_data(request):
+    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+    fetch_and_save_df(user_ta_settings)
+    messages.success(request, 'Data refreshed')
+    return redirect('show_technical_analysis')
+
+
 def show_technical_analysis(request):
     """Widok analizy technicznej dostępny zarówno dla gości, jak i dla zalogowanych użytkowników."""
 
     if request.user.is_authenticated:
-        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+            user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
     else:
-        guest_user = User.objects.get(username='guest')
+        guest_user, created = User.objects.get_or_create(username='guest')
         user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=guest_user)
-        fetch_and_save_df(user_ta_settings)
 
-    indicators_list = ['close', 'rsi', 'cci', 'mfi', 'macd', 'ema', 'boll', 'stoch', 'stoch_rsi', 
-                       'ma_50', 'ma_200', 'adx', 'atr', 'psar', 'vwap', 'di']
+    indicators_list = ['close', 'rsi', 'cci', 'mfi', 'macd', 'ema', 'boll', 'stoch', 'stoch-rsi', 
+                       'ma50', 'ma200', 'adx', 'atr', 'psar', 'vwap', 'di']
 
     if request.method == 'POST':
         selected_indicators = request.POST.getlist('indicators')

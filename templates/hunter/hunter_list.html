@@ -28,6 +28,15 @@
             <p class="text-center">Comment: {{ hunter.comment }}</p>
             <p class="text-center">Running: <span class="{% if hunter.running %}text-success{% else %}text-danger{% endif %}">{{ hunter.running }}</span></p>
             
+            {% if hunter.plot_url %}
+                <div class="w-100 m-0 p-0 text-center">
+                    <p>df fetched: {{ hunter.df_last_fetch_time }}</p>
+                    <img src="data:image/png;base64,{{ hunter.plot_url }}" alt="Technical Analysis Plot" class="img-fluid rounded-3 p-0 mb-3" style="max-height: 800px;">
+                </div>
+            {% else %}
+                <p class="text-center">No data available for Technical Analysis Plot.</p>
+            {% endif %}
+            
             {% if hunter.price_signals %}
               <p class="text-center pt-3 border-top">Price signals: <span class="{% if hunter.price_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.price_signals }}</span></p>
               <p class="text-center">Avg close period: {{ hunter.avg_close_period }}</p>
@@ -140,10 +149,14 @@
         <p class="text-center">Avg PSAR period: {{ hunter.avg_psar_period }}</p>
       {% endif %}
 
-      {% if hunter.ma50_signals or hunter.ma200_signals or hunter.ma_cross_signals%}
+      {% if hunter.ma50_signals or hunter.ma200_signals or hunter.ma_cross_signals %}
         <p class="text-center pt-3 border-top">MA50 signals: <span class="{% if hunter.ma50_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma50_signals }}</span></p>
         <p class="text-center">MA200 signals: <span class="{% if hunter.ma200_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma200_signals }}</span></p>
         <p class="text-center">MA cross signals: <span class="{% if hunter.ma_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma_cross_signals }}</span></p>
+      {% endif %}
+
+      {% if hunter.note != "" %}
+        <p class="text-center pt-3 border-top">Note:<br>{{ hunter.note }}</p>
       {% endif %}
 
             <a href="{% url 'hunter:hunter_edit' hunter.id %}" class="w-100 btn btn-primary mb-3">Change</a>

@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime as dt
+from analysis.models import default_df, default_plot_indicators
 
 class TechnicalAnalysisHunter(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -9,7 +11,8 @@ class TechnicalAnalysisHunter(models.Model):
     symbol = models.CharField(max_length=10, default='BTCUSDC')
     interval = models.CharField(max_length=10, default='1h')
     lookback = models.CharField(max_length=10, default='9d')
-    comment = models.CharField(max_length=1024, default="comment", blank=True, null=True)
+    comment = models.CharField(max_length=1024, default="", blank=True, null=True)
+    note = models.CharField(max_length=4096, default="", blank=True, null=True)
     running = models.BooleanField(default=False)
 
     trend_signals = models.BooleanField(default=False)
@@ -87,6 +90,9 @@ class TechnicalAnalysisHunter(models.Model):
     stoch_buy = models.IntegerField(default=20)
     stoch_sell = models.IntegerField(default=80)
     atr_buy_threshold = models.FloatField(default=0.005)
+    
+    df = models.JSONField(default=default_df)
+    df_last_fetch_time = models.DateTimeField(default=dt.now)
 
     def __str__(self):
         return f"Ustawienia analizy dla {self.user.username}"

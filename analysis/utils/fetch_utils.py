@@ -137,13 +137,13 @@ def fetch_server_time():
 
 
 @exception_handler()
-def fetch_and_save_df(user_ta_settings):
+def fetch_and_save_df(settings):
     from datetime import datetime as dt 
-    df_fetched = fetch_data(symbol=user_ta_settings.symbol, interval=user_ta_settings.interval, lookback=calculate_lookback_extended(user_ta_settings))
+    df_fetched = fetch_data(symbol=settings.symbol, interval=settings.interval, lookback=calculate_lookback_extended(settings))
     json_data = df_fetched.to_json(orient='records')
-    user_ta_settings.df = json_data
-    user_ta_settings.df_last_fetch_time = dt.now()
-    user_ta_settings.save()
+    settings.df = json_data
+    settings.df_last_fetch_time = dt.now()
+    settings.save()
     
     
 @exception_handler()

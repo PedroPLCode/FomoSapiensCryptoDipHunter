@@ -1,11 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from io import StringIO
+import pandas as pd
 from .forms import TechnicalAnalysisHunterForm
 from .models import TechnicalAnalysisHunter
 
 @login_required
 def hunter_list(request):
+    from analysis.utils.calc_utils import calculate_ta_indicators
+    from analysis.utils.plot_utils import plot_selected_ta_indicators, prepare_selected_indicators_list
+    from analysis.utils.plot_utils import get_bot_specific_plot_indicators
     hunters = TechnicalAnalysisHunter.objects.filter(user=request.user)
+    
+    for hunter in hunters:
+        df_loaded = pd.read_json(StringIO(hunter.df))
+        df_calculated = calculate_ta_indicators(df_loaded, hunter)
+    
+        plot_url = plot_selected_ta_indicators(df_calculated, hunter)
+        hunter.plot_url = plot_url
+    
     return render(request, 'hunter/hunter_list.html', {'hunters': hunters})
 
 

@@ -304,7 +304,7 @@ def calculate_ta_macd(df, user_settings):
         bool: False if not enough data points are available or if an error occurs.
     """
     if len(df) < user_settings.macd_timeperiod * 2:
-        logger.trade('Not enough data points for MACD calculation.')
+        logger.info('Not enough data points for MACD calculation.')
         return df
     
     df['macd'], df['macd_signal'], _ = talib.MACD(
@@ -570,11 +570,8 @@ def check_ta_trend(df, hunter_settings):
     )
 
     if uptrend:
-        logger.trade(f"Bot {hunter_settings.id} {hunter_settings.strategy} have BULLISH UPTREND")
         return 'uptrend'
     elif downtrend:
-        logger.trade(f"Bot {hunter_settings.id} {hunter_settings.strategy} have BEARISH DOWNTREND")
         return 'downtrend'
     elif horizontal:
-        logger.trade(f"Bot {hunter_settings.id} {hunter_settings.strategy} have HORIZONTAL TREND")
         return 'horizontal'

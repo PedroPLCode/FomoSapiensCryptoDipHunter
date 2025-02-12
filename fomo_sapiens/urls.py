@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from fomo_sapiens.views import home_page, custom_404_view
-from django_cron import CronJobManager
 
 urlpatterns = [
     path('', home_page, name='home_page'),
@@ -28,5 +27,3 @@ urlpatterns = [
 ]
 
 handler404 = "fomo_sapiens.views.custom_404_view"
-#cron_manager = CronJobManager()
-#cron_manager.run()

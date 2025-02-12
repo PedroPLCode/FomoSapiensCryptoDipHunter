@@ -36,6 +36,9 @@ def exception_handler(default_return=None, db_rollback=False):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            #import django
+            #django.setup()
+
             bot_id = None
 
             if 'bot_settings' in kwargs and hasattr(kwargs['bot_settings'], 'id'):

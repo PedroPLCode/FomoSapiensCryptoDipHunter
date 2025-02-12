@@ -81,6 +81,7 @@ class TechnicalAnalysisHunterForm(forms.ModelForm):
             'ma50_signals', 
             'ma200_signals', 
             'ma_cross_signals',
+            'note'
         ]
         
     widgets = {
@@ -160,4 +161,5 @@ class TechnicalAnalysisHunterForm(forms.ModelForm):
         'ma50_signals': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         'ma200_signals': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         'ma_cross_signals': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        'note': forms.Textarea(attrs={'class': 'form-control w-100', 'rows': 3})
     }

@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'fomo_sapiens',
     'analysis',
     'hunter',
-    'django_cron',
+    'django_apscheduler',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

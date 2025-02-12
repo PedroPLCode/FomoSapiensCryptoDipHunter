@@ -18,7 +18,15 @@ def plot_selected_ta_indicators(df, settings):
     """
     Generates an interactive Plotly chart with selected technical analysis indicators.
     """
-    indicators = prepare_selected_indicators_list(settings.selected_plot_indicators)
+    
+    indicators = []
+    
+    selected_indicators = getattr(settings, 'selected_plot_indicators', None)
+    if selected_indicators:
+        indicators = prepare_selected_indicators_list(settings.selected_plot_indicators)
+    else:
+        indicators = get_bot_specific_plot_indicators(settings) or ['rsi', 'macd']
+    
     validate_indicators(df, indicators)
     
     if not is_df_valid(df):
@@ -36,6 +44,7 @@ def plot_selected_ta_indicators(df, settings):
     
     return generate_plot_image(fig)
 
+
 @exception_handler(default_return=False)
 def add_price_traces(fig, df, indicators):
     """Adds price-related traces to the figure."""
@@ -44,9 +53,9 @@ def add_price_traces(fig, df, indicators):
     if 'ema' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ema_fast'], name='EMA Fast', line=dict(color='green')))
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ema_slow'], name='EMA Slow', line=dict(color='red')))
-    if 'ma_50' in indicators:
+    if 'ma50' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ma_50'], name='MA50', line=dict(color='orange')))
-    if 'ma_200' in indicators:
+    if 'ma200' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['ma_200'], name='MA200', line=dict(color='purple')))
 
 
@@ -179,6 +188,7 @@ def validate_indicators(df, indicators):
     """ 
     required_columns = {
         'close': ['close'],
+        'volume': ['volume'],
         'ema': ['ema_fast', 'ema_slow'],
         'ma50': ['ma_50'],
         'ma200': ['ma_200'],
@@ -189,7 +199,7 @@ def validate_indicators(df, indicators):
         'cci': ['cci'],
         'mfi': ['mfi'],
         'stoch': ['stoch_k', 'stoch_d'],
-        'stoch_rsi': ['stoch_rsi_k', 'stoch_rsi_d'],
+        'stoch-rsi': ['stoch_rsi_k', 'stoch_rsi_d'],
         'psar': ['psar'],
         'vwap': ['vwap'],
         'adx': ['adx'],
@@ -206,4 +216,57 @@ def validate_indicators(df, indicators):
         
         
 def prepare_selected_indicators_list(indicators_list):
-    return [indicator.strip() for indicator in indicators_list.split(',')]
+    if isinstance(indicators_list, str):
+        return [indicator.strip() for indicator in indicators_list.split(',')]
+    elif isinstance(indicators_list, list):
+        return [indicator.strip() for indicator in indicators_list]
+    else:
+        raise ValueError("Input should be a string or a list")
+    
+    
+@exception_handler()
+def get_bot_specific_plot_indicators(settings):
+    """
+    Extracts and returns a list of selected trading indicators based on the given settings.
+
+    Parameters:
+        settings (object): An object containing boolean attributes that determine 
+                          which indicators are selected for plotting.
+
+    Returns:
+        list: A list of strings representing the selected indicators.
+    """
+    indicators = []
+
+    if settings.rsi_signals or settings.rsi_divergence_signals:
+        indicators.append('rsi')
+    if settings.cci_signals or settings.cci_divergence_signals:
+        indicators.append('cci')
+    if settings.mfi_signals or settings.mfi_divergence_signals:
+        indicators.append('mfi')
+    if settings.macd_cross_signals or settings.macd_histogram_signals:
+        indicators.append('macd')
+    if settings.bollinger_signals:
+        indicators.append('boll')
+    if settings.stoch_signals or settings.stoch_divergence_signals:
+        indicators.append('stoch')
+    if settings.stoch_rsi_signals:
+        indicators.append('stoch_rsi')
+    if settings.ema_cross_signals or settings.ema_fast_signals or settings.ema_slow_signals:
+        indicators.append('ema')
+    if settings.di_signals:
+        indicators.append('di')
+    if settings.atr_signals:
+        indicators.append('atr')
+    if settings.vwap_signals:
+        indicators.append('vwap')
+    if settings.psar_signals:
+        indicators.append('psar')
+    if settings.ma50_signals or settings.ma_cross_signals:
+        indicators.append('ma50')
+    if settings.ma200_signals or settings.ma_cross_signals:
+        indicators.append('ma200')
+    if settings.trend_signals:
+        indicators.append('adx')
+
+    return indicators

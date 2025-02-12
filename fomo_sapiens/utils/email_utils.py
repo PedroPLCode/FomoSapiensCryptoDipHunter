@@ -1,7 +1,10 @@
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
 from .logging import logger
 from .exception_handlers import exception_handler
+import django
+
+#if not django.apps.apps.ready:
+#    django.setup()
 
 @exception_handler(default_return=False)
 def send_email(email, subject, body):
@@ -47,6 +50,10 @@ def send_admin_email(subject, body):
     Raises:
         Logs any exceptions encountered.
     """
+    from django.apps import apps
+
+    if apps.ready:
+        from django.contrib.auth.models import User
     try:
         users = User.objects.filter(is_superuser=True)
         for user in users:
