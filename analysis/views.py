@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.signals import user_logged_in
-from django.dispatch import receiver
 from django.contrib import messages
 from io import StringIO
 import pandas as pd
@@ -14,13 +12,13 @@ from .utils.plot_utils import plot_selected_ta_indicators, prepare_selected_indi
 
 @login_required
 def update_technical_analysis_settings(request):
-
     user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
         form = TechnicalAnalysisSettingsForm(request.POST, instance=user_ta_settings)
         if form.is_valid():
             form.save()
+            fetch_and_save_df(user_ta_settings)
             messages.success(request, 'Twoje ustawienia zostały zapisane!')
             return redirect('show_technical_analysis')
     else:
@@ -39,12 +37,12 @@ def refresh_data(request):
 
 def show_technical_analysis(request):
     """Widok analizy technicznej dostępny zarówno dla gości, jak i dla zalogowanych użytkowników."""
-
     if request.user.is_authenticated:
             user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
     else:
         guest_user, created = User.objects.get_or_create(username='guest')
         user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=guest_user)
+        fetch_and_save_df(user_ta_settings)
 
     indicators_list = ['close', 'rsi', 'cci', 'mfi', 'macd', 'ema', 'boll', 'stoch', 'stoch-rsi', 
                        'ma50', 'ma200', 'adx', 'atr', 'psar', 'vwap', 'di']
@@ -74,5 +72,5 @@ def show_technical_analysis(request):
         'previous_data': previous_data,
         'plot_url': plot_url,
         'selected_indicators_list': selected_indicators_list,
-        'indicators': indicators_list 
+        'indicators_list': indicators_list 
     })

@@ -5,11 +5,6 @@
 
 # prezentowanie analizy technicznej. zgdnie z ustawieniami. zmiana ustawień.
 
-# wysyłanie maili z sygnałami. bot co 1h, 14h i 1d
-
-# notatki.
-
-
 <function settings_updated at 0x7f4f1b29e660>
 settings_updated
 <function update_technical_analysis_settings at 0x7f4f37a396c0>

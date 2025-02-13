@@ -21,6 +21,7 @@ from fomo_sapiens.views import home_page, custom_404_view
 urlpatterns = [
     path('', home_page, name='home_page'),
     path('accounts/', include('allauth.urls')),
+    path('captcha/', include('captcha.urls')),
     path('admin/', admin.site.urls),
     path('analysis/', include('analysis.urls')),
     path('hunter/', include('hunter.urls')),

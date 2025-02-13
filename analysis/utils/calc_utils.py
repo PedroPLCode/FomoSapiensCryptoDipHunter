@@ -6,14 +6,13 @@ from fomo_sapiens.utils.exception_handlers import exception_handler
 @exception_handler()
 def is_df_valid(df):
     """
-    Checks if a DataFrame is valid for use in the bot's trading logic.
+    Checks if a DataFrame is valid for use in the hunter's logic.
 
-    This function validates that the provided DataFrame is not empty, has at least two rows, 
-    and is not None. If the DataFrame fails these conditions, it logs a message and returns False.
+    This function validates that the provided DataFrame is not empty and is not None. 
+    If the DataFrame fails these conditions, it logs a message and returns False.
 
     Args:
         df (pandas.DataFrame): The DataFrame to validate, containing market data.
-        bot_id (int): The ID of the bot, used for logging purposes.
 
     Returns:
         bool: True if the DataFrame is valid, False otherwise.
@@ -25,14 +24,14 @@ def is_df_valid(df):
 
 
 @exception_handler(default_return=False)
-def handle_ta_df_initial_praparation(df, user_settings):
+def handle_ta_df_initial_praparation(df, settings):
     """
     Prepares the DataFrame for technical analysis by converting relevant columns to numeric 
     types and handling missing values.
 
     Args:
         df (pandas.DataFrame): The raw DataFrame containing market data.
-        user_settings (object): The bot's settings containing configuration for analysis.
+        settings (object): The settings containing configuration for analysis.
 
     Returns:
         pandas.DataFrame: The cleaned DataFrame with numeric conversion and missing values handled.
@@ -52,13 +51,13 @@ def handle_ta_df_initial_praparation(df, user_settings):
 
 
 @exception_handler(default_return=False)
-def calculate_ta_rsi(df, user_settings):
+def calculate_ta_rsi(df, settings):
     """
     Calculates the Relative Strength Index (RSI) using the 'close' price.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing RSI time period configuration.
+        settings (object): The settings containing RSI time period configuration.
 
     Returns:
         pandas.DataFrame: The DataFrame with the RSI values added.
@@ -66,20 +65,20 @@ def calculate_ta_rsi(df, user_settings):
     """
     df['rsi'] = talib.RSI(
         df['close'], 
-        timeperiod=user_settings.rsi_timeperiod
+        timeperiod=settings.rsi_timeperiod
         )
     
     return df
         
 
 @exception_handler(default_return=False)
-def calculate_ta_cci(df, user_settings):
+def calculate_ta_cci(df, settings):
     """
     Calculates the Commodity Channel Index (CCI) using 'high', 'low', and 'close' prices.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing CCI time period configuration.
+        settings (object): The settings containing CCI time period configuration.
 
     Returns:
         pandas.DataFrame: The DataFrame with the CCI values added.
@@ -89,20 +88,20 @@ def calculate_ta_cci(df, user_settings):
         df['high'],
         df['low'],
         df['close'],
-        timeperiod=user_settings.cci_timeperiod
+        timeperiod=settings.cci_timeperiod
         )
     
     return df
 
 
 @exception_handler(default_return=False)
-def calculate_ta_mfi(df, user_settings):
+def calculate_ta_mfi(df, settings):
     """
     Calculates the Money Flow Index (MFI) using 'high', 'low', 'close', and 'volume' data.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing MFI time period configuration.
+        settings (object): The settings containing MFI time period configuration.
 
     Returns:
         pandas.DataFrame: The DataFrame with the MFI values added.
@@ -113,20 +112,20 @@ def calculate_ta_mfi(df, user_settings):
         df['low'],
         df['close'],
         df['volume'],
-        timeperiod=user_settings.mfi_timeperiod
+        timeperiod=settings.mfi_timeperiod
         )
     
     return df
 
 
 @exception_handler(default_return=False)
-def calculate_ta_adx(df, user_settings):
+def calculate_ta_adx(df, settings):
     """
     Calculates the Average Directional Index (ADX) using 'high', 'low', and 'close' prices.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing ADX time period configuration.
+        settings (object): The settings containing ADX time period configuration.
 
     Returns:
         pandas.DataFrame: The DataFrame with the ADX values added.
@@ -137,20 +136,20 @@ def calculate_ta_adx(df, user_settings):
         df['high'],
         df['low'],
         df['close'],
-        timeperiod=user_settings.adx_timeperiod
+        timeperiod=settings.adx_timeperiod
         )
     
     return df
 
 
 @exception_handler(default_return=False)
-def calculate_ta_atr(df, user_settings):
+def calculate_ta_atr(df, settings):
     """
     Calculates the Average True Range (ATR) using 'high', 'low', and 'close' prices.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing ATR time period configuration.
+        settings (object): The settings containing ATR time period configuration.
 
     Returns:
         pandas.DataFrame: The DataFrame with the ATR values added.
@@ -160,21 +159,21 @@ def calculate_ta_atr(df, user_settings):
         df['high'],
         df['low'],
         df['close'],
-        timeperiod=user_settings.atr_timeperiod
+        timeperiod=settings.atr_timeperiod
         )
     
     return df
     
 
 @exception_handler(default_return=False)
-def calculate_ta_di(df, user_settings):
+def calculate_ta_di(df, settings):
     """
     Calculates the Directional Indicators (DI) including the Plus DI and Minus DI 
     using 'high', 'low', and 'close' prices.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing DI time period configuration.
+        settings (object): The settings containing DI time period configuration.
 
     Returns:
         pandas.DataFrame: The DataFrame with the Plus DI and Minus DI values added.
@@ -184,27 +183,27 @@ def calculate_ta_di(df, user_settings):
         df['high'],
         df['low'],
         df['close'],
-        timeperiod=user_settings.di_timeperiod
+        timeperiod=settings.di_timeperiod
         )
     
     df['minus_di'] = talib.MINUS_DI(
         df['high'],
         df['low'],
         df['close'],
-        timeperiod=user_settings.di_timeperiod
+        timeperiod=settings.di_timeperiod
         )
     
     return df
 
 
 @exception_handler(default_return=False)
-def calculate_ta_stochastic(df, user_settings):
+def calculate_ta_stochastic(df, settings):
     """
     Calculates the Stochastic Oscillator using 'high', 'low', and 'close' prices.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing Stochastic parameters.
+        settings (object): The settings containing Stochastic parameters.
 
     Returns:
         pandas.DataFrame: The DataFrame with the Stochastic K and D values added.
@@ -214,10 +213,10 @@ def calculate_ta_stochastic(df, user_settings):
         df['high'],
         df['low'],
         df['close'],
-        fastk_period=user_settings.stoch_k_timeperiod,
-        slowk_period=user_settings.stoch_d_timeperiod,
+        fastk_period=settings.stoch_k_timeperiod,
+        slowk_period=settings.stoch_d_timeperiod,
         slowk_matype=0,
-        slowd_period=user_settings.stoch_d_timeperiod,
+        slowd_period=settings.stoch_d_timeperiod,
         slowd_matype=0
     )
     
@@ -225,13 +224,13 @@ def calculate_ta_stochastic(df, user_settings):
 
 
 @exception_handler(default_return=False)
-def calculate_ta_bollinger_bands(df, user_settings):
+def calculate_ta_bollinger_bands(df, settings):
     """
     Calculates the Bollinger Bands using 'close' price.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing market data.
-        user_settings (object): The bot's settings containing Bollinger Bands parameters.
+        settings (object): The settings containing Bollinger Bands parameters.
 
     Returns:
         pandas.DataFrame: The DataFrame with the upper, middle, and lower bands added.
@@ -239,9 +238,9 @@ def calculate_ta_bollinger_bands(df, user_settings):
     """
     df['upper_band'], df['middle_band'], df['lower_band'] = talib.BBANDS(
         df['close'],
-        timeperiod=user_settings.bollinger_timeperiod,
-        nbdevup=user_settings.bollinger_nbdev,
-        nbdevdn=user_settings.bollinger_nbdev,
+        timeperiod=settings.bollinger_timeperiod,
+        nbdevup=settings.bollinger_nbdev,
+        nbdevdn=settings.bollinger_nbdev,
         matype=0
     )
     
@@ -249,13 +248,13 @@ def calculate_ta_bollinger_bands(df, user_settings):
 
 
 @exception_handler(default_return=False)
-def calculate_ta_vwap(df, user_settings):
+def calculate_ta_vwap(df, settings):
     """
     Calculate the Volume Weighted Average Price (VWAP) for the given DataFrame.
 
     Args:
         df (DataFrame): The DataFrame containing the price and volume data.
-        user_settings (object): The bot settings object containing relevant configuration for the calculation.
+        settings (object): The settings object containing relevant configuration for the calculation.
 
     Returns:
         DataFrame: The original DataFrame with the calculated VWAP.
@@ -268,13 +267,13 @@ def calculate_ta_vwap(df, user_settings):
 
     
 @exception_handler(default_return=False)
-def calculate_ta_psar(df, user_settings):
+def calculate_ta_psar(df, settings):
     """
-    Calculate the Parabolic SAR (PSAR) for the given DataFrame using bot settings.
+    Calculate the Parabolic SAR (PSAR) for the given DataFrame using settings.
 
     Args:
         df (DataFrame): The DataFrame containing the price data.
-        user_settings (object): The bot settings object containing the acceleration and maximum values for PSAR calculation.
+        settings (object): The settings object containing the acceleration and maximum values for PSAR calculation.
 
     Returns:
         DataFrame: The original DataFrame with the calculated PSAR.
@@ -283,35 +282,35 @@ def calculate_ta_psar(df, user_settings):
     df['psar'] = talib.SAR(
         df['high'],
         df['low'],
-        acceleration=user_settings.psar_acceleration,
-        maximum=user_settings.psar_maximum
+        acceleration=settings.psar_acceleration,
+        maximum=settings.psar_maximum
     )
     
     return df
 
     
 @exception_handler(default_return=False)
-def calculate_ta_macd(df, user_settings):
+def calculate_ta_macd(df, settings):
     """
     Calculate the Moving Average Convergence Divergence (MACD) for the given DataFrame.
 
     Args:
         df (DataFrame): The DataFrame containing the closing price data.
-        user_settings (object): The bot settings object containing configuration for MACD calculation.
+        settings (object): The settings object containing configuration for MACD calculation.
 
     Returns:
         DataFrame: The original DataFrame with the calculated MACD and MACD signal.
         bool: False if not enough data points are available or if an error occurs.
     """
-    if len(df) < user_settings.macd_timeperiod * 2:
+    if len(df) < settings.macd_timeperiod * 2:
         logger.info('Not enough data points for MACD calculation.')
         return df
     
     df['macd'], df['macd_signal'], _ = talib.MACD(
         df['close'],
-        fastperiod=user_settings.macd_timeperiod,
-        slowperiod=user_settings.macd_timeperiod * 2,
-        signalperiod=user_settings.macd_signalperiod
+        fastperiod=settings.macd_timeperiod,
+        slowperiod=settings.macd_timeperiod * 2,
+        signalperiod=settings.macd_signalperiod
     )
     
     df['macd_histogram'] = df['macd'] - df['macd_signal']
@@ -320,13 +319,13 @@ def calculate_ta_macd(df, user_settings):
 
     
 @exception_handler(default_return=False)
-def calculate_ta_ma(df, user_settings):
+def calculate_ta_ma(df, settings):
     """
     Calculate the 200-period and 50-period Moving Averages (MA) for the given DataFrame.
 
     Args:
         df (DataFrame): The DataFrame containing the closing price data.
-        user_settings (object): The bot settings object (not used in this function).
+        settings (object): The settings object (not used in this function).
 
     Returns:
         DataFrame: The original DataFrame with the calculated 200-period and 50-period MAs.
@@ -339,13 +338,13 @@ def calculate_ta_ma(df, user_settings):
 
     
 @exception_handler(default_return=False)
-def calculate_ta_ema(df, user_settings):
+def calculate_ta_ema(df, settings):
     """
     Calculate the Fast and Slow Exponential Moving Averages (EMA) for the given DataFrame.
 
     Args:
         df (DataFrame): The DataFrame containing the closing price data.
-        user_settings (object): The bot settings object containing the time periods for the fast and slow EMAs.
+        settings (object): The settings object containing the time periods for the fast and slow EMAs.
 
     Returns:
         DataFrame: The original DataFrame with the calculated fast and slow EMAs.
@@ -353,25 +352,25 @@ def calculate_ta_ema(df, user_settings):
     """
     df['ema_fast'] = talib.EMA(
         df['close'], 
-        timeperiod=user_settings.ema_fast_timeperiod
+        timeperiod=settings.ema_fast_timeperiod
         )
     
     df['ema_slow'] = talib.EMA(
         df['close'], 
-        timeperiod=user_settings.ema_slow_timeperiod
+        timeperiod=settings.ema_slow_timeperiod
         )
     
     return df
 
     
 @exception_handler(default_return=False)
-def calculate_ta_stochastic_rsi(df, user_settings):
+def calculate_ta_stochastic_rsi(df, settings):
     """
     Calculate the Stochastic RSI (Relative Strength Index) for the given DataFrame.
 
     Args:
         df (DataFrame): The DataFrame containing the RSI data.
-        user_settings (object): The bot settings object containing the time periods for Stochastic RSI calculation.
+        settings (object): The settings object containing the time periods for Stochastic RSI calculation.
 
     Returns:
         DataFrame: The original DataFrame with the calculated Stochastic RSI and its %K and %D values.
@@ -379,17 +378,17 @@ def calculate_ta_stochastic_rsi(df, user_settings):
     """
     df['stoch_rsi'] = talib.RSI(
         df['rsi'], 
-        timeperiod=user_settings.stoch_rsi_timeperiod
+        timeperiod=settings.stoch_rsi_timeperiod
         )
     
     df['stoch_rsi_k'], df['stoch_rsi_d'] = talib.STOCH(
         df['stoch_rsi'],
         df['stoch_rsi'],
         df['stoch_rsi'],
-        fastk_period=user_settings.stoch_rsi_k_timeperiod,
-        slowk_period=user_settings.stoch_rsi_d_timeperiod,
+        fastk_period=settings.stoch_rsi_k_timeperiod,
+        slowk_period=settings.stoch_rsi_d_timeperiod,
         slowk_matype=0,
-        slowd_period=user_settings.stoch_rsi_d_timeperiod,
+        slowd_period=settings.stoch_rsi_d_timeperiod,
         slowd_matype=0
     )
     
@@ -397,14 +396,14 @@ def calculate_ta_stochastic_rsi(df, user_settings):
 
     
 @exception_handler(default_return=False)
-def handle_ta_df_final_cleaning(df, columns_to_check, user_settings):
+def handle_ta_df_final_cleaning(df, columns_to_check, settings):
     """
     Clean the final DataFrame by removing rows with missing values in the specified columns.
 
     Args:
         df (DataFrame): The DataFrame to clean.
         columns_to_check (list): A list of column names to check for missing values.
-        user_settings (object): The bot settings object (not used in this function).
+        settings (object): The settings object (not used in this function).
 
     Returns:
         DataFrame: The cleaned DataFrame.
@@ -416,7 +415,7 @@ def handle_ta_df_final_cleaning(df, columns_to_check, user_settings):
 
     
 @exception_handler(default_return=False)
-def calculate_ta_indicators(df, user_settings):
+def calculate_ta_indicators(df, settings):
     """
     Calculates various technical analysis indicators on the given DataFrame.
 
@@ -426,7 +425,7 @@ def calculate_ta_indicators(df, user_settings):
 
     Args:
         df (pandas.DataFrame): The DataFrame containing the market data.
-        user_settings (object): The settings for the bot, including parameters for the indicators.
+        settings (object): The settings including parameters for the indicators.
 
     Returns:
         pandas.DataFrame: The updated DataFrame with calculated technical indicators, or False if an error occurs.
@@ -434,40 +433,40 @@ def calculate_ta_indicators(df, user_settings):
     if not is_df_valid(df):
         return df
 
-    handle_ta_df_initial_praparation(df, user_settings)
+    handle_ta_df_initial_praparation(df, settings)
 
-    calculate_ta_rsi(df, user_settings)
-    calculate_ta_cci(df, user_settings)
-    calculate_ta_mfi(df, user_settings)
-    calculate_ta_stochastic(df, user_settings)
-    calculate_ta_stochastic_rsi(df, user_settings)
-    calculate_ta_bollinger_bands(df, user_settings)
-    calculate_ta_ema(df, user_settings)
-    calculate_ta_macd(df, user_settings)
-    calculate_ta_ma(df, user_settings)
-    calculate_ta_atr(df, user_settings)
-    calculate_ta_psar(df, user_settings)
-    calculate_ta_vwap(df, user_settings)
-    calculate_ta_adx(df, user_settings)
-    calculate_ta_di(df, user_settings)
+    calculate_ta_rsi(df, settings)
+    calculate_ta_cci(df, settings)
+    calculate_ta_mfi(df, settings)
+    calculate_ta_stochastic(df, settings)
+    calculate_ta_stochastic_rsi(df, settings)
+    calculate_ta_bollinger_bands(df, settings)
+    calculate_ta_ema(df, settings)
+    calculate_ta_macd(df, settings)
+    calculate_ta_ma(df, settings)
+    calculate_ta_atr(df, settings)
+    calculate_ta_psar(df, settings)
+    calculate_ta_vwap(df, settings)
+    calculate_ta_adx(df, settings)
+    calculate_ta_di(df, settings)
     
     columns_to_check = []
-    handle_ta_df_final_cleaning(df, columns_to_check, user_settings)
+    handle_ta_df_final_cleaning(df, columns_to_check, settings)
 
     return df
 
 
 @exception_handler()
-def calculate_ta_averages(df, hunter_settings):
+def calculate_ta_averages(df, settings):
     """
     Calculates the average values for various technical analysis indicators.
 
     This function computes the average of specific columns in the DataFrame over a defined period,
-    based on the bot settings. The calculated averages are returned as a dictionary.
+    based on the settings. The calculated averages are returned as a dictionary.
 
     Args:
         df (pandas.DataFrame): The DataFrame containing the market data.
-        hunter_settings (object): The settings for the bot, including the periods for averaging the indicators.
+        settings (object): The settings including the periods for averaging the indicators.
 
     Returns:
         dict: A dictionary containing the average values of technical indicators, or None if an error occurs.
@@ -475,23 +474,23 @@ def calculate_ta_averages(df, hunter_settings):
     averages = {}
     
     average_mappings = {
-        'avg_volume': ('volume', hunter_settings.avg_volume_period),
-        'avg_rsi': ('rsi', hunter_settings.avg_rsi_period),
-        'avg_cci': ('cci', hunter_settings.avg_cci_period),
-        'avg_mfi': ('mfi', hunter_settings.avg_mfi_period),
-        'avg_atr': ('atr', hunter_settings.avg_atr_period),
-        'avg_stoch_rsi_k': ('stoch_rsi_k', hunter_settings.avg_stoch_rsi_period),
-        'avg_macd': ('macd', hunter_settings.avg_macd_period),
-        'avg_macd_signal': ('macd_signal', hunter_settings.avg_macd_period),
-        'avg_stoch_k': ('stoch_k', hunter_settings.avg_stoch_period),
-        'avg_stoch_d': ('stoch_d', hunter_settings.avg_stoch_period),
-        'avg_ema_fast': ('ema_fast', hunter_settings.avg_ema_period),
-        'avg_ema_slow': ('ema_slow', hunter_settings.avg_ema_period),
-        'avg_plus_di': ('plus_di', hunter_settings.avg_di_period),
-        'avg_minus_di': ('minus_di', hunter_settings.avg_di_period),
-        'avg_psar': ('psar', hunter_settings.avg_psar_period),
-        'avg_vwap': ('vwap', hunter_settings.avg_vwap_period),
-        'avg_close': ('close', hunter_settings.avg_close_period),
+        'avg_volume': ('volume', settings.avg_volume_period),
+        'avg_rsi': ('rsi', settings.avg_rsi_period),
+        'avg_cci': ('cci', settings.avg_cci_period),
+        'avg_mfi': ('mfi', settings.avg_mfi_period),
+        'avg_atr': ('atr', settings.avg_atr_period),
+        'avg_stoch_rsi_k': ('stoch_rsi_k', settings.avg_stoch_rsi_period),
+        'avg_macd': ('macd', settings.avg_macd_period),
+        'avg_macd_signal': ('macd_signal', settings.avg_macd_period),
+        'avg_stoch_k': ('stoch_k', settings.avg_stoch_period),
+        'avg_stoch_d': ('stoch_d', settings.avg_stoch_period),
+        'avg_ema_fast': ('ema_fast', settings.avg_ema_period),
+        'avg_ema_slow': ('ema_slow', settings.avg_ema_period),
+        'avg_plus_di': ('plus_di', settings.avg_di_period),
+        'avg_minus_di': ('minus_di', settings.avg_di_period),
+        'avg_psar': ('psar', settings.avg_psar_period),
+        'avg_vwap': ('vwap', settings.avg_vwap_period),
+        'avg_close': ('close', settings.avg_close_period),
     }
 
     for avg_name, (column, period) in average_mappings.items():
@@ -501,7 +500,7 @@ def calculate_ta_averages(df, hunter_settings):
 
 
 @exception_handler(default_return='none')
-def check_ta_trend(df, hunter_settings):
+def check_ta_trend(df, settings):
     """
     Checks the market trend based on technical analysis indicators.
 
@@ -511,22 +510,22 @@ def check_ta_trend(df, hunter_settings):
 
     Args:
         df (pandas.DataFrame): The DataFrame containing the market data.
-        hunter_settings (object): The settings for the bot, including the thresholds for trend identification.
+        settings (object): The settings including the thresholds for trend identification.
 
     Returns:
         str: The market trend ('uptrend', 'downtrend', 'horizontal', or 'none').
     """
     latest_data = df.iloc[-1]
     
-    avg_adx_period = hunter_settings.avg_adx_period
+    avg_adx_period = settings.avg_adx_period
     avg_adx = df['adx'].iloc[-avg_adx_period:].mean()
     
     adx_trend = (
-        float(latest_data['adx']) > float(hunter_settings.adx_strong_trend) or 
+        float(latest_data['adx']) > float(settings.adx_strong_trend) or 
         float(latest_data['adx']) > float(avg_adx)
         )
     
-    avg_di_period = hunter_settings.avg_di_period
+    avg_di_period = settings.avg_di_period
     avg_plus_di = df['plus_di'].iloc[-avg_di_period:].mean()
     avg_minus_di = df['minus_di'].iloc[-avg_di_period:].mean()
     
@@ -538,11 +537,11 @@ def check_ta_trend(df, hunter_settings):
         (float(latest_data['high']) - float(latest_data['low'])) > 
         float(latest_data['atr']))
     
-    is_rsi_bullish = float(latest_data['rsi']) < float(hunter_settings.rsi_sell)
-    is_rsi_bearish = float(latest_data['rsi']) > float(hunter_settings.rsi_buy)
+    is_rsi_bullish = float(latest_data['rsi']) < float(settings.rsi_sell)
+    is_rsi_bearish = float(latest_data['rsi']) > float(settings.rsi_buy)
     
-    is_strong_plus_di = float(latest_data['plus_di']) > float(hunter_settings.adx_weak_trend)
-    is_strong_minus_di = float(latest_data['minus_di']) > float(hunter_settings.adx_weak_trend)
+    is_strong_plus_di = float(latest_data['plus_di']) > float(settings.adx_weak_trend)
+    is_strong_minus_di = float(latest_data['minus_di']) > float(settings.adx_weak_trend)
 
     uptrend = (
         is_rsi_bullish and 
@@ -564,9 +563,9 @@ def check_ta_trend(df, hunter_settings):
 
     horizontal = (
         float(latest_data['adx']) < avg_adx or 
-        avg_adx < float(hunter_settings.adx_weak_trend) or 
+        avg_adx < float(settings.adx_weak_trend) or 
         abs(float(latest_data['plus_di']) - float(latest_data['minus_di'])) < 
-        float(hunter_settings.adx_no_trend)
+        float(settings.adx_no_trend)
     )
 
     if uptrend:

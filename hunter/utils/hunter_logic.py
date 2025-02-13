@@ -113,7 +113,12 @@ def run_single_hunter_logic(hunter):
     fetch_and_save_df(hunter)
     logger.info(f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} df fetched and saved in db.')
 
-
+    if hunter.id == 1:
+        user_ta_settings = hunter.user.technicalanalysissettings
+        fetch_and_save_df(user_ta_settings)
+        logger.info(f'User {hunter.user.username} df {user_ta_settings.symbol} {user_ta_settings.interval} {user_ta_settings.lookback} fetched and saved in db.')
+        
+        
 @exception_handler(default_return=(None, None))
 def get_latest_and_previus_data(df):
     latest_data = df.iloc[-1]

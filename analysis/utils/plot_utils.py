@@ -2,10 +2,8 @@ from datetime import timedelta
 import re
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from analysis.utils.calc_utils import is_df_valid
 import plotly.graph_objects as go

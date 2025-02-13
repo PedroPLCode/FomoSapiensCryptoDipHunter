@@ -27,7 +27,7 @@
                 <input type="hidden" name="settings_id" value="{{ user_ta_settings.id }}">
             
                 <div class="grid-container text-primary">
-                    {% for indicator in indicators %}
+                    {% for indicator in indicators_list %}
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" name="indicators" value="{{ indicator }}" style="display: none;" 
                             {% if indicator in user_ta_settings.selected_plot_indicators %}checked{% endif %}
@@ -46,49 +46,47 @@
             
             <div class="">
                 {% if selected_indicators_list and latest_data and previous_data %}
-                    
-                    {% for indicator in selected_indicators_list %}
                         
-                        {% if indicator|slugify == 'close' %}
-                        <div class="text-center mt-2 d-flex flex-column justify-content-center align-item-center">
-                            <p class="p-0 m-0 mb-2">Price:</p>
-                            <p class="p-0 m-0 mb-2">Typical Price:<br>
-                               Latest: {{ latest_data.typical_price }}<br>
-                               Previous: {{ previous_data.typical_price }}<br>
-                                <span class="text {% if typical_price.open > previous_data.typical_price %}text-success{% else %}text-danger{% endif %}">
-                                    {% if latest_data.typical_price > previous_data.typical_price %} RISING {% else %} DROPPING {% endif %}
-                                </span>
-                            </p>
-                            <p class="p-0 m-0 mb-2">Open:<br>
-                               Latest: {{ latest_data.open }}<br>
-                               Previous: {{ previous_data.open }}<br>
-                                <span class="text {% if latest_data.open > previous_data.open %}text-success{% else %}text-danger{% endif %}">
-                                    {% if latest_data.open > previous_data.open %} RISING {% else %} DROPPING {% endif %}
-                                </span>
-                            </p>
-                            <p class="p-0 m-0 mb-2">High:<br>
-                               Latest: {{ latest_data.high }}<br>
-                               Previous: {{ previous_data.high }}<br>
-                                <span class="text {% if previous_data.high > previous_data.high %}text-success{% else %}text-danger{% endif %}">
-                                    {% if latest_data.high > previous_data.high %} RISING {% else %} DROPPING {% endif %}
-                                </span>
-                            </p>
-                            <p class="p-0 m-0 mb-2">Low:<br>
-                               Latest: {{ latest_data.low }}<br>
-                               Previous: {{ previous_data.low }}<br>
-                                <span class="text {% if previous_data.low > previous_data.low %}text-success{% else %}text-danger{% endif %}">
-                                    {% if latest_data.low > previous_data.low %} RISING {% else %} DROPPING {% endif %}
-                                </span>
-                            </p>
-                            <p class="p-0 m-0">Close:<br>
-                               Latest: {{ latest_data.close }}<br>
-                               Previous: {{ previous_data.close }}<br>
-                               <span class="text {% if latest_data.close > previous_data.close %}text-success{% else %}text-danger{% endif %}">
-                                {% if latest_data.close > previous_data.close %} RISING {% else %} DROPPING {% endif %}
-                               </span>
-                            </p>
-                        </div>
-                        {% endif %}
+                    <div class="text-center mt-2 d-flex flex-column justify-content-center align-item-center">
+                        <p class="p-0 m-0 mb-2">Price:</p>
+                        <p class="p-0 m-0 mb-2">Typical Price:<br>
+                        Latest: {{ latest_data.typical_price }}<br>
+                        Previous: {{ previous_data.typical_price }}<br>
+                            <span class="text {% if typical_price.open > previous_data.typical_price %}text-success{% else %}text-danger{% endif %}">
+                                {% if latest_data.typical_price > previous_data.typical_price %} RISING {% else %} DROPPING {% endif %}
+                            </span>
+                        </p>
+                        <p class="p-0 m-0 mb-2">Open:<br>
+                        Latest: {{ latest_data.open }}<br>
+                        Previous: {{ previous_data.open }}<br>
+                            <span class="text {% if latest_data.open > previous_data.open %}text-success{% else %}text-danger{% endif %}">
+                                {% if latest_data.open > previous_data.open %} RISING {% else %} DROPPING {% endif %}
+                            </span>
+                        </p>
+                        <p class="p-0 m-0 mb-2">High:<br>
+                        Latest: {{ latest_data.high }}<br>
+                        Previous: {{ previous_data.high }}<br>
+                            <span class="text {% if previous_data.high > previous_data.high %}text-success{% else %}text-danger{% endif %}">
+                                {% if latest_data.high > previous_data.high %} RISING {% else %} DROPPING {% endif %}
+                            </span>
+                        </p>
+                        <p class="p-0 m-0 mb-2">Low:<br>
+                        Latest: {{ latest_data.low }}<br>
+                        Previous: {{ previous_data.low }}<br>
+                            <span class="text {% if previous_data.low > previous_data.low %}text-success{% else %}text-danger{% endif %}">
+                                {% if latest_data.low > previous_data.low %} RISING {% else %} DROPPING {% endif %}
+                            </span>
+                        </p>
+                        <p class="p-0 m-0">Close:<br>
+                        Latest: {{ latest_data.close }}<br>
+                        Previous: {{ previous_data.close }}<br>
+                        <span class="text {% if latest_data.close > previous_data.close %}text-success{% else %}text-danger{% endif %}">
+                            {% if latest_data.close > previous_data.close %} RISING {% else %} DROPPING {% endif %}
+                        </span>
+                        </p>
+                    </div>
+
+                    {% for indicator in selected_indicators_list %}
             
                         {% if indicator|slugify == 'rsi' %}
                         <div class="text-center border-top pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
@@ -354,9 +352,15 @@
                     </div>
 
                     <div class="text-center w-100 m-0 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
+                        
+                        {% if user.is_authenticated %}
                         <a href="{% url 'refresh_data' %}" class="btn btn-primary">Refresh Data</a>
-                        <a href="{% url 'update_technical_analysis_settings' %}" class="btn btn-primary">Settings</a>
+                        <a href="{% url 'update_technical_analysis_settings' %}" class="btn btn-primary">Analysis Settings</a>
+                        {% else %}
+                        <a class="btn btn-primary" href="/accounts/">Sing in to access setting and hunters</a>
+                        {% endif %}
                     </div>
+        
                 {% endif %}
             </div>
             

@@ -1,7 +1,5 @@
 from django.apps import AppConfig
 from apscheduler.schedulers.background import BackgroundScheduler
-from concurrent.futures import ProcessPoolExecutor
-from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 import atexit
 import os
 from fomo_sapiens.utils.logging import logger

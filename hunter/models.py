@@ -10,7 +10,7 @@ class TechnicalAnalysisHunter(models.Model):
 
     symbol = models.CharField(max_length=10, default='BTCUSDC')
     interval = models.CharField(max_length=10, default='1h')
-    lookback = models.CharField(max_length=10, default='9d')
+    lookback = models.CharField(max_length=10, default='1d')
     comment = models.CharField(max_length=1024, default="", blank=True, null=True)
     note = models.CharField(max_length=4096, default="", blank=True, null=True)
     running = models.BooleanField(default=False)

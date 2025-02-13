@@ -2,8 +2,11 @@
 
 {% block body %}
 <div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center bg-secondary">
-  <h2 class="text-center">Yours Hunters</h2>
+  <h4 class="text-center text-white">Hunters List</h4>
   <div class="accordion" id="botsAccordion">
+
+    {% if hunters %}
+
     {% for hunter in hunters %}
       <div class="accordion-item mb-3 bg-light">
         <div class="accordion-header d-flex justify-content-center" id="heading{{ hunter.id }}">
@@ -142,32 +145,46 @@
             <p class="text-center">Avg VWAP period: {{ hunter.avg_vwap_period }}</p>
           {% endif %}
 
-        {% if hunter.psar_signals %}
-        <p class="text-center pt-3 border-top">PSAR signals: <span class="{% if hunter.psar_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.psar_signals }}</span></p>
-        <p class="text-center">PSAR acceleration: {{ hunter.psar_acceleration }}</p>
-        <p class="text-center">PSAR maximum: {{ hunter.psar_maximum }}</p>
-        <p class="text-center">Avg PSAR period: {{ hunter.avg_psar_period }}</p>
-      {% endif %}
+          {% if hunter.psar_signals %}
+            <p class="text-center pt-3 border-top">PSAR signals: <span class="{% if hunter.psar_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.psar_signals }}</span></p>
+            <p class="text-center">PSAR acceleration: {{ hunter.psar_acceleration }}</p>
+            <p class="text-center">PSAR maximum: {{ hunter.psar_maximum }}</p>
+            <p class="text-center">Avg PSAR period: {{ hunter.avg_psar_period }}</p>
+          {% endif %}
 
-      {% if hunter.ma50_signals or hunter.ma200_signals or hunter.ma_cross_signals %}
-        <p class="text-center pt-3 border-top">MA50 signals: <span class="{% if hunter.ma50_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma50_signals }}</span></p>
-        <p class="text-center">MA200 signals: <span class="{% if hunter.ma200_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma200_signals }}</span></p>
-        <p class="text-center">MA cross signals: <span class="{% if hunter.ma_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma_cross_signals }}</span></p>
-      {% endif %}
+          {% if hunter.ma50_signals or hunter.ma200_signals or hunter.ma_cross_signals %}
+            <p class="text-center pt-3 border-top">MA50 signals: <span class="{% if hunter.ma50_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma50_signals }}</span></p>
+            <p class="text-center">MA200 signals: <span class="{% if hunter.ma200_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma200_signals }}</span></p>
+            <p class="text-center">MA cross signals: <span class="{% if hunter.ma_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma_cross_signals }}</span></p>
+          {% endif %}
 
-      {% if hunter.note != "" %}
-        <p class="text-center pt-3 border-top">Note:<br>{{ hunter.note }}</p>
-      {% endif %}
+          {% if hunter.note != "" %}
+            <p class="text-center pt-3 border-top">Note:<br>{{ hunter.note }}</p>
+          {% endif %}
 
-            <a href="{% url 'hunter:hunter_edit' hunter.id %}" class="w-100 btn btn-primary mb-3">Change</a>
+          {% if not hunter.running %}
+            <a href="{% url 'hunter:start_hunter' pk=hunter.id %}" class="w-100 btn btn-success mb-3">Start</a>
+          {% endif %}
+
+          {% if hunter.running %}
+            <a href="{% url 'hunter:stop_hunter' pk=hunter.id %}" class="w-100 btn btn-danger mb-3">Stop</a>
+          {% endif %}
+
+            <a href="{% url 'hunter:hunter_create_or_edit' pk=hunter.id %}" class="w-100 btn btn-primary mb-3">Edit</a>
             <a href="{% url 'hunter:hunter_delete' hunter.id %}" class="w-100 btn btn-danger">Delete</a>
           </div>
         </div>
       </div>
-    {% empty %}
-      <p>Nie masz żadnych hunterów.</p>
     {% endfor %}
+
+    <a href="{% url 'hunter:start_all_hunters' %}" class="w-100 btn btn-success mb-3">Start ALL</a>
+    <a href="{% url 'hunter:stop_all_hunters' %}" class="w-100 btn btn-danger mb-3">Stop ALL</a>
+
+    {% else %}
+      <p class="text-center">NO HUNTERS. LETS CREATE SOME</p>
+    {% endif %}
   </div>
-  <a href="{% url 'hunter:hunter_create' %}" class="w-100 btn btn-primary">Add New Hunter</a>
+
+  <a href="{% url 'hunter:hunter_create_or_edit' pk=0 %}" class="w-100 btn btn-primary">Add New Hunter</a>
 </div>
 {% endblock %}

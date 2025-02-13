@@ -20,8 +20,8 @@ def default_plot_indicators():
 def default_df():
     from .utils.fetch_utils import fetch_data
     df_fetched = fetch_data('BTCUSDC')
-    json_data = df_fetched.to_json(orient='records')
-    return json_data
+    json_df = df_fetched.to_json(orient='records')
+    return json_df
 
 class TechnicalAnalysisSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

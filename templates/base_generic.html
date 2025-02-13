@@ -36,11 +36,11 @@
                     </li>
             
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path|startswith:'/analysis/' %}active{% endif %}" href="/analysis/">Analiza</a>
+                        <a class="nav-link {% if request.path|startswith:'/analysis/' %}active{% endif %}" href="/analysis/">Analysis</a>
                     </li>
             
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path|startswith:'/hunter/' %}active{% endif %}" href="/hunter/">Hunter</a>
+                        <a class="nav-link {% if request.path|startswith:'/hunter/' %}active{% endif %}" href="/hunter/">Hunters {% if user.is_authenticated %}({{ user.technicalanalysishunter_set.count }}){% endif %}</a>
                     </li>
             
                     {% if user.is_superuser %}

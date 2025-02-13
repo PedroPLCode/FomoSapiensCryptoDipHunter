@@ -140,9 +140,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
     'axes.backends.AxesBackend',
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 SITE_ID = 1
@@ -163,6 +163,8 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Skonfiguruj, by allauth używało adresu email jako login
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+LOGIN_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_AUTHENTICATED_REMEMBER = True
 ACCOUNT_EMAIL_REQUIRED = True
@@ -189,7 +191,6 @@ SESSION_COOKIE_HTTPONLY = True  # Sesja niedostępna dla JavaScript
 SESSION_ENGINE = "django.contrib.sessions.backends.db"  # Przechowywanie sesji w bazie danych
 
 ACCOUNT_FORMS = {
-#    'login': 'forms.CustomLoginForm',
     'signup': 'fomo_sapiens.forms.CustomSignupForm',
 }
 
@@ -231,9 +232,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('GMAIL_USERNAME')
 EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-CRONJOBS = [
-    ('*/60 * * * *', 'hunter.cron.HourlyCronHunterJob'),  # Co godzinę
-    ('0 */4 * * *', 'hunter.cron.FourHoursCronHunterJob'),  # Co 4 godziny
-    ('0 0 * * *', 'hunter.cron.DailyCronHunterJob'),  # Codziennie o północy
-]

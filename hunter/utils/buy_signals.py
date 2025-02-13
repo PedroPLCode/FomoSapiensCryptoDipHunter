@@ -1,4 +1,3 @@
-from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from analysis.utils.calc_utils import is_df_valid
 

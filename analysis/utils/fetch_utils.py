@@ -41,6 +41,47 @@ def create_binance_client():
 
 
 @exception_handler()
+def fetch_and_save_df(settings):
+    """
+    Fetches data for a given trading symbol and interval, processes it into JSON format, 
+    and saves the data along with the timestamp of the last fetch to the provided settings.
+
+    Args:
+        settings (TechnicalAnalysisSettings): The settings object containing the user's symbol, 
+                                              interval, and other configuration details.
+
+    This function fetches market data using the `fetch_data` function, converts the resulting 
+    DataFrame to JSON format, and stores it in the `df` field of the `settings` model. 
+    The timestamp of the fetch is also recorded in the `df_last_fetch_time` field.
+    """
+    from datetime import datetime as dt 
+    df_fetched = fetch_data(symbol=settings.symbol, interval=settings.interval, lookback=calculate_lookback_extended(settings))
+    json_data = df_fetched.to_json(orient='records')
+    settings.df = json_data
+    settings.df_last_fetch_time = dt.now()
+    settings.save()
+
+
+@exception_handler()
+def calculate_lookback_extended(settings):
+    """
+    Calculates the extended lookback period based on the interval set in the provided settings.
+
+    Args:
+        settings (TechnicalAnalysisSettings): The settings object containing the interval configuration.
+
+    Returns:
+        str: The extended lookback period in the format 'xY', where x is the number of units 
+             multiplied by 205 (based on the interval), and Y is the time unit (e.g., 'm', 'h', etc.).
+
+    Example:
+        If the interval is '5m', the function returns '1025m' (5 * 205).
+    """
+    lookback_extended = f'{int(settings.interval[:-1]) * 205}{settings.interval[-1:]}'
+    return lookback_extended
+
+
+@exception_handler()
 def fetch_data(symbol, interval='1h', lookback='2d', start_str=None, end_str=None):
     """
     Fetch historical kline (candlestick) data for a specific trading symbol.
@@ -134,19 +175,3 @@ def fetch_server_time():
     general_client = create_binance_client()
     server_time = general_client.get_server_time()
     return server_time
-
-
-@exception_handler()
-def fetch_and_save_df(settings):
-    from datetime import datetime as dt 
-    df_fetched = fetch_data(symbol=settings.symbol, interval=settings.interval, lookback=calculate_lookback_extended(settings))
-    json_data = df_fetched.to_json(orient='records')
-    settings.df = json_data
-    settings.df_last_fetch_time = dt.now()
-    settings.save()
-    
-    
-@exception_handler()
-def calculate_lookback_extended(settings):
-    lookback_extended = f'{int(settings.interval[:-1]) * 205}{settings.interval[-1:]}'
-    return lookback_extended
