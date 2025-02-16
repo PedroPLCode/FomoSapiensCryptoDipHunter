@@ -26,7 +26,7 @@ from . import views
 app_name = 'hunter'
 
 urlpatterns = [
-    path('', views.hunter_list, name='hunter_list'),
+    path('', views.show_hunters_list, name='show_hunters_list'),
     path('create_edit/<int:pk>/', views.hunter_create_or_edit, name='hunter_create_or_edit'),
     path('delete/<int:pk>/', views.hunter_delete, name='hunter_delete'),
     path('remove_all/', views.remove_all_hunters, name='remove_all_hunters'),

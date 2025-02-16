@@ -13,7 +13,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from datetime import datetime as dt
+from django.utils import timezone
 
 @receiver(post_save, sender=User)
 def create_user_analysis_settings(sender, instance, created, **kwargs):
@@ -79,7 +79,7 @@ class TechnicalAnalysisSettings(models.Model):
     selected_plot_indicators = models.JSONField(default=default_plot_indicators)
     
     df = models.JSONField(default=default_df)
-    df_last_fetch_time = models.DateTimeField(default=dt.now)
+    df_last_fetch_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"technical Analysis settings for user: {self.user.username}"
+        return f"Technical Analysis settings for {self.user.username}"

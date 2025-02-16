@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from fomo_sapiens.utils.exception_handlers import exception_handler
 
 @exception_handler()
-def generate_report_email(settings, df):
+def generate_ta_report_email(settings, df):
     """
     Generates an email report for technical analysis of a given symbol, interval, and lookback period.
 
@@ -49,19 +49,19 @@ def generate_report_email(settings, df):
         "RSI (Relative Strength Index):\n"
         f"rsi_timeperiod: {settings.rsi_timeperiod}\n"
         f"rsi_latest_data: {latest_data['rsi']}\n"
-        f"rsi_previous_data: {previous_data['rsi']}\n\n"
+        f"rsi_previous_data: {previous_data['rsi']}\n"
         f"rsi_buy: {settings.rsi_buy}\n"
         f"rsi_sell: {settings.rsi_sell}\n\n"
         "CCI (Commodity Channel Index):\n"
         f"cci_timeperiod: {settings.cci_timeperiod}\n"
         f"cci_latest_data: {latest_data['cci']}\n"
-        f"cci_previous_data: {previous_data['cci']}\n\n"
+        f"cci_previous_data: {previous_data['cci']}\n"
         f"cci_buy: {settings.cci_buy}\n"
         f"cci_sell: {settings.cci_sell}\n\n"
         "MFI (Money Flow Index):\n"
         f"mfi_timeperiod: {settings.mfi_timeperiod}\n"
         f"mfi_latest_data: {latest_data['mfi']}\n"
-        f"mfi_previous_data: {previous_data['mfi']}\n\n"
+        f"mfi_previous_data: {previous_data['mfi']}\n"
         f"mfi_buy: {settings.mfi_buy}\n"
         f"mfi_sell: {settings.mfi_sell}\n\n"
         "MACD (Moving Average Convergence Divergence):\n"
@@ -86,9 +86,9 @@ def generate_report_email(settings, df):
         f"stoch_k_latest_data: {latest_data['stoch_k']}\n"
         f"stoch_d_latest_data: {latest_data['stoch_d']}\n"
         f"stoch_k_previous_data: {previous_data['stoch_k']}\n"
-        f"stoch_d_previous_data: {previous_data['stoch_d']}\n\n"
-        #f"stoch_buy: {settings.stoch_buy}\n"
-        #f"stoch_sell: {settings.stoch_sell}\n\n"
+        f"stoch_d_previous_data: {previous_data['stoch_d']}\n"
+        f"stoch_buy: {settings.stoch_buy}\n"
+        f"stoch_sell: {settings.stoch_sell}\n\n"
         "Stochastic RSI Indicators:\n"
         f"stoch_rsi_timeperiod: {settings.stoch_rsi_timeperiod}\n"
         f"stoch_rsi_k_timeperiod: {settings.stoch_rsi_k_timeperiod}\n"
@@ -113,8 +113,8 @@ def generate_report_email(settings, df):
         "ATR (Average True Range):\n"
         f"atr_timeperiod: {settings.atr_timeperiod}\n"
         f"atr_latest_data: {latest_data['atr']}\n"
-        f"atr_previous_data: {previous_data['atr']}\n\n"
-        #f"atr_buy_threshold: {settings.atr_buy_threshold}\n\n"
+        f"atr_previous_data: {previous_data['atr']}\n"
+        f"atr_buy_threshold: {settings.atr_buy_threshold}\n\n"
         "VWAP (Volume Weighted Average Price):\n"
         f"vwap_latest_data: {latest_data['vwap']}\n"
         f"vwap_previous_data: {previous_data['vwap']}\n\n"
@@ -130,9 +130,9 @@ def generate_report_email(settings, df):
         f"ma_200_previous_data: {previous_data['ma_200']}\n\n"
         "ADX Trend:\n"
         f"adx_timeperiod: {settings.adx_timeperiod}\n"
-        #f"adx_strong_trend: {settings.adx_strong_trend}\n"
-        #f"adx_weak_trend: {settings.adx_weak_trend}\n"
-        #f"adx_no_trend: {settings.adx_no_trend}\n"
+        f"adx_strong_trend: {settings.adx_strong_trend}\n"
+        f"adx_weak_trend: {settings.adx_weak_trend}\n"
+        f"adx_no_trend: {settings.adx_no_trend}\n"
         f"adx_latest_data: {latest_data['adx']}\n"
         f"adx_previous_data: {previous_data['adx']}\n"
         )

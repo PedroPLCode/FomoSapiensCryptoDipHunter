@@ -7,6 +7,6 @@
     {% csrf_token %}
     <button type="submit" class="w-100 btn btn-danger mb-3">Yes, delete</button>
   </form>
-  <a href="{% url 'hunter:hunter_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
+  <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
 </div>
 {% endblock %}

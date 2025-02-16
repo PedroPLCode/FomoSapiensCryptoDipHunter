@@ -181,14 +181,14 @@
     <a href="{% url 'hunter:stop_all_hunters' %}" class="w-100 btn btn-warning mb-3">Stop ALL</a>
 
     {% else %}
-      <p class="text-center">NO HUNTERS. LETS CREATE SOME</p>
+      <p class="text-center">No hunters found. Lets create some.</p>
     {% endif %}
   </div>
 
   <a href="{% url 'hunter:hunter_create_or_edit' pk=0 %}" class="w-100 btn btn-primary">Add New Hunter</a>
 
   {% if hunters %}
-    <a href="{% url 'hunter:remove_all_hunters' %}" class="w-100 btn btn-danger">Remove ALL Hunters</a>
+    <a href="{% url 'hunter:remove_all_hunters' %}" class="w-100 btn btn-danger mt-3">Remove ALL Hunters</a>
   {% endif %}
   
 </div>

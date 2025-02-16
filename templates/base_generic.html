@@ -21,7 +21,7 @@
                 <a class="text-light fs-6 navbar-brand p-0 m-0" href="/">FomoSapiensCryptoDipHunter</a>
                 <p class="text-light p-0 m-0">{{ date_and_time }}</p>
                 {% if user.is_authenticated %}
-                    <p class='text-light p-0 m-0'>user {{ user.username }} logged in</p>
+                    <p class='text-light p-0 m-0'>{{ user.email }}</p>
                     {% else %}
                     <p class='text-light p-0 m-0'>guest user</p>
                     {% endif %}

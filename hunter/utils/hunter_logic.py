@@ -71,7 +71,7 @@ def run_single_hunter_logic(hunter):
         
     symbol = hunter.symbol
     interval = hunter.interval
-    signal = 'no'
+    signal = None
         
     df_fetched = fetch_data(
         symbol=symbol, 
@@ -105,25 +105,25 @@ def run_single_hunter_logic(hunter):
             trend, 
             averages, 
             )
-            
+        
         sell_singal = check_classic_ta_sell_signal(
             df_calculated, 
             hunter, 
             trend, 
             averages, 
             )
-            
+
         if buy_singal or sell_singal: 
             signal = 'buy' if buy_singal else 'sell'
             email = hunter.user.email
             subject, content = generate_hunter_signal_email(signal, hunter, df_calculated, trend, averages)
             send_email(email, subject, content)
-                
-        logger.info(f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} {signal.upper()} signal.')
-             
+
+        logger.info(f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} {signal.upper() if signal else "NO"} signal.')
+
     else:
         logger.info(f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} is sleeping.')
-           
+
     fetch_and_save_df(hunter)
     logger.info(f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} df fetched and saved in db.')
 

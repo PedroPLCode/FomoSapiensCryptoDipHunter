@@ -7,20 +7,20 @@
 
         <h4 class="text-center">Remove ALL Hunters?</h4>
         {% for hunter in hunters %}
-            <p class="text-center">>{{ hunter.id }} {{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }} {{ hunter.comment }}</p>
-        {% endif %}
+            <p class="text-center">{{ hunter.id }} {{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }} {{ hunter.comment }}</p>
+        {% endfor %}
         <h4 class="text-center">Total {{ user.technicalanalysishunter_set.count }} Hunters to remove.</h4>
 
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="w-100 btn btn-danger mb-3">Yes, remove ALL</button>
         </form>
-        <a href="{% url 'hunter:hunter_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
+        <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
 
     {% else %}
 
         <h4 class="text-center">No hunters. Nothing to remove.</h4>
-        <a href="{% url 'hunter:hunter_list' %}" class="w-100 btn btn-primary">Back</a>
+        <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">Back</a>
         
     {% endif %}
   

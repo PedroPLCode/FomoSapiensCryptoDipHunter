@@ -8,9 +8,9 @@ from .models import TechnicalAnalysisHunter
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from fomo_sapiens.utils.logging import logger
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
-def hunter_list(request):
+def show_hunters_list(request):
     """
     View function to display a list of hunters associated with the logged-in user.
     Each hunter's data is processed to calculate technical analysis indicators and
@@ -20,7 +20,7 @@ def hunter_list(request):
         request: The HTTP request object.
 
     Returns:
-        A rendered 'hunter_list.html' template with the hunters' data and plot URLs.
+        A rendered 'hunters_list.html' template with the hunters' data and plot URLs.
     """
     from analysis.utils.calc_utils import calculate_ta_indicators
     from analysis.utils.plot_utils import plot_selected_ta_indicators
@@ -33,11 +33,11 @@ def hunter_list(request):
         plot_url = plot_selected_ta_indicators(df_calculated, hunter)
         hunter.plot_url = plot_url
     
-    return render(request, 'hunter/hunter_list.html', {'hunters': hunters})
+    return render(request, 'hunter/hunters_list.html', {'hunters': hunters})
 
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
 def hunter_create_or_edit(request, pk=None):
     """
     View function to create a new hunter or edit an existing one. The hunter's
@@ -64,15 +64,15 @@ def hunter_create_or_edit(request, pk=None):
             hunter.user = request.user
             hunter.save()
             messages.success(request, f'Hunter {"changed" if pk else "created"}')
-            return redirect('hunter:hunter_list')
+            return redirect('hunter:show_hunters_list')
     else:
         form = TechnicalAnalysisHunterForm(instance=hunter)
 
     return render(request, 'hunter/hunter_edit.html', {'form': form, 'hunter': hunter, 'title': title})
 
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
 def hunter_delete(request, pk):
     """
     View function to delete a hunter. The hunter is identified by the primary key.
@@ -89,12 +89,12 @@ def hunter_delete(request, pk):
     if request.method == 'POST':
         hunter.delete()
         messages.success(request, 'Hunter deleted')
-        return redirect('hunter:hunter_list')
+        return redirect('hunter:show_hunters_list')
     return render(request, 'hunter/hunter_delete.html', {'hunter': hunter})
 
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
 def remove_all_hunters(request):
     """
     View function to remove all hunters associated with the logged-in user.
@@ -115,12 +115,12 @@ def remove_all_hunters(request):
             messages.success(request, 'All hunters removed')
         else:
             messages.success(request, 'No hunters to remove')
-        return redirect('hunter:hunter_list')
+        return redirect('hunter:show_hunters_list')
     return render(request, 'hunter/hunters_remove.html', {'hunters': hunters})
 
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
 def start_all_hunters(request):
     """
     View function to start all hunters associated with the logged-in user.
@@ -130,7 +130,7 @@ def start_all_hunters(request):
         request: The HTTP request object.
 
     Returns:
-        A redirect to the 'hunter_list' view with a success message.
+        A redirect to the 'show_hunters_list' view with a success message.
     """
     hunters = TechnicalAnalysisHunter.objects.filter(user=request.user)
     
@@ -143,11 +143,11 @@ def start_all_hunters(request):
     else:
         messages.success(request, 'No hunters to start')
         
-    return redirect('hunter:hunter_list')
+    return redirect('hunter:show_hunters_list')
 
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
 def start_hunter(request, pk):
     """
     View function to start a specific hunter identified by its primary key.
@@ -158,7 +158,7 @@ def start_hunter(request, pk):
         pk: The primary key of the hunter to start.
 
     Returns:
-        A redirect to the 'hunter_list' view with a success message.
+        A redirect to the 'show_hunters_list' view with a success message.
     """
     hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
     if hunter:
@@ -169,11 +169,11 @@ def start_hunter(request, pk):
     else:
         messages.success(request, 'No hunter found to start')
         
-    return redirect('hunter:hunter_list')
+    return redirect('hunter:show_hunters_list')
 
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
 def stop_hunter(request, pk):
     """
     View function to stop a specific hunter identified by its primary key.
@@ -184,7 +184,7 @@ def stop_hunter(request, pk):
         pk: The primary key of the hunter to stop.
 
     Returns:
-        A redirect to the 'hunter_list' view with a success message.
+        A redirect to the 'show_hunters_list' view with a success message.
     """
     hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
     if hunter:
@@ -195,11 +195,11 @@ def stop_hunter(request, pk):
     else:
         messages.success(request, 'No hunter found to stop')
         
-    return redirect('hunter:hunter_list')
+    return redirect('hunter:show_hunters_list')
 
 
+@exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-@exception_handler(default_return=lambda: redirect('hunter_list'))
 def stop_all_hunters(request):
     """
     View function to stop all hunters associated with the logged-in user.
@@ -209,7 +209,7 @@ def stop_all_hunters(request):
         request: The HTTP request object.
 
     Returns:
-        A redirect to the 'hunter_list' view with a success message.
+        A redirect to the 'show_hunters_list' view with a success message.
     """
     hunters = TechnicalAnalysisHunter.objects.filter(user=request.user)
     
@@ -222,4 +222,4 @@ def stop_all_hunters(request):
     else:
         messages.success(request, 'No hunters to stop')
         
-    return redirect('hunter:hunter_list')
+    return redirect('hunter:show_hunters_list')

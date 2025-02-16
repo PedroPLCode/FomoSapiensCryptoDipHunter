@@ -99,7 +99,7 @@ def add_ta_traces(fig, df, indicators, settings):
     """
     ta_mappings = {
         'macd': [('macd', 'blue'), ('macd_signal', 'orange'), ('macd_histogram', 'grey', 'lines')],
-        'boll': [('upper_band', 'green'), ('lower_band', 'red', None, 'rgba(128, 128, 128, 0.2)')],
+        'boll': [('upper_band', 'green'), ('lower_band', 'red'), ('middle_band', 'yellow')],
         'rsi': [('rsi', 'purple', None, None, [(settings.rsi_sell, 'red'), (settings.rsi_buy, 'green')])],
         'cci': [('cci', 'brown', None, None, [(settings.cci_sell, 'red'), (settings.cci_buy, 'green')])],
         'mfi': [('mfi', 'orange', None, None, [(settings.mfi_sell, 'red'), (settings.mfi_buy, 'green')])],
@@ -325,6 +325,8 @@ def get_bot_specific_plot_indicators(settings):
     """
     indicators = []
 
+    if settings.price_signals:
+        indicators.append('close')
     if settings.rsi_signals or settings.rsi_divergence_signals:
         indicators.append('rsi')
     if settings.cci_signals or settings.cci_divergence_signals:

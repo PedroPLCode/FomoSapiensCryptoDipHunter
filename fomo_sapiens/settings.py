@@ -13,24 +13,24 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv()
+APP_SECRET_KEY = os.environ.get('APP_SECRET_KEY')
+GMAIL_USERNAME = os.environ.get('GMAIL_USERNAME')
+GMAIL_APP_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_SECRET_KEY')
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d=-vd-u-c52aaa_aq45oo@!dvo=l3d-!$z!m&l5iam@@mqs_74'
+SECRET_KEY = APP_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap4",
     'axes',
-    'captcha',  # django-recaptcha
+    'captcha',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -100,17 +100,11 @@ TEMPLATES = [
 
 STATIC_URL = '/static/'
 
-# Dodaj folder z plikami CSS do STATICFILES_DIRS
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Zakładając, że masz folder static w głównym katalogu projektu
+    BASE_DIR / "static",
 ]
 
-
 WSGI_APPLICATION = 'fomo_sapiens.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -118,10 +112,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -138,17 +128,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
     'axes.backends.AxesBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SITE_ID = 1
-LOGIN_REDIRECT_URL = '/analysis/'
-
-# Ustawienia allauth
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -162,47 +147,45 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# Skonfiguruj, by allauth używało adresu email jako login
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_AUTHENTICATED_REMEMBER = True
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_USERNAME_REQUIRED = True
+SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
+    'client_id': SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+    'secret': SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+    'key': ''
+}
 
-# Google OAuth2 ustawienia
+
+SITE_ID = 1
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
+#ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_AUTHENTICATED_REMEMBER = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+#ACCOUNT_USERNAME_REQUIRED = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_QUERY_EMAIL = True
-
 ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/account/'
 
-SESSION_COOKIE_AGE = 1800  # 30 minut
-SESSION_SAVE_EVERY_REQUEST = True  # Resetuje licznik czasu po każdej aktywności użytkownika
-
+SESSION_COOKIE_AGE = 180
+SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-AXES_FAILURE_LIMIT = 5  # Po 5 błędnych logowaniach użytkownik zostaje zablokowany
-AXES_LOCK_OUT_AT_FAILURE = True  # Blokuje konto po przekroczeniu limitu
-AXES_RESET_ON_SUCCESS = True  # Resetuje licznik po udanym logowaniu
+AXES_FAILURE_LIMIT = 5
+AXES_LOCK_OUT_AT_FAILURE = True
+AXES_RESET_ON_SUCCESS = True
 
-SESSION_COOKIE_SECURE = True  # Sesje tylko przez HTTPS
-SESSION_COOKIE_HTTPONLY = True  # Sesja niedostępna dla JavaScript
-SESSION_ENGINE = "django.contrib.sessions.backends.db"  # Przechowywanie sesji w bazie danych
+SESSION_COOKIE_SECURE = True  # HTTPS
+SESSION_COOKIE_HTTPONLY = True  # JavaScript
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 ACCOUNT_FORMS = {
     'signup': 'fomo_sapiens.forms.CustomSignupForm',
 }
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_CLIENT_ID')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_SECRET_KEY')
-
-RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
-RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -212,23 +195,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Gmail settings
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('GMAIL_USERNAME')
-EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD')
+EMAIL_HOST_USER = GMAIL_USERNAME
+EMAIL_HOST_PASSWORD = GMAIL_APP_PASSWORD
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
