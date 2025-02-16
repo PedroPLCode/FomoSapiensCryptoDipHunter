@@ -7,6 +7,9 @@ from django.db import connection
 from django.utils import timezone
 
 def inject_date_and_time(request):
+    """
+    Injects current date and time into the context for use in templates.
+    """
     try:
         date_and_time = timezone.now()
         date_and_time = date_and_time.replace(tzinfo=None)

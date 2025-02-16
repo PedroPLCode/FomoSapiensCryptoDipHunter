@@ -13,6 +13,20 @@ import time
 
 @exception_handler()
 def run_selected_interval_hunters(interval='1h'):
+    """
+    Runs the trading logic for all selected hunters at a given interval.
+
+    This function iterates through all the hunters configured with the specified 
+    interval and runs their logic. If no hunters are found for the given interval, 
+    the function will log a message and return without executing any logic.
+
+    Args:
+        interval (str): The time interval for the hunter, default is '1h'. 
+                         Valid intervals can include '1h', '15m', '30m', etc.
+
+    Returns:
+        None
+    """
     apps.check_apps_ready()
     logger.info(f'Start run_selected_interval_hunters interval {interval}')
     
@@ -121,6 +135,18 @@ def run_single_hunter_logic(hunter):
         
 @exception_handler(default_return=(None, None))
 def get_latest_and_previus_data(df):
+    """
+    Fetches the latest and previous data points from the given DataFrame.
+
+    This function extracts the most recent row and the second most recent row from 
+    the DataFrame, which can then be used for comparison or trend analysis.
+
+    Args:
+        df (DataFrame): The DataFrame containing market data.
+
+    Returns:
+        tuple: A tuple containing two rows, the latest data and the previous data.
+    """
     latest_data = df.iloc[-1]
     previous_data = df.iloc[-2]
     return latest_data, previous_data

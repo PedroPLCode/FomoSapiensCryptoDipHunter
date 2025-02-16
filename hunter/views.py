@@ -5,10 +5,23 @@ from io import StringIO
 import pandas as pd
 from .forms import TechnicalAnalysisHunterForm
 from .models import TechnicalAnalysisHunter
+from fomo_sapiens.utils.exception_handlers import exception_handler
 from fomo_sapiens.utils.logging import logger
 
 @login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
 def hunter_list(request):
+    """
+    View function to display a list of hunters associated with the logged-in user.
+    Each hunter's data is processed to calculate technical analysis indicators and
+    a plot URL is generated for each hunter.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        A rendered 'hunter_list.html' template with the hunters' data and plot URLs.
+    """
     from analysis.utils.calc_utils import calculate_ta_indicators
     from analysis.utils.plot_utils import plot_selected_ta_indicators
     
@@ -17,7 +30,6 @@ def hunter_list(request):
     for hunter in hunters:
         df_loaded = pd.read_json(StringIO(hunter.df))
         df_calculated = calculate_ta_indicators(df_loaded, hunter)
-    
         plot_url = plot_selected_ta_indicators(df_calculated, hunter)
         hunter.plot_url = plot_url
     
@@ -25,7 +37,19 @@ def hunter_list(request):
 
 
 @login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
 def hunter_create_or_edit(request, pk=None):
+    """
+    View function to create a new hunter or edit an existing one. The hunter's
+    data is stored in the form, validated, and saved to the database.
+
+    Args:
+        request: The HTTP request object.
+        pk: The primary key of the hunter to edit (if provided).
+
+    Returns:
+        A rendered 'hunter_edit.html' template with the form for creating or editing a hunter.
+    """
     if pk:
         title = 'Selected Hunter Settings:'
         hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
@@ -48,7 +72,19 @@ def hunter_create_or_edit(request, pk=None):
 
 
 @login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
 def hunter_delete(request, pk):
+    """
+    View function to delete a hunter. The hunter is identified by the primary key.
+    A confirmation page is shown before deletion.
+
+    Args:
+        request: The HTTP request object.
+        pk: The primary key of the hunter to delete.
+
+    Returns:
+        A rendered 'hunter_delete.html' template with the hunter's data for confirmation.
+    """
     hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
     if request.method == 'POST':
         hunter.delete()
@@ -58,14 +94,51 @@ def hunter_delete(request, pk):
 
 
 @login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
+def remove_all_hunters(request):
+    """
+    View function to remove all hunters associated with the logged-in user.
+    A confirmation page is shown before deletion of all hunters.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        A rendered 'hunters_remove.html' template showing all hunters to be removed.
+    """
+    hunters = TechnicalAnalysisHunter.objects.filter(user=request.user)
+    if request.method == 'POST':
+        if hunters:
+            for hunter in hunters:
+                hunter.delete()
+                logger.info(f'hunter {hunter.id} removed')
+            messages.success(request, 'All hunters removed')
+        else:
+            messages.success(request, 'No hunters to remove')
+        return redirect('hunter:hunter_list')
+    return render(request, 'hunter/hunters_remove.html', {'hunters': hunters})
+
+
+@login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
 def start_all_hunters(request):
+    """
+    View function to start all hunters associated with the logged-in user.
+    The running state of each hunter is updated to True.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        A redirect to the 'hunter_list' view with a success message.
+    """
     hunters = TechnicalAnalysisHunter.objects.filter(user=request.user)
     
     if hunters:
         for hunter in hunters:
             hunter.running = True
             hunter.save()
-            logger.info(f'hunter {hunter.id} stoped')
+            logger.info(f'hunter {hunter.id} started')
         messages.success(request, 'All hunters started')
     else:
         messages.success(request, 'No hunters to start')
@@ -74,7 +147,19 @@ def start_all_hunters(request):
 
 
 @login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
 def start_hunter(request, pk):
+    """
+    View function to start a specific hunter identified by its primary key.
+    The running state of the hunter is updated to True.
+
+    Args:
+        request: The HTTP request object.
+        pk: The primary key of the hunter to start.
+
+    Returns:
+        A redirect to the 'hunter_list' view with a success message.
+    """
     hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
     if hunter:
         hunter.running = True
@@ -88,12 +173,24 @@ def start_hunter(request, pk):
 
 
 @login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
 def stop_hunter(request, pk):
+    """
+    View function to stop a specific hunter identified by its primary key.
+    The running state of the hunter is updated to False.
+
+    Args:
+        request: The HTTP request object.
+        pk: The primary key of the hunter to stop.
+
+    Returns:
+        A redirect to the 'hunter_list' view with a success message.
+    """
     hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
     if hunter:
         hunter.running = False
         hunter.save()
-        logger.info(f'hunter {hunter.id} stoped')
+        logger.info(f'hunter {hunter.id} stopped')
         messages.success(request, f'Hunter {hunter.id} stopped')
     else:
         messages.success(request, 'No hunter found to stop')
@@ -102,14 +199,25 @@ def stop_hunter(request, pk):
 
 
 @login_required
+@exception_handler(default_return=lambda: redirect('hunter_list'))
 def stop_all_hunters(request):
+    """
+    View function to stop all hunters associated with the logged-in user.
+    The running state of each hunter is updated to False.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        A redirect to the 'hunter_list' view with a success message.
+    """
     hunters = TechnicalAnalysisHunter.objects.filter(user=request.user)
     
     if hunters:
         for hunter in hunters:
             hunter.running = False
             hunter.save()
-            logger.info(f'hunter {hunter.id} stoped')
+            logger.info(f'hunter {hunter.id} stopped')
         messages.success(request, 'All hunters stopped')
     else:
         messages.success(request, 'No hunters to stop')

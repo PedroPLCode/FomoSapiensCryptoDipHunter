@@ -1,18 +1,21 @@
 """
-URL configuration for FomoSapiensCryptoDipHunter project.
+URL configuration for the FomoSapiensCryptoDipHunter project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+This file contains the URL patterns that map requests to specific views 
+for the FomoSapiensCryptoDipHunter application. It includes routes for 
+the home page, account management, CAPTCHA validation, the Django admin 
+interface, and various app modules such as analysis and hunter.
+
+URL Patterns:
+    - '/' (home_page): Renders the home page.
+    - '/accounts/': Includes URLs for account management, provided by allauth.
+    - '/captcha/': Includes URLs for CAPTCHA validation.
+    - '/admin/': URL for the Django admin interface.
+    - '/analysis/': Includes URLs for the analysis app.
+    - '/hunter/': Includes URLs for the hunter app.
+
+Custom Error Handling:
+    - 404 errors are handled by the custom_404_view in fomo_sapiens.views.
 """
 from django.contrib import admin
 from django.urls import path, include

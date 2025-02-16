@@ -1,18 +1,11 @@
 """
-URL configuration for FomoSapiensCryptoDipHunter project.
+URL configuration for the FomoSapiensCryptoDipHunter project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Defines URL patterns for technical analysis views, including:
+- Displaying technical analysis data.
+- Updating user settings for technical analysis.
+- Refreshing technical analysis data.
+- Sending an email report with analysis results.
 """
 from django.urls import path
 from . import views
@@ -21,4 +14,5 @@ urlpatterns = [
     path('', views.show_technical_analysis, name='show_technical_analysis'),
     path('settings/', views.update_technical_analysis_settings, name='update_technical_analysis_settings'),
     path('refresh/', views.refresh_data, name='refresh_data'),
+    path('report/', views.send_email_analysis_report, name='send_email_analysis_report'),
 ]

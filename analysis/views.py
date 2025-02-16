@@ -1,3 +1,4 @@
+from re import sub
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,12 +7,32 @@ import pandas as pd
 from .forms import TechnicalAnalysisSettingsForm
 from .models import User, TechnicalAnalysisSettings
 from fomo_sapiens.utils.logging import logger
+from fomo_sapiens.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.email_utils import send_email
 from .utils.fetch_utils import fetch_and_save_df
-from .utils.calc_utils import calculate_ta_indicators
-from .utils.plot_utils import plot_selected_ta_indicators, prepare_selected_indicators_list
+from analysis.utils.report_utils import generate_report_email
+from .utils.plot_utils import (
+    plot_selected_ta_indicators, 
+    prepare_selected_indicators_list
+)
+from analysis.utils.calc_utils import calculate_ta_indicators
 
 @login_required
+#@exception_handler(default_return=lambda: redirect('show_technical_analysis'))
 def update_technical_analysis_settings(request):
+    """
+    View function to update the user's technical analysis settings.
+    
+    This function handles both displaying the settings form and processing the submitted form.
+    If the request method is POST, it validates and saves the form data. If successful, the 
+    settings are updated, and new technical analysis data is fetched and saved.
+    
+    Args:
+        request: The HTTP request object.
+    
+    Returns:
+        HttpResponse: Renders the settings page or redirects upon successful update.
+    """
     user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
@@ -19,7 +40,7 @@ def update_technical_analysis_settings(request):
         if form.is_valid():
             form.save()
             fetch_and_save_df(user_ta_settings)
-            messages.success(request, 'Twoje ustawienia zostały zapisane!')
+            messages.success(request, 'Settings saved succesfully.')
             return redirect('show_technical_analysis')
     else:
         form = TechnicalAnalysisSettingsForm(instance=user_ta_settings)
@@ -28,17 +49,44 @@ def update_technical_analysis_settings(request):
 
 
 @login_required
+#@exception_handler(default_return=lambda: redirect('show_technical_analysis'))
 def refresh_data(request):
+    """
+    View function to refresh the user's technical analysis data.
+    
+    This function retrieves or creates the user's technical analysis settings, 
+    updates the analysis data, and informs the user upon successful completion.
+    
+    Args:
+        request: The HTTP request object.
+    
+    Returns:
+        HttpResponseRedirect: Redirects to the technical analysis page after refreshing the data.
+    """
     user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
     fetch_and_save_df(user_ta_settings)
-    messages.success(request, 'Data refreshed')
+    messages.success(request, 'Data refreshed successfully')
     return redirect('show_technical_analysis')
 
 
+#@exception_handler(default_return=lambda: redirect('show_technical_analysis'))
 def show_technical_analysis(request):
-    """Widok analizy technicznej dostępny zarówno dla gości, jak i dla zalogowanych użytkowników."""
+    """
+    View function to display technical analysis data.
+    
+    This view is accessible to both authenticated users and guests. If a user is authenticated,
+    their saved settings are loaded or created. If a guest accesses the page, a guest account
+    is used to generate technical analysis data. Users can select technical indicators to be
+    displayed, and the latest data is fetched and plotted accordingly.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders the technical analysis page with the relevant data and charts.
+    """
     if request.user.is_authenticated:
-            user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
     else:
         guest_user, created = User.objects.get_or_create(username='guest')
         user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=guest_user)
@@ -54,11 +102,11 @@ def show_technical_analysis(request):
 
     df_loaded = pd.read_json(StringIO(user_ta_settings.df))
     if df_loaded is None or df_loaded.empty:
-        return render(request, 'analysis/show.html', {'error': 'Nie udało się pobrać danych'})
+        return render(request, 'analysis/show_analysis.html', {'error': 'Error loading data.'})
 
     df_calculated = calculate_ta_indicators(df_loaded, user_ta_settings)
     if df_calculated is None or df_calculated.empty:
-        return render(request, 'analysis/show.html', {'error': 'Nie udało się obliczyć analizy technicznej'})
+        return render(request, 'analysis/show_analysis.html', {'error': 'Error calculating Technical Analysis.'})
 
     latest_data = df_calculated.iloc[-1].to_dict()
     previous_data = df_calculated.iloc[-2].to_dict()
@@ -74,3 +122,35 @@ def show_technical_analysis(request):
         'selected_indicators_list': selected_indicators_list,
         'indicators_list': indicators_list 
     })
+    
+    
+@login_required
+def send_email_analysis_report(request):
+    """
+    Sends a technical analysis report via email to the user.
+
+    This view function retrieves the user's technical analysis settings,
+    loads the saved data, calculates indicators, trends, and averages,
+    and then generates and sends an email report.
+
+    If data is unavailable or calculations fail, an error message is displayed.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: Redirects to the technical analysis page or displays an error message.
+    """
+    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+    
+    df_loaded = pd.read_json(StringIO(user_ta_settings.df))
+    if df_loaded is None or df_loaded.empty:
+        return render(request, 'analysis/show_analysis.html', {'error': 'Error calculating Technical Analysis.'})
+    
+    df_calculated = calculate_ta_indicators(df_loaded, user_ta_settings)
+    email = user_ta_settings.user.email
+    subject, content = generate_report_email(user_ta_settings, df_calculated)
+    send_email(email, subject, content)
+    
+    messages.success(request, 'Email sent successfully.')
+    return redirect('show_technical_analysis')

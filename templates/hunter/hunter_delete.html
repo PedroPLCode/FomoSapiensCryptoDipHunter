@@ -1,7 +1,7 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-<div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center bg-secondary">
+<div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center text-dark bg-dark bg-opacity-25">
   <h4 class="text-center">Delete this hunter?<br>{{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }}<br>{{ hunter.comment }}</h4>
   <form method="post">
     {% csrf_token %}

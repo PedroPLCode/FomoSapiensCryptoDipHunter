@@ -1,3 +1,14 @@
+"""
+Models and signals for managing technical analysis settings in the FomoSapiensCryptoDipHunter project.
+
+- `TechnicalAnalysisSettings`: Stores user-specific settings for technical analysis, including indicators, time periods, and fetched data.
+- `create_user_analysis_settings`: Signal that creates default technical analysis settings when a new user is created.
+- `save_user_analysis_settings`: Signal that saves the user's analysis settings whenever the user object is saved.
+- `default_plot_indicators`: Returns a default list of selected indicators for plotting.
+- `default_df`: Fetches and returns default market data in JSON format.
+
+This module integrates with Django's `User` model and uses signals to automate settings creation.
+"""
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -51,12 +62,19 @@ class TechnicalAnalysisSettings(models.Model):
     psar_acceleration = models.FloatField(default=0.02)
     psar_maximum = models.FloatField(default=0.2)
     
+    adx_strong_trend = models.IntegerField(default=25)
+    adx_weak_trend = models.IntegerField(default=20)
+    adx_no_trend = models.IntegerField(default=5)
+    
     rsi_buy = models.IntegerField(default=30)
     rsi_sell = models.IntegerField(default=70)
     cci_buy = models.IntegerField(default=30)
     cci_sell = models.IntegerField(default=70)
     mfi_buy = models.IntegerField(default=30)
     mfi_sell = models.IntegerField(default=70)
+    stoch_buy = models.IntegerField(default=30)
+    stoch_sell = models.IntegerField(default=70)
+    atr_buy_threshold = models.FloatField(default=0.005)
     
     selected_plot_indicators = models.JSONField(default=default_plot_indicators)
     
@@ -64,4 +82,4 @@ class TechnicalAnalysisSettings(models.Model):
     df_last_fetch_time = models.DateTimeField(default=dt.now)
 
     def __str__(self):
-        return f"Ustawienia analizy dla {self.user.username}"
+        return f"technical Analysis settings for user: {self.user.username}"

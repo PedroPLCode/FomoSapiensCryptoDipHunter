@@ -10,7 +10,7 @@
 </h4>
     {% if not SOCIALACCOUNT_ONLY %}
         {% setvar link %}
-            <a class="text-white" href="{{ signup_url }}">
+            <a class="text-dark" href="{{ signup_url }}">
             {% endsetvar %}
             {% setvar end_link %}
             </a>
@@ -30,7 +30,7 @@
                 {% element button type="submit" tags="prominent,login" class="btn btn-primary" %}
                     {% trans "Sign In" %}
                 {% endelement %}
-                <a class="text-white mt-2" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                <a class="text-dark mt-2" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
             {% endslot %}
         {% endelement %}
     {% endif %}

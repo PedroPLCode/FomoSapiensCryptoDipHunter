@@ -414,7 +414,7 @@ def handle_ta_df_final_cleaning(df, columns_to_check, settings):
     return df
 
     
-@exception_handler(default_return=False)
+@exception_handler()
 def calculate_ta_indicators(df, settings):
     """
     Calculates various technical analysis indicators on the given DataFrame.

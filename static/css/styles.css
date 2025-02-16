@@ -7,14 +7,6 @@ ul li {
     margin-bottom: 10px;
 }
 
-.border-bottom {
-    border-bottom: 50px solid #ffffff98;
-}
-
-.border-top {
-    border-top: 50px solid #ffffff98;
-}
-
 .form-check {
     width: 100%;
 }

@@ -1,10 +1,6 @@
 from django.core.mail import send_mail
 from .logging import logger
 from .exception_handlers import exception_handler
-import django
-
-#if not django.apps.apps.ready:
-#    django.setup()
 
 @exception_handler(default_return=False)
 def send_email(email, subject, body):

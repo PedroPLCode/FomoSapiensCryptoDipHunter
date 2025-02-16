@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 import pandas as pd
 from binance.client import Client
 import os
-from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
 
 load_dotenv()

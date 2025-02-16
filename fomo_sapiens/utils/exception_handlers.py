@@ -5,61 +5,44 @@ from binance.exceptions import BinanceAPIException
 
 logger = logging.getLogger(__name__)
 
-def exception_handler(default_return=None, db_rollback=False):
+def exception_handler(default_return=None):
     """
-    A decorator that catches exceptions, logs the error, optionally rolls back the database session, 
-    and sends an email notification.
+    Decorator to handle exceptions and provide a consistent logging and error reporting 
+    mechanism for wrapped functions.
+
+    This decorator catches a set of predefined exceptions (e.g., IndexError, BinanceAPIException, 
+    ConnectionError, etc.) and logs them along with the function name where the exception occurred.
+    In case of an exception, it also sends an email to the admin with the error details.
+
+    If the exception is of an unhandled type, a generic exception handler is invoked to log and report
+    the error.
+
+    The decorator allows for two behaviors for the return value after an exception:
+    1. A default return value (specified by the `default_return` parameter).
+    2. A callable that is invoked if the exception occurs.
+    
+    If `default_return` is set to `exit`, the program will terminate with `sys.exit(1)`.
 
     Args:
-        default_return (Any, optional): The value to return if an exception occurs. Defaults to None.
-        db_rollback (bool, optional): If True, rolls back the database session upon an exception. Defaults to False.
+        default_return (optional): The value to return in case of an exception. 
+                                    It can be:
+                                    - A default value to return
+                                    - A callable that will be executed if an exception occurs
+                                    - `exit` to terminate the program on error
 
     Returns:
-        function: A wrapped function that handles exceptions.
+        The value from `default_return` or the result of the callable if defined. 
+        If `exit` is passed, the program will terminate.
 
-    Exceptions Caught:
-        - IndexError
-        - BinanceAPIException
-        - ConnectionError
-        - TimeoutError
-        - ValueError
-        - TypeError
-        - FileNotFoundError
-        - General Exception (any other unexpected errors)
-    
-    Behavior:
-        - Logs the exception with the bot ID (if available).
-        - Sends an email notification to the administrator.
-        - Optionally rolls back the database session if `db_rollback=True`.
-        - Returns `default_return` in case of an error.
+    Example:
+        @exception_handler(default_return="Fallback value")
+        def risky_function():
+            # Function that may raise an exception
+            pass
     """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            #import django
-            #django.setup()
-
-            bot_id = None
-
-            if 'bot_settings' in kwargs and hasattr(kwargs['bot_settings'], 'id'):
-                bot_id = kwargs['bot_settings'].id
-            else:
-                for arg in args:
-                    if hasattr(arg, 'id') and hasattr(arg, 'bot_running'):
-                        bot_id = arg.id
-                        break
-            
-            if bot_id is None:
-                if 'bot_id' in kwargs:
-                    bot_id = kwargs['bot_id']
-                else:
-                    for arg in args:
-                        if isinstance(arg, int):
-                            bot_id = arg
-                            break
-
-            bot_str = f'Bot {bot_id} ' if bot_id else ''
-
             try:
                 return func(*args, **kwargs)
             except (
@@ -72,14 +55,21 @@ def exception_handler(default_return=None, db_rollback=False):
                 FileNotFoundError
             ) as e:
                 exception_type = type(e).__name__
-                logger.error(f"{bot_str}{exception_type} in {func.__name__}: {str(e)}")
+                logger.error(f"{exception_type} in {func.__name__}: {str(e)}")
                 from .email_utils import send_admin_email
-                send_admin_email(f"{bot_str}{exception_type} in {func.__name__}", str(e))
+                send_admin_email(f"{exception_type} in {func.__name__}", str(e))
             except Exception as e:
                 exception_type = "Exception"
-                logger.error(f"{bot_str}{exception_type} in {func.__name__}: {str(e)}")
+                logger.error(f"{exception_type} in {func.__name__}: {str(e)}")
                 from .email_utils import send_admin_email
-                send_admin_email(f"{bot_str}{exception_type} in {func.__name__}", str(e))
+                send_admin_email(f"{exception_type} in {func.__name__}", str(e))
+            
+            if default_return is exit:
+                logger.error('sys.exit(1) Exiting program due to an error.')
+                sys.exit(1)
+            elif callable(default_return):
+                return default_return()
+            return default_return
 
         return wrapper
     return decorator

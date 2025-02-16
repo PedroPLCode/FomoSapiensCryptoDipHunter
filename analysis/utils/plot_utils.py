@@ -15,6 +15,17 @@ from io import BytesIO
 def plot_selected_ta_indicators(df, settings):
     """
     Generates an interactive Plotly chart with selected technical analysis indicators.
+    
+    This function creates a chart that visualizes various technical analysis indicators based on the given DataFrame 
+    and user settings. It validates the indicators, filters the data if necessary, and generates the plot with relevant 
+    traces (e.g., price, moving averages, RSI, MACD).
+    
+    Parameters:
+        df (DataFrame): The DataFrame containing the trading data.
+        settings (object): The settings object containing user-selected indicators and chart configurations.
+    
+    Returns:
+        str: A base64-encoded PNG image of the chart.
     """
     
     indicators = []
@@ -45,7 +56,20 @@ def plot_selected_ta_indicators(df, settings):
 
 @exception_handler(default_return=False)
 def add_price_traces(fig, df, indicators):
-    """Adds price-related traces to the figure."""
+    """
+    Adds traces for price data to the Plotly figure.
+    
+    This function adds traces to the figure for various price-related indicators like 'close', 'ema', 'ma50', and 'ma200',
+    based on the selected indicators.
+
+    Parameters:
+        fig (plotly.graph_objects.Figure): The Plotly figure object to which traces are added.
+        df (DataFrame): The DataFrame containing the data for the price traces.
+        indicators (list): The list of selected indicators to plot.
+    
+    Returns:
+        None
+    """
     if 'close' in indicators:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df['close'], name='Close Price', line=dict(color='blue')))
     if 'ema' in indicators:
@@ -59,7 +83,20 @@ def add_price_traces(fig, df, indicators):
 
 @exception_handler(default_return=False)
 def add_ta_traces(fig, df, indicators, settings):
-    """Adds technical analysis indicator traces to the figure."""
+    """
+    Adds traces for various technical analysis indicators to the Plotly figure.
+    
+    This function checks which technical analysis indicators are selected and adds their respective traces to the figure.
+
+    Parameters:
+        fig (plotly.graph_objects.Figure): The Plotly figure object to which traces are added.
+        df (DataFrame): The DataFrame containing the data for the indicators.
+        indicators (list): The list of selected indicators to plot.
+        settings (object): The settings object containing configuration values for indicators.
+    
+    Returns:
+        None
+    """
     ta_mappings = {
         'macd': [('macd', 'blue'), ('macd_signal', 'orange'), ('macd_histogram', 'grey', 'lines')],
         'boll': [('upper_band', 'green'), ('lower_band', 'red', None, 'rgba(128, 128, 128, 0.2)')],
@@ -83,7 +120,24 @@ def add_ta_traces(fig, df, indicators, settings):
 
 @exception_handler(default_return=False)
 def add_trace(fig, df, column, color, mode='lines', fillcolor=None, horizontal_lines=None):
-    """Adds a single trace to the figure."""
+    """
+    Adds a single trace to the Plotly figure.
+
+    This function adds a trace for the specified column in the DataFrame to the Plotly figure, with optional configurations 
+    for line mode, fill color, and horizontal lines.
+
+    Parameters:
+        fig (plotly.graph_objects.Figure): The Plotly figure object to which the trace is added.
+        df (DataFrame): The DataFrame containing the data for the trace.
+        column (str): The column name in the DataFrame to plot.
+        color (str): The color for the line in the plot.
+        mode (str, optional): The mode for the line, default is 'lines'.
+        fillcolor (str, optional): The fill color for the area under the line.
+        horizontal_lines (list, optional): A list of horizontal lines to add to the plot.
+    
+    Returns:
+        None
+    """
     if column in df:
         fig.add_trace(go.Scatter(x=df['open_time'], y=df[column], name=column.upper(), line=dict(color=color), mode=mode))
     
@@ -98,7 +152,17 @@ def add_trace(fig, df, column, color, mode='lines', fillcolor=None, horizontal_l
 
 @exception_handler(default_return=False)
 def format_chart(fig):
-    """Applies formatting to the figure."""
+    """
+    Applies formatting to the Plotly figure.
+    
+    This function sets the layout options for the figure, such as background color, grid visibility, and axis properties.
+
+    Parameters:
+        fig (plotly.graph_objects.Figure): The Plotly figure object to format.
+    
+    Returns:
+        None
+    """
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
@@ -133,7 +197,17 @@ def format_chart(fig):
 
 @exception_handler(default_return=None)
 def generate_plot_image(fig):
-    """Generates a base64-encoded PNG image from the figure."""
+    """
+    Converts the Plotly figure into a base64-encoded PNG image.
+    
+    This function generates a PNG image of the Plotly figure and encodes it into base64 format to be used in web pages or APIs.
+
+    Parameters:
+        fig (plotly.graph_objects.Figure): The Plotly figure to convert into an image.
+    
+    Returns:
+        str: A base64-encoded PNG image.
+    """
     img = BytesIO()
     pio.write_image(fig, img, format='png')
     img.seek(0)
@@ -178,12 +252,12 @@ def validate_indicators(df, indicators):
     Validates that the required columns for the selected indicators are present in the DataFrame.
 
     Parameters:
-        df (DataFrame): The DataFrame containing the data to be validated.
+        df (DataFrame): The DataFrame containing the data.
         indicators (list): The list of indicators to validate.
-
-    Raises:
-        ValueError: If any required columns for the selected indicators are missing in the DataFrame.
-    """ 
+    
+    Returns:
+        None
+    """
     required_columns = {
         'close': ['close'],
         'volume': ['volume'],
@@ -211,28 +285,43 @@ def validate_indicators(df, indicators):
                 raise ValueError(f"Missing required columns for indicator {indicator}: {', '.join(missing_columns)}")
         else:
             raise ValueError(f"Unknown indicator: {indicator}")
-        
+
         
 def prepare_selected_indicators_list(indicators_list):
+    """
+    Prepares and returns a list of selected indicators by parsing a comma-separated string 
+    or returning the given list of indicators. Each indicator is stripped of any leading 
+    or trailing whitespace.
+
+    Parameters:
+        indicators_list (str or list): A string of comma-separated indicators or a list of indicators.
+
+    Returns:
+        list: A list of indicator strings.
+
+    Raises:
+        ValueError: If the input is neither a string nor a list.
+    """
     if isinstance(indicators_list, str):
         return [indicator.strip() for indicator in indicators_list.split(',')]
     elif isinstance(indicators_list, list):
         return [indicator.strip() for indicator in indicators_list]
     else:
         raise ValueError("Input should be a string or a list")
-    
-    
+
+
 @exception_handler()
 def get_bot_specific_plot_indicators(settings):
     """
-    Extracts and returns a list of selected trading indicators based on the given settings.
+    Extracts and returns a list of selected trading indicators based on the given settings 
+    that determine which indicators should be plotted.
 
     Parameters:
-        settings (object): An object containing boolean attributes that determine 
-                          which indicators are selected for plotting.
+        settings (object): An object containing boolean attributes that determine which indicators 
+                          are selected for plotting. Each attribute corresponds to a specific indicator.
 
     Returns:
-        list: A list of strings representing the selected indicators.
+        list: A list of strings representing the selected indicators, such as 'rsi', 'macd', 'boll', etc.
     """
     indicators = []
 

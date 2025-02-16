@@ -1,3 +1,12 @@
+"""
+Forms for managing user-specific technical analysis settings in the FomoSapiensCryptoDipHunter project.
+
+- `TechnicalAnalysisSettingsForm`: A Django ModelForm that allows users to update their technical analysis settings.
+  It includes fields for selecting the trading pair, interval, lookback period, and various technical indicators.
+  Widgets are customized with Bootstrap classes for better UI styling.
+
+This form is linked to the `TechnicalAnalysisSettings` model and helps users configure their preferred analysis parameters.
+"""
 from django import forms
 from .models import TechnicalAnalysisSettings
 

@@ -3,6 +3,28 @@ from fomo_sapiens.utils.exception_handlers import exception_handler
 
 @exception_handler
 def generate_hunter_signal_email(signal, hunter, df, trend, averages):
+    """
+    Generates an email content for the Hunter signal based on various technical indicators and current market data.
+
+    Args:
+        signal (str): The type of signal (e.g., "buy", "sell") for which the email is generated.
+        hunter (object): The Hunter object containing various settings and market signal configurations.
+        df (DataFrame): The DataFrame containing the historical market data used to compute signals.
+        trend (str): The current market trend (e.g., "bullish", "bearish").
+        averages (dict): A dictionary containing the average values of various indicators.
+
+    Returns:
+        str: A formatted email content with details on the signal and relevant technical indicators.
+    
+    The email includes information on the following:
+        - Hunter's configuration (symbol, interval, lookback, comment)
+        - Signal details (signal type, trend, and relevant indicators)
+        - The latest and previous market data for each indicator (e.g., close price, volume)
+        - Various technical indicators like RSI, CCI, MFI, MACD, Bollinger Bands, etc.
+    
+    This function constructs a detailed report of the signal, the relevant technical indicator values,
+    and sends it via email. The content is dynamically generated based on the signal and current market data.
+    """
     from hunter.utils.hunter_logic import get_latest_and_previus_data
     
     now = dt.now()
