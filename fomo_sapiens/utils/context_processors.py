@@ -5,8 +5,9 @@ import numpy as np
 import pandas as pd
 from django.db import connection
 from django.utils import timezone
+from typing import Dict
 
-def inject_date_and_time(request):
+def inject_date_and_time(request) -> Dict[str, str]:
     """
     Injects current date and time into the context for use in templates.
     """
@@ -15,10 +16,10 @@ def inject_date_and_time(request):
         date_and_time = date_and_time.replace(tzinfo=None)
     except Exception as e:
         date_and_time = f"Error retrieving current time: {e}"
-    return {'date_and_time': date_and_time}
-    
+    return {'date_and_time': str(date_and_time)}
 
-def inject_user_agent(request):
+
+def inject_user_agent(request) -> Dict[str, str]:
     """
     Injects the User-Agent header of the request into the context for use in templates.
     """
@@ -29,7 +30,7 @@ def inject_user_agent(request):
     return {'user_agent': user_agent}
 
 
-def inject_system_info(request):
+def inject_system_info(request) -> Dict[str, str]:
     """
     Injects the system's name, version, and release information into the context for use in templates.
     """
@@ -42,7 +43,7 @@ def inject_system_info(request):
     return {'system_info': f'{system_name} {release} {system_version}'}
 
 
-def inject_system_uptime(request):
+def inject_system_uptime(request) -> Dict[str, str]:
     """
     Injects the system's uptime into the context for use in templates.
     """
@@ -53,7 +54,7 @@ def inject_system_uptime(request):
     return {'system_uptime': uptime}
 
 
-def inject_python_version(request):
+def inject_python_version(request) -> Dict[str, str]:
     """
     Injects the Python version into the context for use in templates.
     """
@@ -64,7 +65,7 @@ def inject_python_version(request):
     return {'python_version': python_version}
 
 
-def inject_django_version(request):
+def inject_django_version(request) -> Dict[str, str]:
     """
     Injects the django version into the context for use in templates.
     """
@@ -75,7 +76,7 @@ def inject_django_version(request):
     return {'django_version': django_info}
 
 
-def inject_numpy_version(request):
+def inject_numpy_version(request) -> Dict[str, str]:
     """
     Injects the version of NumPy into the context for use in templates.
     """
@@ -86,7 +87,7 @@ def inject_numpy_version(request):
     return {'numpy_version': numpy_version}
 
 
-def inject_pandas_version(request):
+def inject_pandas_version(request) -> Dict[str, str]:
     """
     Injects the version of Pandas into the context for use in templates.
     """
@@ -97,7 +98,7 @@ def inject_pandas_version(request):
     return {'pandas_version': pandas_version}
 
 
-def inject_db_info(request):
+def inject_db_info(request) -> Dict[str, str]:
     """
     Injects the database engine type into the context for use in templates.
     """

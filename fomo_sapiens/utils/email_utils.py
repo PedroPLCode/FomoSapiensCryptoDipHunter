@@ -3,7 +3,7 @@ from .logging import logger
 from .exception_handlers import exception_handler
 
 @exception_handler(default_return=False)
-def send_email(email, subject, body):
+def send_email(email: str, subject: str, body: str) -> bool:
     """
     Sends an email to a specified recipient.
 
@@ -31,7 +31,7 @@ def send_email(email, subject, body):
         return False
 
 
-def send_admin_email(subject, body):
+def send_admin_email(subject: str, body: str) -> None:
     """
     Sends an email notification to all users with admin panel access.
 

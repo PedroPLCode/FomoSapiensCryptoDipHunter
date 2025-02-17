@@ -5,13 +5,13 @@ from hunter.utils.hunter_logic import run_single_hunter_logic
 
 class TestHunterLogic(unittest.TestCase):
 
-    @patch('your_module.fetch_data')
-    @patch('your_module.calculate_ta_indicators')
-    @patch('your_module.check_ta_trend')
-    @patch('your_module.check_classic_ta_buy_signal')
-    @patch('your_module.check_classic_ta_sell_signal')
-    @patch('your_module.send_email')
-    @patch('your_module.fetch_and_save_df')
+    @patch('hunter.utils.fetch_data')
+    @patch('hunter.utils.calculate_ta_indicators')
+    @patch('hunter.utils.check_ta_trend')
+    @patch('hunter.utils.check_classic_ta_buy_signal')
+    @patch('hunter.utils.check_classic_ta_sell_signal')
+    @patch('hunter.utils.send_email')
+    @patch('hunter.utils.fetch_and_save_df')
     def test_run_single_hunter_logic(self, mock_fetch_and_save_df, mock_send_email, mock_sell_signal, mock_buy_signal,
                                      mock_check_trend, mock_calculate_indicators, mock_fetch_data):
         hunter = MagicMock()

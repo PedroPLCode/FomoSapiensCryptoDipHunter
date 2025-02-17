@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import HttpRequest, HttpResponse
 
-def custom_404_view(request, exception):
+def custom_404_view(request: HttpRequest, exception: Exception) -> HttpResponse:
     """
     Handles the custom 404 error page by displaying a success message 
     and redirecting the user to the home page.
@@ -20,7 +21,7 @@ def custom_404_view(request, exception):
     return redirect("/")
 
 
-def home_page(request):
+def home_page(request: HttpRequest) -> HttpResponse:
     """
     Renders the home page with server time and system status.
 

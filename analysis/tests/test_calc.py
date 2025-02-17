@@ -117,14 +117,14 @@ def test_check_ta_trend(mock_settings):
 
 class TestTechnicalAnalysisFunctions(unittest.TestCase):
 
-    @patch('analysis.your_module.logger')
+    @patch('analysis.utils.logger')
     def test_is_df_valid_empty_dataframe(self, mock_logger):
         df = pd.DataFrame()
         result = is_df_valid(df)
         self.assertFalse(result)
         mock_logger.error.assert_called_with('DataFrame is empty.')
 
-    @patch('analysis.your_module.logger')
+    @patch('analysis.utils.logger')
     def test_is_df_valid_non_empty_dataframe(self, mock_logger):
         df = pd.DataFrame({'close': [1, 2, 3]})
         result = is_df_valid(df)

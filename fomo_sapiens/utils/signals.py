@@ -3,9 +3,11 @@ from django.dispatch import receiver
 from analysis.models import TechnicalAnalysisSettings
 from analysis.utils.fetch_utils import fetch_and_save_df
 from django.contrib.auth.models import User
+from django.http import HttpRequest
+from typing import Dict
 
 @receiver(user_logged_in)
-def make_first_user_superuser(sender, request, user, **kwargs):
+def make_first_user_superuser(sender: type, request: HttpRequest, user: User, **kwargs: Dict) -> None:
     """
     Signal handler for when a user logs in.
 
@@ -26,7 +28,7 @@ def make_first_user_superuser(sender, request, user, **kwargs):
 
 
 @receiver(user_logged_in)
-def custom_login_function(sender, request, user, **kwargs):
+def custom_login_function(sender: type, request: HttpRequest, user: User, **kwargs: Dict) -> None:
     """
     Signal handler for custom logic upon user login.
 

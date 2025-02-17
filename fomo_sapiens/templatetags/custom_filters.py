@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 @register.filter(name='startswith')
-def startswith(value, arg):
+def startswith(value: str, arg: str) -> bool:
     """
     Custom template filter to check if a string starts with a specified prefix.
 
