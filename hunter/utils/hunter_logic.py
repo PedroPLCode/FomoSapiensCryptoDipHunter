@@ -1,4 +1,3 @@
-from datetime import datetime as dt
 from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from analysis.utils.calc_utils import calculate_ta_indicators, calculate_ta_averages, check_ta_trend
@@ -10,9 +9,10 @@ from fomo_sapiens.utils.email_utils import send_email
 from analysis.utils.calc_utils import is_df_valid
 from django.apps import apps
 import time
+from typing import Tuple, Any
 
 @exception_handler()
-def run_selected_interval_hunters(interval='1h'):
+def run_selected_interval_hunters(interval: str = '1h') -> None:
     """
     Runs the trading logic for all selected hunters at a given interval.
 
@@ -50,7 +50,7 @@ def run_selected_interval_hunters(interval='1h'):
 
 
 @exception_handler()
-def run_single_hunter_logic(hunter):
+def run_single_hunter_logic(hunter: object) -> None:
     """
     Runs the trading logic for a single bot based on its settings.
 
@@ -134,7 +134,7 @@ def run_single_hunter_logic(hunter):
         
         
 @exception_handler(default_return=(None, None))
-def get_latest_and_previus_data(df):
+def get_latest_and_previus_data(df: Any) -> Tuple[Any, Any]:
     """
     Fetches the latest and previous data points from the given DataFrame.
 

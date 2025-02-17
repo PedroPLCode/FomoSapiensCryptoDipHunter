@@ -1,8 +1,16 @@
+from pandas import DataFrame
+from typing import Union, Dict, Optional, Tuple
 from datetime import datetime as dt
 from fomo_sapiens.utils.exception_handlers import exception_handler
 
-@exception_handler
-def generate_hunter_signal_email(signal, hunter, df, trend, averages):
+@exception_handler()
+def generate_hunter_signal_email(
+    signal: str, 
+    hunter: object, 
+    df: DataFrame, 
+    trend: str, 
+    averages: Dict[str, float]
+) -> Union[Tuple[str, str], Optional[int]]:
     """
     Generates an email content for the Hunter signal based on various technical indicators and current market data.
 

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from io import StringIO
+from typing import Optional, Any
 import pandas as pd
 from .forms import TechnicalAnalysisHunterForm
 from .models import TechnicalAnalysisHunter
@@ -10,7 +11,7 @@ from fomo_sapiens.utils.logging import logger
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def show_hunters_list(request):
+def show_hunters_list(request: Any) -> Any:
     """
     View function to display a list of hunters associated with the logged-in user.
     Each hunter's data is processed to calculate technical analysis indicators and
@@ -38,7 +39,7 @@ def show_hunters_list(request):
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def hunter_create_or_edit(request, pk=None):
+def hunter_create_or_edit(request: Any, pk: Optional[int] = None) -> Any:
     """
     View function to create a new hunter or edit an existing one. The hunter's
     data is stored in the form, validated, and saved to the database.
@@ -73,7 +74,7 @@ def hunter_create_or_edit(request, pk=None):
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def hunter_delete(request, pk):
+def hunter_delete(request: Any, pk: int) -> Any:
     """
     View function to delete a hunter. The hunter is identified by the primary key.
     A confirmation page is shown before deletion.
@@ -95,7 +96,7 @@ def hunter_delete(request, pk):
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def remove_all_hunters(request):
+def remove_all_hunters(request: Any) -> Any:
     """
     View function to remove all hunters associated with the logged-in user.
     A confirmation page is shown before deletion of all hunters.
@@ -121,7 +122,7 @@ def remove_all_hunters(request):
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def start_all_hunters(request):
+def start_all_hunters(request: Any) -> Any:
     """
     View function to start all hunters associated with the logged-in user.
     The running state of each hunter is updated to True.
@@ -148,7 +149,7 @@ def start_all_hunters(request):
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def start_hunter(request, pk):
+def start_hunter(request: Any, pk: int) -> Any:
     """
     View function to start a specific hunter identified by its primary key.
     The running state of the hunter is updated to True.
@@ -174,7 +175,7 @@ def start_hunter(request, pk):
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def stop_hunter(request, pk):
+def stop_hunter(request: Any, pk: int) -> Any:
     """
     View function to stop a specific hunter identified by its primary key.
     The running state of the hunter is updated to False.
@@ -200,7 +201,7 @@ def stop_hunter(request, pk):
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))
 @login_required
-def stop_all_hunters(request):
+def stop_all_hunters(request: Any) -> Any:
     """
     View function to stop all hunters associated with the logged-in user.
     The running state of each hunter is updated to False.
