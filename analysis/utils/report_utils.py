@@ -1,8 +1,9 @@
 from datetime import datetime as dt
 from fomo_sapiens.utils.exception_handlers import exception_handler
+import pandas as pd
 
 @exception_handler()
-def generate_ta_report_email(settings, df):
+def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, str]:
     """
     Generates an email report for technical analysis of a given symbol, interval, and lookback period.
 
@@ -16,8 +17,6 @@ def generate_ta_report_email(settings, df):
                             indicators, and thresholds for various technical analysis parameters.
         df (DataFrame): A DataFrame containing the historical market data (e.g., OHLCV) to compute 
                         technical indicators and trends.
-        trend (str): A string indicating the current market trend.
-        averages (dict): A dictionary containing average values for various indicators used in the analysis.
 
     Returns:
         tuple: A tuple containing the subject (str) and content (str) of the email.
@@ -27,13 +26,13 @@ def generate_ta_report_email(settings, df):
     """
     from hunter.utils.hunter_logic import get_latest_and_previus_data
     
-    time = settings.df_last_fetch_time
-    formatted_time = time.strftime('%Y-%m-%d %H:%M:%S')
+    time: dt = settings.df_last_fetch_time
+    formatted_time: str = time.strftime('%Y-%m-%d %H:%M:%S')
     latest_data, previous_data = get_latest_and_previus_data(df)
     
-    subject = f"Technical Analysis report."
+    subject: str = "Technical Analysis report."
     
-    content = (
+    content: str = (
         f"Technical Analysis report.\n"
         f"symbol: {settings.symbol}\n"
         f"interval: {settings.interval}\n"

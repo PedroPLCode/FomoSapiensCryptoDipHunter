@@ -1,3 +1,5 @@
+from typing import Union, Optional, Tuple
+from analysis.models import TechnicalAnalysisSettings
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import pandas as pd
@@ -7,7 +9,7 @@ from fomo_sapiens.utils.exception_handlers import exception_handler
 
 load_dotenv()
 
-def get_binance_api_credentials():
+def get_binance_api_credentials() -> Tuple[Optional[str], Optional[str]]:
     """
     Retrieves Binance API credentials from environment variables.
 
@@ -21,7 +23,7 @@ def get_binance_api_credentials():
 
 
 @exception_handler()
-def create_binance_client():
+def create_binance_client() -> Union[Client, Optional[int]]:
     """
     Creates a Binance client instance using the provided API credentials.
 
@@ -40,7 +42,7 @@ def create_binance_client():
 
 
 @exception_handler()
-def fetch_and_save_df(settings):
+def fetch_and_save_df(settings: TechnicalAnalysisSettings) -> Union[bool, Optional[int]]:
     """
     Fetches data for a given trading symbol and interval, processes it into JSON format, 
     and saves the data along with the timestamp of the last fetch to the provided settings.
@@ -52,17 +54,28 @@ def fetch_and_save_df(settings):
     This function fetches market data using the `fetch_data` function, converts the resulting 
     DataFrame to JSON format, and stores it in the `df` field of the `settings` model. 
     The timestamp of the fetch is also recorded in the `df_last_fetch_time` field.
+    
+    Returns:
+        Union[pd.DataFrame, Optional[int]]: The fetched DataFrame if successful, otherwise None or an integer error code.
     """
     from datetime import datetime as dt 
-    df_fetched = fetch_data(symbol=settings.symbol, interval=settings.interval, lookback=calculate_lookback_extended(settings))
+    
+    df_fetched = fetch_data(
+        symbol=settings.symbol, 
+        interval=settings.interval, 
+        lookback=calculate_lookback_extended(settings)
+        )
+    
     json_data = df_fetched.to_json(orient='records')
     settings.df = json_data
     settings.df_last_fetch_time = dt.now()
     settings.save()
+    
+    return df_fetched
 
 
 @exception_handler()
-def calculate_lookback_extended(settings):
+def calculate_lookback_extended(settings: TechnicalAnalysisSettings) -> Union[str, Optional[int]]:
     """
     Calculates the extended lookback period based on the interval set in the provided settings.
 
@@ -81,7 +94,13 @@ def calculate_lookback_extended(settings):
 
 
 @exception_handler()
-def fetch_data(symbol, interval='1h', lookback='2d', start_str=None, end_str=None):
+def fetch_data(
+    symbol: str, 
+    interval: str = '1h', 
+    lookback: str = '2d', 
+    start_str: Optional[str] = None, 
+    end_str: Optional[str] = None
+) -> Union[pd.DataFrame, Optional[int]]:
     """
     Fetch historical kline (candlestick) data for a specific trading symbol.
 
@@ -151,7 +170,7 @@ def fetch_data(symbol, interval='1h', lookback='2d', start_str=None, end_str=Non
     
 
 @exception_handler()
-def fetch_system_status():
+def fetch_system_status() -> Union[object, Optional[int]]:
     """
     Fetches the current system status from the Binance API.
 
@@ -164,7 +183,7 @@ def fetch_system_status():
 
 
 @exception_handler()
-def fetch_server_time():
+def fetch_server_time() -> Union[dict, Optional[int]]:
     """
     Fetches the current server time from the Binance API.
 

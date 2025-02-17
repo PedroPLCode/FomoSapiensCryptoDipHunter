@@ -10,9 +10,11 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import base64
 from io import BytesIO
+import pandas as pd
+from typing import List, Optional, Union
 
 @exception_handler(default_return=None)
-def plot_selected_ta_indicators(df, settings):
+def plot_selected_ta_indicators(df: pd.DataFrame, settings: object) -> Optional[str]:
     """
     Generates an interactive Plotly chart with selected technical analysis indicators.
     
@@ -28,7 +30,7 @@ def plot_selected_ta_indicators(df, settings):
         str: A base64-encoded PNG image of the chart.
     """
     
-    indicators = []
+    indicators: List[str] = []
     
     selected_indicators = getattr(settings, 'selected_plot_indicators', None)
     if selected_indicators:
@@ -55,7 +57,7 @@ def plot_selected_ta_indicators(df, settings):
 
 
 @exception_handler(default_return=False)
-def add_price_traces(fig, df, indicators):
+def add_price_traces(fig: go.Figure, df: pd.DataFrame, indicators: List[str]) -> None:
     """
     Adds traces for price data to the Plotly figure.
     
@@ -82,7 +84,7 @@ def add_price_traces(fig, df, indicators):
 
 
 @exception_handler(default_return=False)
-def add_ta_traces(fig, df, indicators, settings):
+def add_ta_traces(fig: go.Figure, df: pd.DataFrame, indicators: List[str], settings: object) -> None:
     """
     Adds traces for various technical analysis indicators to the Plotly figure.
     
@@ -119,7 +121,7 @@ def add_ta_traces(fig, df, indicators, settings):
 
 
 @exception_handler(default_return=False)
-def add_trace(fig, df, column, color, mode='lines', fillcolor=None, horizontal_lines=None):
+def add_trace(fig: go.Figure, df: pd.DataFrame, column: str, color: str, mode: str = 'lines', fillcolor: Optional[str] = None, horizontal_lines: Optional[List[tuple]] = None) -> None:
     """
     Adds a single trace to the Plotly figure.
 
@@ -151,7 +153,7 @@ def add_trace(fig, df, column, color, mode='lines', fillcolor=None, horizontal_l
 
 
 @exception_handler(default_return=False)
-def format_chart(fig):
+def format_chart(fig: go.Figure) -> None:
     """
     Applies formatting to the Plotly figure.
     
@@ -196,7 +198,7 @@ def format_chart(fig):
 
 
 @exception_handler(default_return=None)
-def generate_plot_image(fig):
+def generate_plot_image(fig: go.Figure) -> Optional[str]:
     """
     Converts the Plotly figure into a base64-encoded PNG image.
     
@@ -215,7 +217,7 @@ def generate_plot_image(fig):
 
 
 @exception_handler(default_return=False)
-def parse_lookback(lookback):
+def parse_lookback(lookback: str) -> timedelta:
     """
     Parses a lookback period string (e.g., '10d', '3h', '5m') into a timedelta object.
 
@@ -247,7 +249,7 @@ def parse_lookback(lookback):
 
 
 @exception_handler(default_return=False)
-def validate_indicators(df, indicators):
+def validate_indicators(df: pd.DataFrame, indicators: List[str]) -> None:
     """
     Validates that the required columns for the selected indicators are present in the DataFrame.
 
@@ -286,8 +288,8 @@ def validate_indicators(df, indicators):
         else:
             raise ValueError(f"Unknown indicator: {indicator}")
 
-        
-def prepare_selected_indicators_list(indicators_list):
+
+def prepare_selected_indicators_list(indicators_list: Union[str, List[str]]) -> List[str]:
     """
     Prepares and returns a list of selected indicators by parsing a comma-separated string 
     or returning the given list of indicators. Each indicator is stripped of any leading 
@@ -311,7 +313,7 @@ def prepare_selected_indicators_list(indicators_list):
 
 
 @exception_handler()
-def get_bot_specific_plot_indicators(settings):
+def get_bot_specific_plot_indicators(settings) -> List[str]:
     """
     Extracts and returns a list of selected trading indicators based on the given settings 
     that determine which indicators should be plotted.

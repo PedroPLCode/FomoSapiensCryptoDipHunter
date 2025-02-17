@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpRequest, HttpResponse
 from io import StringIO
 import pandas as pd
 from .forms import TechnicalAnalysisSettingsForm
@@ -18,7 +19,7 @@ from .utils.plot_utils import (
 
 @exception_handler(default_return=lambda: redirect('show_technical_analysis'))
 @login_required
-def update_technical_analysis_settings(request):
+def update_technical_analysis_settings(request: HttpRequest) -> HttpResponse:
     """
     View function to update the user's technical analysis settings.
     
@@ -49,7 +50,7 @@ def update_technical_analysis_settings(request):
 
 @exception_handler(default_return=lambda: redirect('show_technical_analysis'))
 @login_required
-def refresh_data(request):
+def refresh_data(request: HttpRequest) -> HttpResponse:
     """
     View function to refresh the user's technical analysis data.
     
@@ -69,7 +70,7 @@ def refresh_data(request):
 
 
 @exception_handler(default_return=lambda: redirect('show_technical_analysis'))
-def show_technical_analysis(request):
+def show_technical_analysis(request: HttpRequest) -> HttpResponse:
     """
     View function to display technical analysis data.
     
@@ -126,7 +127,7 @@ def show_technical_analysis(request):
     
 @exception_handler(default_return=lambda: redirect('show_technical_analysis'))
 @login_required
-def send_email_analysis_report(request):
+def send_email_analysis_report(request: HttpRequest) -> HttpResponse:
     """
     Sends a technical analysis report via email to the user.
 
