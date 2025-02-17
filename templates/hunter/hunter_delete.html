@@ -1,12 +1,23 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-<div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center text-dark bg-dark bg-opacity-25">
-  <h4 class="text-center">Delete this hunter?<br>{{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }}<br>{{ hunter.comment }}</h4>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="w-100 btn btn-danger mb-3">Yes, delete</button>
-  </form>
-  <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
+<div class="col-12 col-md-6 rounded-3 card mt-5 d-flex flex-column justify-content-center align-item-center text-dark bg-light">
+    
+  <div class="card-header">
+    <h4 class="text-center">Hunter Delete</h4>
+  </div>  
+  
+  <div class="card-body">
+    
+    <h5 class="text-center">Delete this hunter?<br>{{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }}<br>{{ hunter.comment }}</h5>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="w-100 btn btn-danger mb-3">Yes, delete</button>
+    </form>
+    <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
+
+  </div>
+
 </div>
 {% endblock %}

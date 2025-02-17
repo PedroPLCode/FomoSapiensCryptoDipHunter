@@ -52,11 +52,11 @@ def hunter_create_or_edit(request: Any, pk: Optional[int] = None) -> Any:
         A rendered 'hunter_edit.html' template with the form for creating or editing a hunter.
     """
     if pk:
-        title = 'Selected Hunter Settings:'
         hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
+        title = f'Hunter {hunter.id} Settings'
     else:
-        title = 'Create New Hunter:'
         hunter = None
+        title = 'Create New Hunter'
 
     if request.method == "POST":
         form = TechnicalAnalysisHunterForm(request.POST, instance=hunter)

@@ -20,11 +20,8 @@ from typing import List, Dict, Any
 def create_user_analysis_settings(sender: type[User], instance: User, created: bool, **kwargs: Dict[str, Any]) -> None:
     if created:
         if instance.is_authenticated:
-            TechnicalAnalysisSettings.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_analysis_settings(sender: type[User], instance: User, **kwargs: Dict[str, Any]) -> None:
-    instance.technicalanalysissettings.save()
+            if not hasattr(instance, 'technicalanalysissettings'):
+                TechnicalAnalysisSettings.objects.create(user=instance)
 
 def default_plot_indicators() -> List[str]:
     return ['rsi', 'macd']

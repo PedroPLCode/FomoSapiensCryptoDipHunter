@@ -2,30 +2,38 @@
 
 {% block body %}
 
-  <div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center text-dark bg-dark bg-opacity-25">
+  <div class="col-12 col-md-6 rounded-3 card mt-5 d-flex flex-column justify-content-center align-item-center text-dark bg-light">
     
-    <h4 class="text-center">FomoSapiensCryptoDipHunter</h4>
-    <h5 class="text-center">
-      <a href="{% url 'account_login' %}" class="text-dark">Sign In</a> to enjoy 
-      <a href="{% url 'show_technical_analysis' %}" class="text-dark">analysis</a> and 
-      <a href="/hunter/" class="text-dark">hunters</a>
-    </h5>
+    <div class="card-header">
+      <h4 class="text-center">Home Page</h4>
+    </div>
+      
+    <div class="card-body">
 
-    <p class="text-center p-0 m-0">Current Time: {{ date_and_time }}</p>
-    <p class="text-center p-0 m-0">Binance Server time: {{ server_time.serverTime }}</p>
-    <p class="text-center p-0 m-0">Binance System status: {{ system_status.status }} {{ system_status.msg }}</p>
-    <p class="text-center p-0 m-0">User Agent: {{ user_agent }}</p>
+      {% if not user.is_authenticated %}
+      <h5 class="text-center">
+        <a href="{% url 'account_login' %}" class="text-dark">Sign In</a> to enjoy 
+        <a href="{% url 'show_technical_analysis' %}" class="text-dark">analysis</a> and 
+        <a href="/hunter/" class="text-dark">hunters</a>
+      </h5>
+      {% endif %}
 
-    {% if user.is_superuser %}
-      <p class="text-center p-0 m-0">System Info: {{ system_info }}</p>
-      <p class="text-center p-0 m-0">System Uptime: {{ system_uptime }}</p>
-      <p class="text-center p-0 m-0">Python Version: {{ python_version }}</p>
-      <p class="text-center p-0 m-0">Django Version: {{ django_version }}</p>
-      <p class="text-center p-0 m-0">NumPy Version: {{ numpy_version }}</p>
-      <p class="text-center p-0 m-0">Pandas Version: {{ pandas_version }}</p>
-      <p class="text-center p-0 m-0">DB Engine: {{ db_engine }}</p>
-    {% endif %}
+      <p class="text-center p-0 m-0">Current Time: {{ date_and_time }}</p>
+      <p class="text-center p-0 m-0">Binance Server time: {{ server_time.serverTime }}</p>
+      <p class="text-center p-0 m-0">Binance System status: {{ system_status.status }} {{ system_status.msg }}</p>
+      <p class="text-center p-0 m-0">User Agent: {{ user_agent }}</p>
 
+      {% if user.is_superuser %}
+        <p class="text-center p-0 m-0">System Info: {{ system_info }}</p>
+        <p class="text-center p-0 m-0">System Uptime: {{ system_uptime }}</p>
+        <p class="text-center p-0 m-0">Python Version: {{ python_version }}</p>
+        <p class="text-center p-0 m-0">Django Version: {{ django_version }}</p>
+        <p class="text-center p-0 m-0">NumPy Version: {{ numpy_version }}</p>
+        <p class="text-center p-0 m-0">Pandas Version: {{ pandas_version }}</p>
+        <p class="text-center p-0 m-0">DB Engine: {{ db_engine }}</p>
+      {% endif %}
+
+    </div>
   </div>
 
 {% endblock %}

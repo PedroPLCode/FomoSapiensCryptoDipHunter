@@ -4,6 +4,9 @@ PRIVATE_API_KEY.py
 # csv files for backtesting
 *.csv
 
+# scheduler.lock
+scheduler.lock
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

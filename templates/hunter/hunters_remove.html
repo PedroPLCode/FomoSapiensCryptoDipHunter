@@ -1,11 +1,16 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-<div class="col-12 col-md-6 rounded-3 p-3 d-flex flex-column justify-content-center align-item-center text-dark bg-dark bg-opacity-25">
+<div class="col-12 col-md-6 rounded-3 card mt-5 d-flex flex-column justify-content-center align-item-center text-dark bg-light">
   
-    {% if hunters %}
+    <div class="card-header">
+        <h4 class="text-center">Remove All Hunters?</h4>
+    </div>
+        
+    <div class="card-body">
 
-        <h4 class="text-center">Remove ALL Hunters?</h4>
+        {% if hunters %}
+
         {% for hunter in hunters %}
             <p class="text-center">{{ hunter.id }} {{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }} {{ hunter.comment }}</p>
         {% endfor %}
@@ -17,12 +22,14 @@
         </form>
         <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
 
-    {% else %}
+        {% else %}
 
-        <h4 class="text-center">No hunters. Nothing to remove.</h4>
-        <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">Back</a>
-        
-    {% endif %}
+            <h4 class="text-center">No hunters. Nothing to remove.</h4>
+            <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">Back</a>
+            
+        {% endif %}
+
+    </div>
   
 </div>
 {% endblock %}

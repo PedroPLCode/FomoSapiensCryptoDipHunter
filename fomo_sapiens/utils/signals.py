@@ -7,27 +7,6 @@ from django.http import HttpRequest
 from typing import Dict
 
 @receiver(user_logged_in)
-def make_first_user_superuser(sender: type, request: HttpRequest, user: User, **kwargs: Dict) -> None:
-    """
-    Signal handler for when a user logs in.
-
-    This handler checks if the logged-in user is the first user in the system
-    (i.e., if there is only one user in the User table). If the logged-in user is the first one,
-    they are automatically granted superuser and staff privileges.
-
-    Args:
-        sender (type): The model class that sent the signal.
-        request (HttpRequest): The HTTP request object used to process the login.
-        user (User): The logged-in user.
-        kwargs (dict): Additional arguments passed by the signal.
-    """
-    if User.objects.count() == 1:
-        user.is_superuser = True
-        user.is_staff = True
-        user.save()
-
-
-@receiver(user_logged_in)
 def custom_login_function(sender: type, request: HttpRequest, user: User, **kwargs: Dict) -> None:
     """
     Signal handler for custom logic upon user login.
