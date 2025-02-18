@@ -31,25 +31,25 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="text-center text-dark nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="/">Home</a>
+                        <a class="text-center text-dark nav-link {% if request.path == '/' %}fw-bold{% endif %}" aria-current="page" href="/">Home</a>
                     </li>
             
                     <li class="nav-item">
-                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/analysis/' %}active{% endif %}" href="/analysis/">Analysis</a>
+                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/analysis/' %}fw-bold{% endif %}" href="/analysis/">Analysis</a>
                     </li>
             
                     <li class="nav-item">
-                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/hunter/' %}active{% endif %}" href="/hunter/">Hunters {% if user.is_authenticated %}({{ user.technicalanalysishunter_set.count }}){% endif %}</a>
+                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/hunter/' %}fw-bold{% endif %}" href="/hunter/">Hunters {% if user.is_authenticated %}({{ user.technicalanalysishunter_set.count }}){% endif %}</a>
                     </li>
             
                     {% if user.is_superuser %}
                     <li class="nav-item">
-                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/admin/' %}active{% endif %}" href="/admin/">Admin</a>
+                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/admin/' %}fw-bold{% endif %}" href="/admin/">Admin</a>
                     </li>
                     {% endif %}
             
                     <li class="nav-item">
-                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/accounts/' %}active{% endif %}" href="/accounts/">
+                        <a class="text-center text-dark nav-link {% if request.path|startswith:'/accounts/' %}fw-bold{% endif %}" href="/accounts/">
                             {% if user.is_authenticated %}
                               Account
                             {% else %}
