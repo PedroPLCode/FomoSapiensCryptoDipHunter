@@ -17,7 +17,7 @@ class CustomSignupForm(SignupForm):
         label="Username", 
         widget=forms.TextInput(attrs={'placeholder': 'Username'})
     )
-    captcha = CaptchaField(required=True, label="Are you a human?")
+    captcha = CaptchaField(required=True, label="Just a quick humanity check. No pressure!")
     
     
     def save(self, request):

@@ -65,3 +65,12 @@ ul li {
     height: 100vh;
     padding-top: 25vh;
 }
+
+.is-invalid {
+    border: 2px solid red;
+    background-color: red;
+}
+
+.invalid-feedback {
+    color: red;
+}

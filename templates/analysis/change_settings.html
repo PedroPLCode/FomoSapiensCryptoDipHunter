@@ -1,24 +1,23 @@
 {% extends 'base_generic.html' %}
+{% load crispy_forms_tags %}
 
 {% block body %}
+  <div class="col-12 col-md-6 card rounded-3 mt-5 d-flex flex-column justify-content-center align-items-center text-dark bg-light">
 
-  <div class="col-12 col-md-6 card rounded-3 mt-5 d-flex flex-column justify-content-center align-item-center text-dark bg-light">
-
-    <div class="card-header">
+    <div class="card-header w-100">
       <h4 class="text-center">Technical Analysis Settings</h4>
     </div>
 
-    <div class="card-body">
+    <div class="card-body w-100">
       <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <div class="w-100 d-flex flex-column gap-3 justify-content-center align-item-center">
-          <button type="submit" class="w-100 btn btn-primary">Save changes</button>
-          <a href="/analysis/" class="w-100 btn btn-primary">Back to analysis</a>
+        {{ form|crispy }}
+        <div class="w-100 d-flex flex-column gap-3 justify-content-center align-items-center">
+          <button type="submit" class="w-100 btn btn-primary mt-3">Save changes</button>
+          <a href="/analysis/" class="w-100 btn btn-secondary">Back to analysis</a>
         </div>       
       </form>
     </div>
     
   </div>
-
 {% endblock %}

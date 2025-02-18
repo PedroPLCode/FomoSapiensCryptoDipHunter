@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.db.models.signals import post_migrate
 
 class AnalysisConfig(AppConfig):
     """
@@ -25,3 +26,24 @@ class AnalysisConfig(AppConfig):
         and ready to be used.
         """
         import fomo_sapiens.utils.signals
+        
+        from django.contrib.sites.models import Site
+        post_migrate.connect(self.set_site, sender=self)
+
+    def set_site(self, sender, **kwargs):
+        """
+        Sets the site domain and name after migrations.
+
+        This function ensures that the default site configuration is correctly set up
+        after database migrations. It retrieves or creates a Site instance with ID 1
+        and updates its domain and name.
+
+        Args:
+            sender (AppConfig): The application that triggered the signal.
+            **kwargs: Additional keyword arguments passed by the signal.
+        """
+        from django.contrib.sites.models import Site
+        site, created = Site.objects.get_or_create(id=1)
+        site.domain = "fomosapienscryptodiphunter.com"
+        site.name = "FomoSapiensCryptoDipHunter"
+        site.save()

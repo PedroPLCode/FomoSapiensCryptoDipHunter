@@ -94,7 +94,7 @@
                         {% for indicator in selected_indicators_list %}
                 
                             {% if indicator|slugify == 'rsi' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">RSI({{ user_ta_settings.rsi_timeperiod }}, {{ user_ta_settings.rsi_buy }}/{{ user_ta_settings.rsi_sell }}):<br>
                                     Latest: {{ latest_data.rsi|default:"No RSI data" }}<br>
                                     Previous: {{ previous_data.rsi|default:"No previous RSI data" }}<br>
@@ -106,7 +106,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'cci' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">CCI({{ user_ta_settings.cci_timeperiod }}, {{ user_ta_settings.cci_buy }}/{{ user_ta_settings.cci_sell }}):<br>
                                     Latest: {{ latest_data.cci|default:"No CCI data" }}<br> 
                                     Previous: {{ previous_data.cci|default:"No previous CCI data" }}<br>
@@ -118,7 +118,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'mfi' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">MFI({{ user_ta_settings.mfi_timeperiod }}, {{ user_ta_settings.mfi_buy }}/{{ user_ta_settings.mfi_sell }}):<br>
                                     Latest: {{ latest_data.mfi|default:"No MFI data" }}<br> 
                                     Previous: {{ previous_data.mfi|default:"No previous MFI data" }}<br>
@@ -130,7 +130,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'macd' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 pb-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0 mb-2">MACD({{ user_ta_settings.macd_timeperiod }}, {{ user_ta_settings.macd_signalperiod }}):</p>
                                 <p class="p-0 m-0 mb-2">MACD:<br>
                                     Latest: {{ latest_data.macd|default:"No MACD data" }}<br>
@@ -157,7 +157,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'ema' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0 mb-2">EMA Fast({{ user_ta_settings.ema_fast_timeperiod }}):<br>
                                     Latest: {{ latest_data.ema_fast|default:"No EMA Fast data" }}<br>
                                     Previous: {{ previous_data.ema_fast|default:"No previous EMA Fast data" }}<br>
@@ -176,7 +176,7 @@
                             {% endif %}
 
                             {% if indicator|slugify == 'boll' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0 mb-2">Bollinger({{ user_ta_settings.bollinger_timeperiod }}, {{ user_ta_settings.bollinger_nbdev }}):</p>
                                 <p class="p-0 m-0 mb-2">Upper Band:<br> 
                                     Latest: {{ latest_data.upper_band|default:"No Bollinger data" }}<br>
@@ -205,7 +205,7 @@
                             {% endif %}
                         
                             {% if indicator|slugify == 'stoch' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0 mb-2">Stochastic({{ user_ta_settings.stoch_k_timeperiod }}, {{ user_ta_settings.stoch_d_timeperiod }}):</p>
                                 <p class="p-0 m-0 mb-2">Stochastic %K:<br>
                                     Latest: {{ latest_data.stoch_k|default:"No Stoch K data" }}<br>
@@ -226,7 +226,7 @@
                             {% endif %}
 
                             {% if indicator|slugify == 'stoch_rsi' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0 mb-2">StochasticRSI({{ user_ta_settings.stoch_rsi_k_timeperiod }}, {{ user_ta_settings.stoch_rsi_d_timeperiod }}):</p>
                                 <p class="p-0 m-0 mb-2">StochasticRSI:<br>
                                     Latest: {{ latest_data.stoch_rsi|default:"No Stoch RSI data" }}<br>
@@ -255,7 +255,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'ma_200' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">MA 200:<br> 
                                     Latest: {{ latest_data.ma_200|default:"No MA 200 data" }}<br>
                                     Previous: {{ previous_data.ma_200|default:"No previous MA 200 data" }}<br>
@@ -267,7 +267,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'ma_50' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">MA 50:<br> 
                                     Latest: {{ latest_data.ma_50|default:"No MA 50 data" }}<br>
                                     Previous: {{ previous_data.ma_50|default:"No previous MA 50 data" }}<br>
@@ -279,7 +279,7 @@
                             {% endif %}
 
                             {% if indicator|slugify == 'adx' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">ADX({{ user_ta_settings.adx_timeperiod }}): <br>
                                     Latest: {{ latest_data.adx|default:"No ADX data" }}<br>
                                     Previous: {{ previous_data.adx|default:"No previous ADX data" }}<br>
@@ -291,7 +291,7 @@
                             {% endif %}
 
                             {% if indicator|slugify == 'atr' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">ATR({{ user_ta_settings.atr_timeperiod }}):<br> 
                                     Latest: {{ latest_data.atr|default:"No ATR data" }}<br>
                                     Previous: {{ previous_data.atr|default:"No previous ATR data" }}<br>
@@ -303,7 +303,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'psar' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">PSAR({{ user_ta_settings.psar_acceleration }}, {{ user_ta_settings.psar_maximum }}):<br>
                                     Latest: {{ latest_data.psar|default:"No PSAR data" }}<br>
                                     Previous: {{ previous_data.psar|default:"No previous PSAR data" }}<br>
@@ -315,7 +315,7 @@
                             {% endif %}
 
                             {% if indicator|slugify == 'vwap' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0">VWAP:<br> 
                                     Latest: {{ latest_data.vwap|default:"No VWAP data" }}<br>
                                     Previous: {{ previous_data.vwap|default:"No previous VWAP data" }}<br>
@@ -327,7 +327,7 @@
                             {% endif %}
                 
                             {% if indicator|slugify == 'di' %}
-                            <div class="text-center border-top border-dark border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
+                            <div class="text-center border-top border-muted border-1 pt-2 mt-2 d-flex flex-column justify-content-center align-item-center">
                                 <p class="p-0 m-0 mb-2">+DI({{ user_ta_settings.di_timeperiod }}):<br> 
                                     Latest: {{ latest_data.plus_di|default:"No +DI data" }}<br>
                                     Previous: {{ previous_data.plus_di|default:"No previous +DI data" }}<br>
@@ -346,7 +346,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <div class="text-center  border-top border-dark border-1 pt-2 p-3 mb-2 d-flex flex-column justify-content-center align-item-center">
+                        <div class="text-center  border-top border-muted border-1 pt-2 p-3 mb-2 d-flex flex-column justify-content-center align-item-center">
                         <p class="p-0 m-0">Volume:<br>
                         Latest: {{ latest_data.volume }}<br>
                         Previous: {{ previous_data.volume }}<br>

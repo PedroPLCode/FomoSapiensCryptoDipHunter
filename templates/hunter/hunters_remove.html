@@ -12,13 +12,13 @@
         {% if hunters %}
 
         {% for hunter in hunters %}
-            <p class="text-center">{{ hunter.id }} {{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }} {{ hunter.comment }}</p>
+            <p class="text-center">Hunter {{ hunter.id }} {{ hunter.symbol }} {{ hunter.interval }} {{ hunter.lookback }}<br>Comment: {{ hunter.comment }}</p>
         {% endfor %}
         <h4 class="text-center">Total {{ user.technicalanalysishunter_set.count }} Hunters to remove.</h4>
 
         <form method="post">
             {% csrf_token %}
-            <button type="submit" class="w-100 btn btn-danger mb-3">Yes, remove ALL</button>
+            <button type="submit" class="w-100 btn btn-danger mt-1 mb-3">Yes, remove All</button>
         </form>
         <a href="{% url 'hunter:show_hunters_list' %}" class="w-100 btn btn-primary">No, Cancel</a>
 

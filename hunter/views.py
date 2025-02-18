@@ -53,10 +53,12 @@ def hunter_create_or_edit(request: Any, pk: Optional[int] = None) -> Any:
     """
     if pk:
         hunter = get_object_or_404(TechnicalAnalysisHunter, pk=pk, user=request.user)
-        title = f'Hunter {hunter.id} Settings'
+        title = f"Hunter {hunter.id} Settings"
+        btn_text = "Save Changes"
     else:
         hunter = None
-        title = 'Create New Hunter'
+        title = "Create New Hunter"
+        btn_text = "Create Hunter"
 
     if request.method == "POST":
         form = TechnicalAnalysisHunterForm(request.POST, instance=hunter)
@@ -69,7 +71,7 @@ def hunter_create_or_edit(request: Any, pk: Optional[int] = None) -> Any:
     else:
         form = TechnicalAnalysisHunterForm(instance=hunter)
 
-    return render(request, 'hunter/hunter_edit.html', {'form': form, 'hunter': hunter, 'title': title})
+    return render(request, 'hunter/hunter_edit.html', {'form': form, 'hunter': hunter, 'title': title, 'btn_text': btn_text})
 
 
 @exception_handler(default_return=lambda: redirect('show_hunters_list'))

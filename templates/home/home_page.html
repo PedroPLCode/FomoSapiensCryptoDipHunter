@@ -18,15 +18,14 @@
       </h5>
       {% endif %}
 
-      <p class="text-center p-0 m-0">Current Time: {{ date_and_time }}</p>
       <p class="text-center p-0 m-0">Binance Server time: {{ server_time.serverTime }}</p>
       <p class="text-center p-0 m-0">Binance System status: {{ system_status.status }} {{ system_status.msg }}</p>
-      <p class="text-center p-0 m-0">User Agent: {{ user_agent }}</p>
+      <p class="text-center p-0 m-0 mt-3">User Agent: {{ user_agent }}</p>
 
       {% if user.is_superuser %}
-        <p class="text-center p-0 m-0">System Info: {{ system_info }}</p>
+        <p class="text-center p-0 m-0 mt-3">System Info: {{ system_info }}</p>
         <p class="text-center p-0 m-0">System Uptime: {{ system_uptime }}</p>
-        <p class="text-center p-0 m-0">Python Version: {{ python_version }}</p>
+        <p class="text-center p-0 m-0 mt-3">Python Version: {{ python_version }}</p>
         <p class="text-center p-0 m-0">Django Version: {{ django_version }}</p>
         <p class="text-center p-0 m-0">NumPy Version: {{ numpy_version }}</p>
         <p class="text-center p-0 m-0">Pandas Version: {{ pandas_version }}</p>

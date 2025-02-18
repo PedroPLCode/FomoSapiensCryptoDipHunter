@@ -23,7 +23,7 @@
                   
                 <div class="card-body">
                     <div class="container d-flex flex-column justify-content-center align-items-center">
-                        <ul class="d-flex flex-column justify-content-center align-items-center">
+                        <ul class="d-flex flex-column justify-content-center align-items-center m-0 p-0">
                             {% if user.is_authenticated %}
 
                             <p class="text-center  p-0 m-0">Username: {{ user.username }}</p>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="container text-center  d-flex flex-column justify-content-center align-items-center">
+                <div class="container text-center d-flex flex-column justify-content-center align-items-center">
                     {% block content %}
                     {% endblock content %}
                 </div>
