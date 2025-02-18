@@ -3,8 +3,23 @@ from django.contrib.auth.models import User
 from analysis.models import TechnicalAnalysisSettings
 from unittest.mock import patch
 
-
 class SignalHandlersTestCase(TestCase):
+    
+    @patch('utils.email_utils.send_admin_email')
+    @patch('utils.logging.logger')
+    def test_create_user_profile_signal(self, mock_logger, mock_send_email):
+        user = User.objects.create_user(
+            username='testuser', 
+            email='testuser@example.com', 
+            password='password123'
+        )
+
+        mock_send_email.assert_called_once_with(
+            "New user created", 
+            f"User testuser testuser@example.com False {user.date_joined}"
+        )
+
+        mock_logger.info.assert_called_once_with("New user created: testuser")
 
     def test_make_first_user_superuser(self):
         user = User.objects.create_user(username='firstuser', password='testpassword')
