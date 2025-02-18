@@ -26,7 +26,10 @@ def is_df_valid(df: pd.DataFrame) -> Union[bool, Optional[int]]:
 
 
 @exception_handler(default_return=False)
-def handle_ta_df_initial_praparation(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def handle_ta_df_initial_praparation(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Prepares the DataFrame for technical analysis by converting relevant columns to numeric 
     types and handling missing values.
@@ -53,7 +56,10 @@ def handle_ta_df_initial_praparation(df: pd.DataFrame, settings: TechnicalAnalys
 
 
 @exception_handler(default_return=False)
-def calculate_ta_rsi(df: pd.DataFrame, settings: object) -> Union[pd.DataFrame, bool]:
+def calculate_ta_rsi(
+    df: pd.DataFrame, 
+    settings: object
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Relative Strength Index (RSI) using the 'close' price.
 
@@ -74,7 +80,10 @@ def calculate_ta_rsi(df: pd.DataFrame, settings: object) -> Union[pd.DataFrame, 
         
 
 @exception_handler(default_return=False)
-def calculate_ta_cci(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_cci(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Commodity Channel Index (CCI) using 'high', 'low', and 'close' prices.
 
@@ -97,7 +106,10 @@ def calculate_ta_cci(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> U
 
 
 @exception_handler(default_return=False)
-def calculate_ta_mfi(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_mfi(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Money Flow Index (MFI) using 'high', 'low', 'close', and 'volume' data.
 
@@ -121,7 +133,10 @@ def calculate_ta_mfi(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> U
 
 
 @exception_handler(default_return=False)
-def calculate_ta_adx(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_adx(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Average Directional Index (ADX) using 'high', 'low', and 'close' prices.
 
@@ -145,7 +160,10 @@ def calculate_ta_adx(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> U
 
 
 @exception_handler(default_return=False)
-def calculate_ta_atr(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_atr(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Average True Range (ATR) using 'high', 'low', and 'close' prices.
 
@@ -168,7 +186,10 @@ def calculate_ta_atr(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> U
     
 
 @exception_handler(default_return=False)
-def calculate_ta_di(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_di(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Directional Indicators (DI) including the Plus DI and Minus DI 
     using 'high', 'low', and 'close' prices.
@@ -199,7 +220,10 @@ def calculate_ta_di(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Un
 
 
 @exception_handler(default_return=False)
-def calculate_ta_stochastic(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_stochastic(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Stochastic Oscillator using 'high', 'low', and 'close' prices.
 
@@ -226,7 +250,10 @@ def calculate_ta_stochastic(df: pd.DataFrame, settings: TechnicalAnalysisSetting
 
 
 @exception_handler(default_return=False)
-def calculate_ta_bollinger_bands(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_bollinger_bands(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculates the Bollinger Bands using 'close' price.
 
@@ -250,7 +277,10 @@ def calculate_ta_bollinger_bands(df: pd.DataFrame, settings: TechnicalAnalysisSe
 
 
 @exception_handler(default_return=False)
-def calculate_ta_vwap(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_vwap(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculate the Volume Weighted Average Price (VWAP) for the given DataFrame.
 
@@ -269,7 +299,10 @@ def calculate_ta_vwap(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> 
 
     
 @exception_handler(default_return=False)
-def calculate_ta_psar(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_psar(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculate the Parabolic SAR (PSAR) for the given DataFrame using settings.
 
@@ -292,7 +325,10 @@ def calculate_ta_psar(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> 
 
     
 @exception_handler(default_return=False)
-def calculate_ta_macd(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_macd(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculate the Moving Average Convergence Divergence (MACD) for the given DataFrame.
 
@@ -321,7 +357,10 @@ def calculate_ta_macd(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> 
 
     
 @exception_handler(default_return=False)
-def calculate_ta_ma(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_ma(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculate the 200-period and 50-period Moving Averages (MA) for the given DataFrame.
 
@@ -340,7 +379,10 @@ def calculate_ta_ma(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Un
 
     
 @exception_handler(default_return=False)
-def calculate_ta_ema(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_ema(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculate the Fast and Slow Exponential Moving Averages (EMA) for the given DataFrame.
 
@@ -366,7 +408,10 @@ def calculate_ta_ema(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> U
 
     
 @exception_handler(default_return=False)
-def calculate_ta_stochastic_rsi(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def calculate_ta_stochastic_rsi(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Calculate the Stochastic RSI (Relative Strength Index) for the given DataFrame.
 
@@ -398,7 +443,11 @@ def calculate_ta_stochastic_rsi(df: pd.DataFrame, settings: TechnicalAnalysisSet
 
     
 @exception_handler(default_return=False)
-def handle_ta_df_final_cleaning(df: pd.DataFrame, columns_to_check:list, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, bool]:
+def handle_ta_df_final_cleaning(
+    df: pd.DataFrame, 
+    columns_to_check:list, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, bool]:
     """
     Clean the final DataFrame by removing rows with missing values in the specified columns.
 
@@ -417,7 +466,10 @@ def handle_ta_df_final_cleaning(df: pd.DataFrame, columns_to_check:list, setting
 
     
 @exception_handler()
-def calculate_ta_indicators(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[pd.DataFrame, Optional[int]]:
+def calculate_ta_indicators(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[pd.DataFrame, Optional[int]]:
     """
     Calculates various technical analysis indicators on the given DataFrame.
 
@@ -459,7 +511,10 @@ def calculate_ta_indicators(df: pd.DataFrame, settings: TechnicalAnalysisSetting
 
 
 @exception_handler()
-def calculate_ta_averages(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> Union[Dict[str, float], Optional[int]]:
+def calculate_ta_averages(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> Union[Dict[str, float], Optional[int]]:
     """
     Calculates the average values for various technical analysis indicators.
 
@@ -502,7 +557,10 @@ def calculate_ta_averages(df: pd.DataFrame, settings: TechnicalAnalysisSettings)
 
 
 @exception_handler(default_return='none')
-def check_ta_trend(df: pd.DataFrame, settings: TechnicalAnalysisSettings) -> str:
+def check_ta_trend(
+    df: pd.DataFrame, 
+    settings: TechnicalAnalysisSettings
+    ) -> str:
     """
     Checks the market trend based on technical analysis indicators.
 

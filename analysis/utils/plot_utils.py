@@ -73,18 +73,58 @@ def add_price_traces(fig: go.Figure, df: pd.DataFrame, indicators: List[str]) ->
         None
     """
     if 'close' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['close'], name='Close Price', line=dict(color='blue')))
+        fig.add_trace(
+            go.Scatter(
+                x=df['open_time'],
+                y=df['close'], 
+                name='Close Price', 
+                line=dict(color='blue')
+                )
+            )
     if 'ema' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['ema_fast'], name='EMA Fast', line=dict(color='green')))
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['ema_slow'], name='EMA Slow', line=dict(color='red')))
+        fig.add_trace(
+            go.Scatter(
+                x=df['open_time'],
+                y=df['ema_fast'], 
+                name='EMA Fast', 
+                line=dict(color='green')
+                )
+            )
+        fig.add_trace(
+            go.Scatter(
+                x=df['open_time'], 
+                y=df['ema_slow'], 
+                name='EMA Slow', 
+                line=dict(color='red')
+                )
+            )
     if 'ma50' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['ma_50'], name='MA50', line=dict(color='orange')))
+        fig.add_trace(
+            go.Scatter(
+                x=df['open_time'],
+                y=df['ma_50'], 
+                name='MA50', 
+                line=dict(color='orange')
+                )
+            )
     if 'ma200' in indicators:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df['ma_200'], name='MA200', line=dict(color='purple')))
+        fig.add_trace(
+            go.Scatter(
+                x=df['open_time'],
+                y=df['ma_200'], 
+                name='MA200', 
+                line=dict(color='purple')
+                )
+            )
 
 
 @exception_handler(default_return=False)
-def add_ta_traces(fig: go.Figure, df: pd.DataFrame, indicators: List[str], settings: object) -> None:
+def add_ta_traces(
+    fig: go.Figure,
+    df: pd.DataFrame, 
+    indicators: List[str],
+    settings: object
+    ) -> None:
     """
     Adds traces for various technical analysis indicators to the Plotly figure.
     
@@ -121,7 +161,15 @@ def add_ta_traces(fig: go.Figure, df: pd.DataFrame, indicators: List[str], setti
 
 
 @exception_handler(default_return=False)
-def add_trace(fig: go.Figure, df: pd.DataFrame, column: str, color: str, mode: str = 'lines', fillcolor: Optional[str] = None, horizontal_lines: Optional[List[tuple]] = None) -> None:
+def add_trace(
+    fig: go.Figure,
+    df: pd.DataFrame, 
+    column: str, 
+    color: str, 
+    mode: str = 'lines',
+    fillcolor: Optional[str] = None,
+    horizontal_lines: Optional[List[tuple]] = None
+    ) -> None:
     """
     Adds a single trace to the Plotly figure.
 
@@ -141,15 +189,37 @@ def add_trace(fig: go.Figure, df: pd.DataFrame, column: str, color: str, mode: s
         None
     """
     if column in df:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df[column], name=column.upper(), line=dict(color=color), mode=mode))
+        fig.add_trace(
+            go.Scatter(
+                x=df['open_time'],
+                y=df[column], 
+                name=column.upper(),
+                line=dict(color=color), 
+                mode=mode
+                )
+            )
     
     if fillcolor:
-        fig.add_trace(go.Scatter(x=df['open_time'], y=df[column], fill='tonexty', fillcolor=fillcolor, line=dict(color=color)))
+        fig.add_trace(
+            go.Scatter(
+                x=df['open_time'], 
+                y=df[column],
+                fill='tonexty',
+                fillcolor=fillcolor,
+                line=dict(color=color)
+                )
+            )
     
     if horizontal_lines:
         for y_val, h_color in horizontal_lines:
-            fig.add_shape(type="line", x0=df['open_time'].min(), x1=df['open_time'].max(), y0=y_val, y1=y_val,
-                          line=dict(color=h_color, width=2, dash="dash"))
+            fig.add_shape(
+                type="line", 
+                x0=df['open_time'].min(),
+                x1=df['open_time'].max(), 
+                y0=y_val, 
+                y1=y_val,
+                line=dict(color=h_color, width=2, dash="dash")
+                )
 
 
 @exception_handler(default_return=False)

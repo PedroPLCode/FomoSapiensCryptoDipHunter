@@ -33,7 +33,9 @@ def update_technical_analysis_settings(request: HttpRequest) -> HttpResponse:
     Returns:
         HttpResponse: Renders the settings page or redirects upon successful update.
     """
-    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+        user=request.user
+        )
 
     if request.method == 'POST':
         form = TechnicalAnalysisSettingsForm(request.POST, instance=user_ta_settings)
@@ -63,7 +65,9 @@ def refresh_data(request: HttpRequest) -> HttpResponse:
     Returns:
         HttpResponseRedirect: Redirects to the technical analysis page after refreshing the data.
     """
-    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+        user=request.user
+        )
     fetch_and_save_df(user_ta_settings)
     messages.success(request, 'Data refreshed successfully')
     return redirect('show_technical_analysis')
@@ -86,10 +90,14 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
         HttpResponse: Renders the technical analysis page with the relevant data and charts.
     """
     if request.user.is_authenticated:
-        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+            user=request.user
+            )
     else:
         guest_user, created = User.objects.get_or_create(username='guest')
-        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=guest_user)
+        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+            user=guest_user
+            )
         fetch_and_save_df(user_ta_settings)
 
     if request.method == 'POST':
@@ -110,10 +118,12 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
     latest_data = df_calculated.iloc[-1].to_dict()
     previous_data = df_calculated.iloc[-2].to_dict()
     
-    selected_indicators_list = prepare_selected_indicators_list(user_ta_settings.selected_plot_indicators)
+    selected_indicators_list = prepare_selected_indicators_list(
+        user_ta_settings.selected_plot_indicators
+        )
     plot_url = plot_selected_ta_indicators(df_calculated, user_ta_settings)
-    indicators_list = ['close', 'rsi', 'cci', 'mfi', 'macd', 'ema', 'boll', 'stoch', 'stoch_rsi', 
-                       'ma50', 'ma200', 'adx', 'atr', 'psar', 'vwap', 'di']
+    indicators_list = ['close', 'rsi', 'cci', 'mfi', 'macd', 'ema', 'boll', 'stoch', 
+                       'stoch_rsi', 'ma50', 'ma200', 'adx', 'atr', 'psar', 'vwap', 'di']
     
     return render(request, 'analysis/show_analysis.html', {
         'user_ta_settings': user_ta_settings,
@@ -143,7 +153,9 @@ def send_email_analysis_report(request: HttpRequest) -> HttpResponse:
     Returns:
         HttpResponse: Redirects to the technical analysis page or displays an error message.
     """
-    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+    user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+        user=request.user
+        )
     
     df_loaded = pd.read_json(StringIO(user_ta_settings.df))
     if df_loaded is None or df_loaded.empty:

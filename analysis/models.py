@@ -17,7 +17,12 @@ from django.utils import timezone
 from typing import List, Dict, Any
 
 @receiver(post_save, sender=User)
-def create_user_analysis_settings(sender: type[User], instance: User, created: bool, **kwargs: Dict[str, Any]) -> None:
+def create_user_analysis_settings(
+    sender: type[User],
+    instance: User, 
+    created: bool, 
+    **kwargs: Dict[str, Any]
+    ) -> None:
     if created:
         if instance.is_authenticated:
             if not hasattr(instance, 'technicalanalysissettings'):

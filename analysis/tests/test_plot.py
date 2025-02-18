@@ -16,7 +16,13 @@ class TestPlottingFunctions(unittest.TestCase):
     @patch('analysis.utils.calc_utils.is_df_valid')
     @patch('plotly.graph_objects.Figure')
     @patch('plotly.io.write_image')
-    def test_plot_selected_ta_indicators(self, mock_write_image, mock_figure, mock_is_df_valid, mock_exception_handler):
+    def test_plot_selected_ta_indicators(
+        self, 
+        mock_write_image,
+        mock_figure, 
+        mock_is_df_valid,
+        mock_exception_handler
+        ):
         settings = MagicMock()
         settings.selected_plot_indicators = ['rsi', 'macd']
         settings.lookback = '10d'
@@ -70,7 +76,14 @@ class TestPlottingFunctions(unittest.TestCase):
             'macd_histogram': [0]*100
         })
         indicators = ['rsi', 'macd']
-        settings = MagicMock(rsi_sell=70, rsi_buy=30, cci_sell=100, cci_buy=-100, mfi_sell=80, mfi_buy=20)
+        settings = MagicMock(
+            rsi_sell=70, 
+            rsi_buy=30,
+            cci_sell=100, 
+            cci_buy=-100, 
+            mfi_sell=80, 
+            mfi_buy=20
+            )
         
         fig = MagicMock()
         add_ta_traces(fig, df, indicators, settings)
