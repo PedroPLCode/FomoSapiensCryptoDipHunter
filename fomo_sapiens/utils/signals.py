@@ -8,7 +8,7 @@ from django.http import HttpRequest
 from typing import Dict
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(sender: type, instance: User, created: bool, **kwargs: Dict) -> None:
     """
     This function is triggered after a new User instance is saved. 
     It sends an email notification to the admin and logs the new user's information.

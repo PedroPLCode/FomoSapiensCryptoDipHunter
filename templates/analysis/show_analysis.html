@@ -1,7 +1,7 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-    <div class="col-12 col-md-6 card text-center text-dark rounded-3 mt-5 mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
+    <div class="col-12 col-md-6 card text-center text-dark rounded-3 {% if messages %}mt-0{% else %}mt-5{% endif %} mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
         
         <div class="card-header">
             <h4 class="text-center">Technical Analysis</h4>
@@ -346,7 +346,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <div class="text-center  border-top border-muted border-1 pt-2 p-3 mb-2 d-flex flex-column justify-content-center align-item-center">
+                        <div class="text-center border-top border-muted border-1 p-3 pt-2 pb-2 mb-0 d-flex flex-column justify-content-center align-item-center">
                         <p class="p-0 m-0">Volume:<br>
                         Latest: {{ latest_data.volume }}<br>
                         Previous: {{ previous_data.volume }}<br>
@@ -361,7 +361,7 @@
                             {% if user.is_authenticated %}
                             <a href="{% url 'refresh_data' %}" class="btn btn-primary">Refresh Data</a>
                             <a href="{% url 'update_technical_analysis_settings' %}" class="btn btn-primary">Analysis Settings</a>
-                            <a href="{% url 'send_email_analysis_report' %}" class="btn btn-primary">Email Analysis</a>
+                            <a href="{% url 'send_email_analysis_report' %}" class="btn btn-primary">Send Email Analysis</a>
                             {% else %}
                             <a class="btn btn-primary" href="/accounts/">Sing in to access setting and hunters</a>
                             {% endif %}
@@ -371,11 +371,6 @@
                 </div>
             </div>
             
-            
-            
-
-
-
         {% endif %}
 
     </div>

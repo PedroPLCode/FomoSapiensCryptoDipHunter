@@ -14,8 +14,7 @@ from fomo_sapiens.utils.logging import logger
 def show_hunters_list(request: Any) -> Any:
     """
     View function to display a list of hunters associated with the logged-in user.
-    Each hunter's data is processed to calculate technical analysis indicators and
-    a plot URL is generated for each hunter.
+    Each hunter's data is processed to calculate technical analysis indicators.
 
     Args:
         request: The HTTP request object.
@@ -23,16 +22,7 @@ def show_hunters_list(request: Any) -> Any:
     Returns:
         A rendered 'hunters_list.html' template with the hunters' data and plot URLs.
     """
-    from analysis.utils.calc_utils import calculate_ta_indicators
-    from analysis.utils.plot_utils import plot_selected_ta_indicators
-    
     hunters = TechnicalAnalysisHunter.objects.filter(user=request.user)
-    
-    for hunter in hunters:
-        df_loaded = pd.read_json(StringIO(hunter.df))
-        df_calculated = calculate_ta_indicators(df_loaded, hunter)
-        plot_url = plot_selected_ta_indicators(df_calculated, hunter)
-        hunter.plot_url = plot_url
     
     return render(request, 'hunter/hunters_list.html', {'hunters': hunters})
 

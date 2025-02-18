@@ -1,4 +1,0 @@
-# tworzenie konta, logowanie użytkownika. zmiana hasła, zmiana emaila.
-# gmail user.
-# recaptcha.
-# prezentowanie analizy technicznej. zgdnie z ustawieniami. zmiana ustawień.

@@ -1,7 +1,7 @@
 {% extends 'base_generic.html' %}
 
 {% block body %}
-<div class="col-12 col-md-6 rounded-3 card mt-5 d-flex flex-column justify-content-center align-item-center bg-light">
+<div class="col-12 col-md-6 rounded-3 card {% if messages %}mt-0{% else %}mt-5{% endif %} d-flex flex-column justify-content-center align-item-center bg-light">
   
   <div class="card-header">
     <h4 class="text-center text-dark">Hunters List</h4>
@@ -37,27 +37,18 @@
               <p class="text-center">Comment: {{ hunter.comment }}</p>
               <p class="text-center">Running: <span class="{% if hunter.running %}text-success{% else %}text-danger{% endif %}">{{ hunter.running }}</span></p>
               
-              {% if hunter.plot_url %}
-                  <div class="w-100 m-0 p-0 text-center">
-                      <p>df fetched: {{ hunter.df_last_fetch_time }}</p>
-                      <img src="data:image/png;base64,{{ hunter.plot_url }}" alt="Technical Analysis Plot" class="img-fluid rounded-3 p-0 mb-3" style="max-height: 800px;">
-                  </div>
-              {% else %}
-                  <p class="text-center">No data available for Technical Analysis Plot.</p>
-              {% endif %}
-              
               {% if hunter.price_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">Price signals: <span class="{% if hunter.price_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.price_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">Price signals: <span class="{% if hunter.price_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.price_signals }}</span></p>
                 <p class="text-center">Avg close period: {{ hunter.avg_close_period }}</p>
               {% endif %}
 
               {% if hunter.vol_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">Volume signals: <span class="{% if hunter.vol_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.vol_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">Volume signals: <span class="{% if hunter.vol_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.vol_signals }}</span></p>
                 <p class="text-center">Avg volume period: {{ hunter.avg_volume_period }}</p>
               {% endif %}
 
               {% if hunter.trend_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">Trend signals: <span class="{% if hunter.trend_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.trend_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">Trend signals: <span class="{% if hunter.trend_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.trend_signals }}</span></p>
                 <p class="text-center">ADX timeperiod: {{ hunter.adx_timeperiod }}</p>
                 <p class="text-center">ADX strong trend: {{ hunter.adx_strong_trend }}</p>
                 <p class="text-center">ADX weak trend: {{ hunter.adx_weak_trend }}</p>
@@ -66,7 +57,7 @@
               {% endif %}
 
               {% if hunter.rsi_signals or hunter.rsi_divergence_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">RSI signals: <span class="{% if hunter.rsi_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.rsi_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">RSI signals: <span class="{% if hunter.rsi_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.rsi_signals }}</span></p>
                 <p class="text-center">RSI divergence signals: <span class="{% if hunter.rsi_divergence_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.rsi_divergence_signals }}</span></p>
                 <p class="text-center">RSI timeperiod: {{ hunter.rsi_timeperiod }}</p>
                 <p class="text-center">RSI buy: {{ hunter.rsi_buy }}</p>
@@ -75,7 +66,7 @@
               {% endif %}
 
               {% if hunter.cci_signals or hunter.cci_divergence_signals%}
-                <p class="text-center pt-3 border-top border-dark border-1">CCI signals: <span class="{% if hunter.cci_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.cci_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">CCI signals: <span class="{% if hunter.cci_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.cci_signals }}</span></p>
                 <p class="text-center">CCI divergence signals: <span class="{% if hunter.cci_divergence_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.cci_divergence_signals }}</span></p>
                 <p class="text-center">CCI timeperiod: {{ hunter.cci_timeperiod }}</p>
                 <p class="text-center">CCI buy: {{ hunter.cci_buy }}</p>
@@ -84,7 +75,7 @@
               {% endif %}
 
               {% if hunter.mfi_signals or hunter.mfi_divergence_signals%}
-              <p class="text-center pt-3 border-top border-dark border-1">MFI signals: <span class="{% if hunter.mfi_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.mfi_signals }}</span></p>
+              <p class="text-center pt-3 border-top border-muted border-1">MFI signals: <span class="{% if hunter.mfi_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.mfi_signals }}</span></p>
               <p class="text-center">MFI divergence signals: <span class="{% if hunter.mfi_divergence_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.mfi_divergence_signals }}</span></p>
               <p class="text-center">MFI timeperiod: {{ hunter.mfi_timeperiod }}</p>
               <p class="text-center">MFI buy: {{ hunter.mfi_buy }}</p>
@@ -93,7 +84,7 @@
             {% endif %}
 
               {% if hunter.macd_cross_signals or hunter.macd_histogram_signals%}
-                <p class="text-center pt-3 border-top border-dark border-1">MACD cross signals: <span class="{% if hunter.macd_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.macd_cross_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">MACD cross signals: <span class="{% if hunter.macd_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.macd_cross_signals }}</span></p>
                 <p class="text-center">MACD histogram signals: <span class="{% if hunter.macd_histogram_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.macd_histogram_signals }}</span></p>
                 <p class="text-center">MACD timeperiod: {{ hunter.macd_timeperiod }}</p>
                 <p class="text-center">MACD signalperiod: {{ hunter.macd_signalperiod }}</p>
@@ -101,13 +92,13 @@
               {% endif %}
 
               {% if hunter.bollinger_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">Bollinger signals: <span class="{% if hunter.bollinger_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.bollinger_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">Bollinger signals: <span class="{% if hunter.bollinger_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.bollinger_signals }}</span></p>
                 <p class="text-center">Bollinger timeperiod: {{ hunter.bollinger_timeperiod }}</p>
                 <p class="text-center">Bollinger nbdev: {{ hunter.bollinger_nbdev }}</p>
               {% endif %}
 
               {% if hunter.stoch_signals or hunter.stoch_divergence_signals%}
-                <p class="text-center pt-3 border-top border-dark border-1">Stochastic signals: <span class="{% if hunter.stoch_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.stoch_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">Stochastic signals: <span class="{% if hunter.stoch_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.stoch_signals }}</span></p>
                 <p class="text-center">Stochastic divergence signals: <span class="{% if hunter.stoch_divergence_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.stoch_divergence_signals }}</span></p>
                 <p class="text-center">Stochastic K timeperiod: {{ hunter.stoch_k_timeperiod }}</p>
                 <p class="text-center">Stochastic D timeperiod: {{ hunter.stoch_d_timeperiod }}</p>
@@ -117,7 +108,7 @@
               {% endif %}
 
               {% if hunter.stoch_rsi_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">Stochastic RSI signals: <span class="{% if hunter.stoch_rsi_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.stoch_rsi_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">Stochastic RSI signals: <span class="{% if hunter.stoch_rsi_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.stoch_rsi_signals }}</span></p>
                 <p class="text-center">Stochastic RSI timeperiod: {{ hunter.stoch_rsi_timeperiod }}</p>
                 <p class="text-center">Stochastic RSI K timeperiod: {{ hunter.stoch_rsi_k_timeperiod }}</p>
                 <p class="text-center">Stochastic RSI D timeperiod: {{ hunter.stoch_rsi_d_timeperiod }}</p>
@@ -125,7 +116,7 @@
               {% endif %}
 
               {% if hunter.ema_cross_signals or hunter.ema_fast_signals or hunter.ema_slow_signals%}
-                <p class="text-center pt-3 border-top border-dark border-1">EMA cross signals: <span class="{% if hunter.ema_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ema_cross_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">EMA cross signals: <span class="{% if hunter.ema_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ema_cross_signals }}</span></p>
                 <p class="text-center">EMA fast signals: <span class="{% if hunter.ema_fast_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ema_fast_signals }}</span></p>
                 <p class="text-center">EMA slow signals: <span class="{% if hunter.ema_slow_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ema_slow_signals }}</span></p>
                 <p class="text-center">EMA fast timeperiod: {{ hunter.ema_fast_timeperiod }}</p>
@@ -134,38 +125,38 @@
               {% endif %}
 
               {% if hunter.di_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">DI signals: <span class="{% if hunter.di_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.di_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">DI signals: <span class="{% if hunter.di_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.di_signals }}</span></p>
                 <p class="text-center">DI timeperiod: {{ hunter.di_timeperiod }}</p>
                 <p class="text-center">Avg DI period: {{ hunter.avg_di_period }}</p>
               {% endif %}
 
               {% if hunter.atr_signals %}
-                <p class="text-center pt-3 border-top border-dark border-1">ATR signals: <span class="{% if hunter.atr_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.atr_signals }}</span></p>
+                <p class="text-center pt-3 border-top border-muted border-1">ATR signals: <span class="{% if hunter.atr_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.atr_signals }}</span></p>
                 <p class="text-center">ATR timeperiod: {{ hunter.atr_timeperiod }}</p>
                 <p class="text-center">ATR buy treshold: {{ hunter.atr_buy_threshold }}</p>
                 <p class="text-center">Avg ATR period: {{ hunter.avg_atr_period }}</p>
               {% endif %}
 
             {% if hunter.vwap_signals %}
-              <p class="text-center pt-3 border-top border-dark border-1">VWAP signals: <span class="{% if hunter.vwap_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.vwap_signals }}</span></p>
+              <p class="text-center pt-3 border-top border-muted border-1">VWAP signals: <span class="{% if hunter.vwap_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.vwap_signals }}</span></p>
               <p class="text-center">Avg VWAP period: {{ hunter.avg_vwap_period }}</p>
             {% endif %}
 
             {% if hunter.psar_signals %}
-              <p class="text-center pt-3 border-top border-dark border-1">PSAR signals: <span class="{% if hunter.psar_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.psar_signals }}</span></p>
+              <p class="text-center pt-3 border-top border-muted border-1">PSAR signals: <span class="{% if hunter.psar_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.psar_signals }}</span></p>
               <p class="text-center">PSAR acceleration: {{ hunter.psar_acceleration }}</p>
               <p class="text-center">PSAR maximum: {{ hunter.psar_maximum }}</p>
               <p class="text-center">Avg PSAR period: {{ hunter.avg_psar_period }}</p>
             {% endif %}
 
             {% if hunter.ma50_signals or hunter.ma200_signals or hunter.ma_cross_signals %}
-              <p class="text-center pt-3 border-top border-dark border-1">MA50 signals: <span class="{% if hunter.ma50_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma50_signals }}</span></p>
+              <p class="text-center pt-3 border-top border-muted border-1">MA50 signals: <span class="{% if hunter.ma50_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma50_signals }}</span></p>
               <p class="text-center">MA200 signals: <span class="{% if hunter.ma200_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma200_signals }}</span></p>
               <p class="text-center">MA cross signals: <span class="{% if hunter.ma_cross_signals %}text-success{% else %}text-danger{% endif %}">{{ hunter.ma_cross_signals }}</span></p>
             {% endif %}
 
             {% if hunter.note != "" %}
-              <p class="text-center pt-3 border-top border-dark border-1">Note:<br>{{ hunter.note }}</p>
+              <p class="text-center pt-3 border-top border-muted border-1">Note:<br>{{ hunter.note }}</p>
             {% endif %}
 
             {% if not hunter.running %}
@@ -183,8 +174,8 @@
         </div>
       {% endfor %}
 
-      <a href="{% url 'hunter:start_all_hunters' %}" class="w-100 btn btn-success mb-3">Start All</a>
-      <a href="{% url 'hunter:stop_all_hunters' %}" class="w-100 btn btn-warning mb-3">Stop All</a>
+      <a href="{% url 'hunter:start_all_hunters' %}" class="w-100 btn btn-success mb-3">Start All Hunters</a>
+      <a href="{% url 'hunter:stop_all_hunters' %}" class="w-100 btn btn-warning mb-3">Stop All Hunters</a>
 
       {% else %}
         <p class="text-center">No hunters found. Lets create some.</p>

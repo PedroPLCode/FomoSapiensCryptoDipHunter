@@ -273,7 +273,7 @@ def validate_indicators(df: pd.DataFrame, indicators: List[str]) -> None:
         'cci': ['cci'],
         'mfi': ['mfi'],
         'stoch': ['stoch_k', 'stoch_d'],
-        'stoch-rsi': ['stoch_rsi_k', 'stoch_rsi_d'],
+        'stoch_rsi': ['stoch_rsi_k', 'stoch_rsi_d'],
         'psar': ['psar'],
         'vwap': ['vwap'],
         'adx': ['adx'],

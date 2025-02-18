@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %} 
 
 {% block body %}
-  <div class="col-12 col-md-6 rounded-3 card mt-5 d-flex flex-column justify-content-center align-items-center text-dark bg-light">
+  <div class="col-12 col-md-6 rounded-3 card {% if messages %}mt-0{% else %}mt-5{% endif %} d-flex flex-column justify-content-center align-items-center text-dark bg-light">
     
     <div class="card-header w-100">
       <h4 class="text-center">{{ title }}</h4>
