@@ -24,8 +24,8 @@ def create_user_profile(
     """
     if created:
         import datetime as dt
-        from utils.email_utils import send_admin_email
-        from utils.logging import logger
+        from fomo_sapiens.utils.email_utils import send_admin_email
+        from fomo_sapiens.utils.logging import logger
 
         now = dt.now()
         formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
