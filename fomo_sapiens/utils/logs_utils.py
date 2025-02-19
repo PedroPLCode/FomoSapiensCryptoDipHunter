@@ -4,6 +4,7 @@ from .logging import logger
 from .exception_handlers import exception_handler
 from .email_utils import send_admin_email
 
+
 @exception_handler()
 def send_daily_logs():
     """
@@ -23,18 +24,18 @@ def send_daily_logs():
     for log in logs:
         log_file_path = os.path.join(os.getcwd(), log)
         now = datetime.now()
-        formatted_now = now.strftime('%Y-%m-%d %H:%M:%S')
-        today = now.strftime('%Y-%m-%d')
+        formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
+        today = now.strftime("%Y-%m-%d")
         subject = f"{today} Daily Logs"
-        
+
         if os.path.exists(log_file_path):
-            with open(log_file_path, 'r') as log_file:
+            with open(log_file_path, "r") as log_file:
                 log_content = log_file.read()
-                
+
             send_admin_email(
-                f"{subject}: {log}", 
-                f"FomoSapiensCryptoDipHunter daily logs.\n{formatted_now}\n\n{log}\n\n{log_content}"
-                )
+                f"{subject}: {log}",
+                f"FomoSapiensCryptoDipHunter daily logs.\n{formatted_now}\n\n{log}\n\n{log_content}",
+            )
             logger.info(f"Successfully sent email with log: {log}")
         else:
             logger.warning(f"Log file does not exist: {log_file_path}")
@@ -57,17 +58,17 @@ def clear_logs():
         Logs errors in the logger and sends an email notification if any issue occurs.
     """
     from .logging import logs
-    
+
     for log in logs:
         log_file_path = os.path.join(os.getcwd(), log)
         now = datetime.now()
         timestamp = now.strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
-            
+
         if os.path.exists(log_file_path):
-            with open(log_file_path, 'w') as log_file:
+            with open(log_file_path, "w") as log_file:
                 log_file.write(
-                    f'{timestamp} CLEAN: Log file {log_file_path} cleared succesfully.\n'
-                    )
+                    f"{timestamp} CLEAN: Log file {log_file_path} cleared succesfully.\n"
+                )
             logger.info(f"Successfully cleared log file: {log_file_path}")
         else:
             logger.warning(f"Log file does not exist: {log_file_path}")

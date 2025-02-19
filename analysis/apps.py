@@ -1,21 +1,22 @@
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 
+
 class AnalysisConfig(AppConfig):
     """
     Configuration for the 'analysis' application.
 
     This class is used to define the configuration of the 'analysis' app in the Django project.
-    It specifies the default auto field for model primary keys and imports necessary signals 
+    It specifies the default auto field for model primary keys and imports necessary signals
     when the application is ready.
 
     Attributes:
         default_auto_field (str): The default field to use for auto-incrementing primary keys.
         name (str): The name of the Django app, which is 'analysis'.
     """
-    
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'analysis'
+
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "analysis"
 
     def ready(self):
         """
@@ -26,8 +27,9 @@ class AnalysisConfig(AppConfig):
         and ready to be used.
         """
         import fomo_sapiens.utils.signals
-        
+
         from django.contrib.sites.models import Site
+
         post_migrate.connect(self.set_site, sender=self)
 
     def set_site(self, sender, **kwargs):
@@ -43,6 +45,7 @@ class AnalysisConfig(AppConfig):
             **kwargs: Additional keyword arguments passed by the signal.
         """
         from django.contrib.sites.models import Site
+
         site, created = Site.objects.get_or_create(id=1)
         site.domain = "fomosapienscryptodiphunter.com"
         site.name = "FomoSapiensCryptoDipHunter"

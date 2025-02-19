@@ -13,71 +13,72 @@ from .utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
 from analysis.utils.report_utils import generate_ta_report_email
 from .utils.plot_utils import (
-    plot_selected_ta_indicators, 
-    prepare_selected_indicators_list
+    plot_selected_ta_indicators,
+    prepare_selected_indicators_list,
 )
 
-@exception_handler(default_return=lambda: redirect('show_technical_analysis'))
+
+@exception_handler(default_return=lambda: redirect("show_technical_analysis"))
 @login_required
 def update_technical_analysis_settings(request: HttpRequest) -> HttpResponse:
     """
     View function to update the user's technical analysis settings.
-    
+
     This function handles both displaying the settings form and processing the submitted form.
-    If the request method is POST, it validates and saves the form data. If successful, the 
+    If the request method is POST, it validates and saves the form data. If successful, the
     settings are updated, and new technical analysis data is fetched and saved.
-    
+
     Args:
         request: The HTTP request object.
-    
+
     Returns:
         HttpResponse: Renders the settings page or redirects upon successful update.
     """
     user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
         user=request.user
-        )
+    )
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = TechnicalAnalysisSettingsForm(request.POST, instance=user_ta_settings)
         if form.is_valid():
             form.save()
             fetch_and_save_df(user_ta_settings)
-            messages.success(request, 'Settings saved succesfully.')
-            return redirect('show_technical_analysis')
+            messages.success(request, "Settings saved succesfully.")
+            return redirect("show_technical_analysis")
     else:
         form = TechnicalAnalysisSettingsForm(instance=user_ta_settings)
 
-    return render(request, 'analysis/change_settings.html', {'form': form})
+    return render(request, "analysis/change_settings.html", {"form": form})
 
 
-@exception_handler(default_return=lambda: redirect('show_technical_analysis'))
+@exception_handler(default_return=lambda: redirect("show_technical_analysis"))
 @login_required
 def refresh_data(request: HttpRequest) -> HttpResponse:
     """
     View function to refresh the user's technical analysis data.
-    
-    This function retrieves or creates the user's technical analysis settings, 
+
+    This function retrieves or creates the user's technical analysis settings,
     updates the analysis data, and informs the user upon successful completion.
-    
+
     Args:
         request: The HTTP request object.
-    
+
     Returns:
         HttpResponseRedirect: Redirects to the technical analysis page after refreshing the data.
     """
     user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
         user=request.user
-        )
+    )
     fetch_and_save_df(user_ta_settings)
-    messages.success(request, 'Data refreshed successfully')
-    return redirect('show_technical_analysis')
+    messages.success(request, "Data refreshed successfully")
+    return redirect("show_technical_analysis")
 
 
-@exception_handler(default_return=lambda: redirect('show_technical_analysis'))
+@exception_handler(default_return=lambda: redirect("show_technical_analysis"))
 def show_technical_analysis(request: HttpRequest) -> HttpResponse:
     """
     View function to display technical analysis data.
-    
+
     This view is accessible to both authenticated users and guests. If a user is authenticated,
     their saved settings are loaded or created. If a guest accesses the page, a guest account
     is used to generate technical analysis data. Users can select technical indicators to be
@@ -92,50 +93,70 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
             user=request.user
-            )
+        )
     else:
-        guest_user, created = User.objects.get_or_create(username='guest')
+        guest_user, created = User.objects.get_or_create(username="guest")
         user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
             user=guest_user
-            )
+        )
         fetch_and_save_df(user_ta_settings)
 
-    if request.method == 'POST':
-        selected_indicators = request.POST.getlist('indicators')
-        user_ta_settings.selected_plot_indicators = ','.join(selected_indicators)
+    if request.method == "POST":
+        selected_indicators = request.POST.getlist("indicators")
+        user_ta_settings.selected_plot_indicators = ",".join(selected_indicators)
         user_ta_settings.save()
 
     df_loaded = pd.read_json(StringIO(user_ta_settings.df))
     if df_loaded is None or df_loaded.empty:
-        messages.success(request, 'Error loading data.')
-        return render(request, 'analysis/show_analysis.html')
+        messages.success(request, "Error loading data.")
+        return render(request, "analysis/show_analysis.html")
 
     df_calculated = calculate_ta_indicators(df_loaded, user_ta_settings)
     if df_calculated is None or df_calculated.empty:
-        messages.success(request, 'Error calculating Technical Analysis.')
-        return render(request, 'analysis/show_analysis.html')
+        messages.success(request, "Error calculating Technical Analysis.")
+        return render(request, "analysis/show_analysis.html")
 
     latest_data = df_calculated.iloc[-1].to_dict()
     previous_data = df_calculated.iloc[-2].to_dict()
-    
+
     selected_indicators_list = prepare_selected_indicators_list(
         user_ta_settings.selected_plot_indicators
-        )
+    )
     plot_url = plot_selected_ta_indicators(df_calculated, user_ta_settings)
-    indicators_list = ['close', 'rsi', 'cci', 'mfi', 'macd', 'ema', 'boll', 'stoch', 
-                       'stoch_rsi', 'ma50', 'ma200', 'adx', 'atr', 'psar', 'vwap', 'di']
-    
-    return render(request, 'analysis/show_analysis.html', {
-        'user_ta_settings': user_ta_settings,
-        'latest_data': latest_data,
-        'previous_data': previous_data,
-        'plot_url': plot_url,
-        'selected_indicators_list': selected_indicators_list,
-        'indicators_list': indicators_list 
-    })
-    
-    
-@exception_handler(default_return=lambda: redirect('show_technical_analysis'))
+    indicators_list = [
+        "close",
+        "rsi",
+        "cci",
+        "mfi",
+        "macd",
+        "ema",
+        "boll",
+        "stoch",
+        "stoch_rsi",
+        "ma50",
+        "ma200",
+        "adx",
+        "atr",
+        "psar",
+        "vwap",
+        "di",
+    ]
+
+    return render(
+        request,
+        "analysis/show_analysis.html",
+        {
+            "user_ta_settings": user_ta_settings,
+            "latest_data": latest_data,
+            "previous_data": previous_data,
+            "plot_url": plot_url,
+            "selected_indicators_list": selected_indicators_list,
+            "indicators_list": indicators_list,
+        },
+    )
+
+
+@exception_handler(default_return=lambda: redirect("show_technical_analysis"))
 @login_required
 def send_email_analysis_report(request: HttpRequest) -> HttpResponse:
     """
@@ -155,21 +176,21 @@ def send_email_analysis_report(request: HttpRequest) -> HttpResponse:
     """
     user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
         user=request.user
-        )
-    
+    )
+
     df_loaded = pd.read_json(StringIO(user_ta_settings.df))
     if df_loaded is None or df_loaded.empty:
-        messages.success(request, 'Error loading data.')
-        return render(request, 'analysis/show_analysis.html')
-    
+        messages.success(request, "Error loading data.")
+        return render(request, "analysis/show_analysis.html")
+
     df_calculated = calculate_ta_indicators(df_loaded, user_ta_settings)
     if df_calculated is None or df_calculated.empty:
-        messages.success(request, 'Error calculating Technical Analysis.')
-        return render(request, 'analysis/show_analysis.html')
-    
+        messages.success(request, "Error calculating Technical Analysis.")
+        return render(request, "analysis/show_analysis.html")
+
     email = user_ta_settings.user.email
     subject, content = generate_ta_report_email(user_ta_settings, df_calculated)
     send_email(email, subject, content)
-    
-    messages.success(request, 'Email sent successfully.')
-    return redirect('show_technical_analysis')
+
+    messages.success(request, "Email sent successfully.")
+    return redirect("show_technical_analysis")

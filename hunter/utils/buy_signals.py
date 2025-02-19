@@ -3,6 +3,7 @@ from fomo_sapiens.utils.exception_handlers import exception_handler
 from analysis.utils.calc_utils import is_df_valid
 from typing import Dict
 
+
 @exception_handler(default_return=False)
 def trend_buy_signal(trend: str, hunter_settings: object) -> bool:
     """
@@ -16,12 +17,14 @@ def trend_buy_signal(trend: str, hunter_settings: object) -> bool:
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.trend_signals:
-        return (trend == 'uptrend')
+        return trend == "uptrend"
     return True
 
 
 @exception_handler(default_return=False)
-def rsi_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def rsi_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on the RSI values.
 
@@ -34,13 +37,16 @@ def rsi_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.rsi_signals:
-        return (float(latest_data['rsi']) <= float(hunter_settings.rsi_buy) and
-                float(latest_data['rsi']) >= float(averages['avg_rsi'])) 
+        return float(latest_data["rsi"]) <= float(hunter_settings.rsi_buy) and float(
+            latest_data["rsi"]
+        ) >= float(averages["avg_rsi"])
     return True
 
 
 @exception_handler(default_return=False)
-def rsi_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def rsi_divergence_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on RSI divergence.
 
@@ -53,13 +59,16 @@ def rsi_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, s
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.rsi_divergence_signals:
-        return (float(latest_data['close']) <= float(averages['avg_close']) and
-                float(latest_data['rsi']) >= float(averages['avg_rsi'])) 
+        return float(latest_data["close"]) <= float(averages["avg_close"]) and float(
+            latest_data["rsi"]
+        ) >= float(averages["avg_rsi"])
     return True
 
 
 @exception_handler(default_return=False)
-def vol_rising(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def vol_rising(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on increasing volume.
 
@@ -72,12 +81,14 @@ def vol_rising(latest_data: Dict[str, str], averages: Dict[str, str], hunter_set
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.vol_signals:
-        return float(latest_data['volume']) >= float(averages['avg_volume']) 
+        return float(latest_data["volume"]) >= float(averages["avg_volume"])
     return True
 
 
 @exception_handler(default_return=False)
-def macd_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def macd_cross_buy_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on MACD cross.
 
@@ -90,13 +101,16 @@ def macd_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, 
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.macd_cross_signals:
-        return (float(previous_data['macd']) <= float(previous_data['macd_signal']) and
-                float(latest_data['macd']) >= float(latest_data['macd_signal'])) 
+        return float(previous_data["macd"]) <= float(
+            previous_data["macd_signal"]
+        ) and float(latest_data["macd"]) >= float(latest_data["macd_signal"])
     return True
 
 
 @exception_handler(default_return=False)
-def macd_histogram_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def macd_histogram_buy_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on MACD histogram.
 
@@ -109,8 +123,10 @@ def macd_histogram_buy_signal(latest_data: Dict[str, str], previous_data: Dict[s
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.macd_histogram_signals:
-        return (float(previous_data['macd_histogram']) <= 0 and
-                float(latest_data['macd_histogram']) >= 0) 
+        return (
+            float(previous_data["macd_histogram"]) <= 0
+            and float(latest_data["macd_histogram"]) >= 0
+        )
     return True
 
 
@@ -127,12 +143,14 @@ def bollinger_buy_signal(latest_data: Dict[str, str], hunter_settings: object) -
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.bollinger_signals:
-        return float(latest_data['close']) <= float(latest_data['lower_band'])
+        return float(latest_data["close"]) <= float(latest_data["lower_band"])
     return True
 
 
 @exception_handler(default_return=False)
-def stoch_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def stoch_buy_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Stochastic Oscillator.
 
@@ -145,14 +163,18 @@ def stoch_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str],
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.stoch_signals:
-        return (float(previous_data['stoch_k']) <= float(previous_data['stoch_d']) and
-                float(latest_data['stoch_k']) >= float(latest_data['stoch_d']) and
-                float(latest_data['stoch_k']) <= float(hunter_settings.stoch_buy)) 
+        return (
+            float(previous_data["stoch_k"]) <= float(previous_data["stoch_d"])
+            and float(latest_data["stoch_k"]) >= float(latest_data["stoch_d"])
+            and float(latest_data["stoch_k"]) <= float(hunter_settings.stoch_buy)
+        )
     return True
 
 
 @exception_handler(default_return=False)
-def stoch_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def stoch_divergence_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Stochastic Divergence.
 
@@ -165,13 +187,16 @@ def stoch_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str,
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.stoch_divergence_signals:
-        return (float(latest_data['stoch_k']) >= float(averages['avg_stoch_k']) and
-                float(latest_data['close']) <= float(averages['avg_close'])) 
+        return float(latest_data["stoch_k"]) >= float(
+            averages["avg_stoch_k"]
+        ) and float(latest_data["close"]) <= float(averages["avg_close"])
     return True
 
 
 @exception_handler(default_return=False)
-def stoch_rsi_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def stoch_rsi_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Stochastic RSI.
 
@@ -184,13 +209,16 @@ def stoch_rsi_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], 
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.stoch_rsi_signals:
-        return (float(latest_data['stoch_rsi_k']) <= float(hunter_settings.stoch_buy) and
-                float(latest_data['stoch_rsi_k']) >= float(averages['avg_stoch_rsi_k'])) 
+        return float(latest_data["stoch_rsi_k"]) <= float(
+            hunter_settings.stoch_buy
+        ) and float(latest_data["stoch_rsi_k"]) >= float(averages["avg_stoch_rsi_k"])
     return True
 
 
 @exception_handler(default_return=False)
-def ema_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def ema_cross_buy_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on EMA cross.
 
@@ -203,13 +231,16 @@ def ema_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, s
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.ema_cross_signals:
-        return (float(previous_data['ema_fast']) <= float(previous_data['ema_slow']) and
-                float(latest_data['ema_fast']) >= float(latest_data['ema_slow'])) 
+        return float(previous_data["ema_fast"]) <= float(
+            previous_data["ema_slow"]
+        ) and float(latest_data["ema_fast"]) >= float(latest_data["ema_slow"])
     return True
 
 
 @exception_handler(default_return=False)
-def ema_fast_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def ema_fast_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on fast EMA.
 
@@ -222,12 +253,14 @@ def ema_fast_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], h
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.ema_fast_signals:
-        return float(latest_data['close']) >= float(averages['avg_ema_fast']) 
+        return float(latest_data["close"]) >= float(averages["avg_ema_fast"])
     return True
 
 
 @exception_handler(default_return=False)
-def ema_slow_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def ema_slow_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on slow EMA.
 
@@ -240,12 +273,14 @@ def ema_slow_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], h
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.ema_slow_signals:
-        return float(latest_data['close']) >= float(averages['avg_ema_slow']) 
+        return float(latest_data["close"]) >= float(averages["avg_ema_slow"])
     return True
 
 
 @exception_handler(default_return=False)
-def di_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def di_cross_buy_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Directional Indicator cross.
 
@@ -258,13 +293,16 @@ def di_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, st
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.di_signals:
-        return (float(previous_data['plus_di']) <= float(previous_data['minus_di']) and
-                    float(latest_data['plus_di']) >= float(latest_data['minus_di'])) 
+        return float(previous_data["plus_di"]) <= float(
+            previous_data["minus_di"]
+        ) and float(latest_data["plus_di"]) >= float(latest_data["minus_di"])
     return True
-    
+
 
 @exception_handler(default_return=False)
-def cci_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def cci_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Commodity Channel Index (CCI).
 
@@ -277,13 +315,16 @@ def cci_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.cci_signals:
-        return (float(latest_data['cci']) <= float(hunter_settings.cci_buy) and
-                float(latest_data['cci']) >= float(averages['avg_cci']))  
+        return float(latest_data["cci"]) <= float(hunter_settings.cci_buy) and float(
+            latest_data["cci"]
+        ) >= float(averages["avg_cci"])
     return True
 
 
 @exception_handler(default_return=False)
-def cci_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def cci_divergence_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on CCI divergence.
 
@@ -296,13 +337,16 @@ def cci_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, s
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.cci_divergence_signals:
-        return (float(latest_data['close']) <= float(averages['avg_close']) and
-                float(latest_data['cci']) >= float(averages['avg_cci'])) 
+        return float(latest_data["close"]) <= float(averages["avg_close"]) and float(
+            latest_data["cci"]
+        ) >= float(averages["avg_cci"])
     return True
 
 
 @exception_handler(default_return=False)
-def mfi_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def mfi_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Money Flow Index (MFI).
 
@@ -315,13 +359,16 @@ def mfi_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.mfi_signals:
-        return (float(latest_data['mfi']) <= float(hunter_settings.mfi_buy) and
-                float(latest_data['mfi']) >= float(averages['avg_mfi'])) 
+        return float(latest_data["mfi"]) <= float(hunter_settings.mfi_buy) and float(
+            latest_data["mfi"]
+        ) >= float(averages["avg_mfi"])
     return True
 
 
 @exception_handler(default_return=False)
-def mfi_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def mfi_divergence_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on MFI divergence.
 
@@ -334,13 +381,16 @@ def mfi_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, s
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.mfi_divergence_signals:
-        return (float(latest_data['close']) <= float(averages['avg_close']) and
-                float(latest_data['mfi']) >= float(averages['avg_mfi'])) 
+        return float(latest_data["close"]) <= float(averages["avg_close"]) and float(
+            latest_data["mfi"]
+        ) >= float(averages["avg_mfi"])
     return True
 
 
 @exception_handler(default_return=False)
-def atr_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def atr_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Average True Range (ATR).
 
@@ -353,9 +403,10 @@ def atr_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.atr_signals:
-        atr_buy_level = hunter_settings.atr_buy_treshold * float(latest_data['close'])
-        return (float(latest_data['atr']) >= float(averages['avg_atr']) and
-                float(latest_data['atr']) >= float(atr_buy_level))
+        atr_buy_level = hunter_settings.atr_buy_treshold * float(latest_data["close"])
+        return float(latest_data["atr"]) >= float(averages["avg_atr"]) and float(
+            latest_data["atr"]
+        ) >= float(atr_buy_level)
     return True
 
 
@@ -372,12 +423,14 @@ def vwap_buy_signal(latest_data: Dict[str, str], hunter_settings: object) -> boo
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.vwap_signals:
-        return float(latest_data['close']) >= float(latest_data['vwap']) 
+        return float(latest_data["close"]) >= float(latest_data["vwap"])
     return True
-    
+
 
 @exception_handler(default_return=False)
-def psar_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def psar_buy_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Parabolic SAR (PSAR).
 
@@ -390,8 +443,9 @@ def psar_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], 
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.psar_signals:
-        return (float(previous_data['psar']) >= float(previous_data['close']) and
-                float(latest_data['psar']) <= float(latest_data['close'])) 
+        return float(previous_data["psar"]) >= float(previous_data["close"]) and float(
+            latest_data["psar"]
+        ) <= float(latest_data["close"])
     return True
 
 
@@ -408,7 +462,7 @@ def ma50_buy_signal(latest_data: Dict[str, str], hunter_settings: object) -> boo
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.ma50_signals:
-        return float(latest_data['close']) >= float(latest_data['ma_50']) 
+        return float(latest_data["close"]) >= float(latest_data["ma_50"])
     return True
 
 
@@ -425,12 +479,14 @@ def ma200_buy_signal(latest_data: Dict[str, str], hunter_settings: object) -> bo
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.ma200_signals:
-        return float(latest_data['close']) >= float(latest_data['ma_200']) 
+        return float(latest_data["close"]) >= float(latest_data["ma_200"])
     return True
 
 
 @exception_handler(default_return=False)
-def ma_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def ma_cross_buy_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines whether to trigger a buy signal based on Moving Averages (MA50 and MA200).
 
@@ -442,18 +498,19 @@ def ma_cross_buy_signal(latest_data: Dict[str, str], previous_data: Dict[str, st
         bool: True if the buy signal should be triggered, otherwise False.
     """
     if hunter_settings.ma_cross_signals:
-        return (float(previous_data['ma_50']) <= float(previous_data['ma_200']) and
-                    float(latest_data['ma_50']) >= float(latest_data['ma_200'])) 
+        return float(previous_data["ma_50"]) <= float(
+            previous_data["ma_200"]
+        ) and float(latest_data["ma_50"]) >= float(latest_data["ma_200"])
     return True
-    
+
 
 @exception_handler(default_return=False)
 def check_classic_ta_buy_signal(
-    df: pd.DataFrame, 
+    df: pd.DataFrame,
     hunter_settings: object,
-    trend: str, 
-    averages: Dict[str, str], 
-    ) -> bool:
+    trend: str,
+    averages: Dict[str, str],
+) -> bool:
     """
     Calculates whether a buy signal should be triggered based on multiple conditions.
 
@@ -467,13 +524,13 @@ def check_classic_ta_buy_signal(
         bool: True if a buy signal is triggered, otherwise False.
     """
     from hunter.utils.hunter_logic import get_latest_and_previus_data
-    
+
     if not is_df_valid(df):
         return False
-    
+
     latest_data, previous_data = get_latest_and_previus_data(df)
-    
-    if trend == 'downtrend':
+
+    if trend == "downtrend":
         return False
 
     buy_signals = [
@@ -500,12 +557,12 @@ def check_classic_ta_buy_signal(
         psar_buy_signal(latest_data, previous_data, hunter_settings),
         ma50_buy_signal(latest_data, hunter_settings),
         ma200_buy_signal(latest_data, hunter_settings),
-        ma_cross_buy_signal(latest_data, previous_data, hunter_settings)
+        ma_cross_buy_signal(latest_data, previous_data, hunter_settings),
     ]
-    
+
     signals_to_check = [bool(signal) for signal in buy_signals]
 
     if all(signals_to_check):
         return True
-    
+
     return False

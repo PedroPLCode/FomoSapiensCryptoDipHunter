@@ -2,12 +2,13 @@ from django import template
 
 register = template.Library()
 
-@register.filter(name='startswith')
+
+@register.filter(name="startswith")
 def startswith(value: str, arg: str) -> bool:
     """
     Custom template filter to check if a string starts with a specified prefix.
 
-    This filter is used in Django templates to check if the given string 
+    This filter is used in Django templates to check if the given string
     (`value`) starts with the string passed as an argument (`arg`).
 
     Args:

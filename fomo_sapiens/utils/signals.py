@@ -7,10 +7,13 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest
 from typing import Dict
 
+
 @receiver(post_save, sender=User)
-def create_user_profile(sender: type, instance: User, created: bool, **kwargs: Dict) -> None:
+def create_user_profile(
+    sender: type, instance: User, created: bool, **kwargs: Dict
+) -> None:
     """
-    This function is triggered after a new User instance is saved. 
+    This function is triggered after a new User instance is saved.
     It sends an email notification to the admin and logs the new user's information.
 
     Args:
@@ -23,27 +26,29 @@ def create_user_profile(sender: type, instance: User, created: bool, **kwargs: D
         import datetime as dt
         from utils.email_utils import send_admin_email
         from utils.logging import logger
-        
+
         now = dt.now()
-        formatted_now = now.strftime('%Y-%m-%d %H:%M:%S')
-        
+        formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
+
         logger.info(f"New user created: {instance.username}")
-        
+
         send_admin_email(
-            "New user created", 
+            "New user created",
             f"New user has been created and added to db\n"
             f"{formatted_now}\n\n"
-            f"User {instance.username} {instance.email} {instance.is_superuser} {instance.date_joined}"
+            f"User {instance.username} {instance.email} {instance.is_superuser} {instance.date_joined}",
         )
 
 
 @receiver(user_logged_in)
-def custom_login_function(sender: type, request: HttpRequest, user: User, **kwargs: Dict) -> None:
+def custom_login_function(
+    sender: type, request: HttpRequest, user: User, **kwargs: Dict
+) -> None:
     """
     Signal handler for custom logic upon user login.
 
     This handler is triggered when a user logs in. If the user is authenticated,
-    it retrieves or creates their associated TechnicalAnalysisSettings, 
+    it retrieves or creates their associated TechnicalAnalysisSettings,
     and fetches and saves the necessary data.
 
     Args:
@@ -53,5 +58,7 @@ def custom_login_function(sender: type, request: HttpRequest, user: User, **kwar
         kwargs (dict): Additional arguments passed by the signal.
     """
     if request.user.is_authenticated:
-        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(user=request.user)
+        user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+            user=request.user
+        )
         fetch_and_save_df(user_ta_settings)

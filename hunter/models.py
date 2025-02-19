@@ -1,8 +1,8 @@
 """
 Model representing a 'TechnicalAnalysisHunter' which stores settings and configuration
 for a user's technical analysis of a specific trading symbol (e.g., BTCUSDC). This model
-includes various settings for technical indicators, thresholds, and time periods used in 
-market analysis. The model is linked to a specific user and stores the analysis data and 
+includes various settings for technical indicators, thresholds, and time periods used in
+market analysis. The model is linked to a specific user and stores the analysis data and
 results for each user.
 
 Attributes:
@@ -96,19 +96,25 @@ Attributes:
 Methods:
     __str__: Returns a string representation of the model in the format "Ustawienia analizy dla {username}".
 """
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from analysis.models import default_df
 
+
 class TechnicalAnalysisHunter(models.Model):
     user: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    symbol: models.CharField = models.CharField(max_length=10, default='BTCUSDC')
-    interval: models.CharField = models.CharField(max_length=10, default='1h')
-    lookback: models.CharField = models.CharField(max_length=10, default='1d')
-    comment: models.CharField = models.CharField(max_length=1024, default="", blank=True, null=True)
-    note: models.CharField = models.CharField(max_length=4096, default="", blank=True, null=True)
+    symbol: models.CharField = models.CharField(max_length=10, default="BTCUSDC")
+    interval: models.CharField = models.CharField(max_length=10, default="1h")
+    lookback: models.CharField = models.CharField(max_length=10, default="1d")
+    comment: models.CharField = models.CharField(
+        max_length=1024, default="", blank=True, null=True
+    )
+    note: models.CharField = models.CharField(
+        max_length=4096, default="", blank=True, null=True
+    )
     running: models.BooleanField = models.BooleanField(default=False)
 
     trend_signals: models.BooleanField = models.BooleanField(default=False)
@@ -186,9 +192,11 @@ class TechnicalAnalysisHunter(models.Model):
     stoch_buy: models.IntegerField = models.IntegerField(default=20)
     stoch_sell: models.IntegerField = models.IntegerField(default=80)
     atr_buy_threshold: models.FloatField = models.FloatField(default=0.005)
-    
+
     df: models.JSONField = models.JSONField(default=default_df)
-    df_last_fetch_time: models.DateTimeField = models.DateTimeField(default=timezone.now)
+    df_last_fetch_time: models.DateTimeField = models.DateTimeField(
+        default=timezone.now
+    )
 
     def __str__(self) -> str:
         return f"Hunter settings for {self.user.username}"

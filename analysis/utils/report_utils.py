@@ -2,36 +2,37 @@ from datetime import datetime as dt
 from fomo_sapiens.utils.exception_handlers import exception_handler
 import pandas as pd
 
+
 @exception_handler()
 def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, str]:
     """
     Generates an email report for technical analysis of a given symbol, interval, and lookback period.
 
-    The function aggregates the latest and previous data, and computes various technical indicators, 
-    including RSI, CCI, MFI, MACD, Bollinger Bands, Stochastic Indicators, EMA, DMI, ATR, VWAP, 
-    Parabolic SAR, Moving Averages, and ADX, based on the provided settings. It then constructs an 
+    The function aggregates the latest and previous data, and computes various technical indicators,
+    including RSI, CCI, MFI, MACD, Bollinger Bands, Stochastic Indicators, EMA, DMI, ATR, VWAP,
+    Parabolic SAR, Moving Averages, and ADX, based on the provided settings. It then constructs an
     email subject and content with this information for further analysis.
 
     Parameters:
-        settings (object): An object containing the settings related to the trading symbol, 
+        settings (object): An object containing the settings related to the trading symbol,
                             indicators, and thresholds for various technical analysis parameters.
-        df (DataFrame): A DataFrame containing the historical market data (e.g., OHLCV) to compute 
+        df (DataFrame): A DataFrame containing the historical market data (e.g., OHLCV) to compute
                         technical indicators and trends.
 
     Returns:
         tuple: A tuple containing the subject (str) and content (str) of the email.
             - subject: A string subject for the email report.
-            - content: A string with detailed information about the technical analysis, 
+            - content: A string with detailed information about the technical analysis,
               including the latest and previous data, technical indicators, and trend.
     """
     from hunter.utils.hunter_logic import get_latest_and_previus_data
-    
+
     time: dt = settings.df_last_fetch_time
-    formatted_time: str = time.strftime('%Y-%m-%d %H:%M:%S')
+    formatted_time: str = time.strftime("%Y-%m-%d %H:%M:%S")
     latest_data, previous_data = get_latest_and_previus_data(df)
-    
+
     subject: str = "Technical Analysis report."
-    
+
     content: str = (
         f"Technical Analysis report.\n"
         f"symbol: {settings.symbol}\n"
@@ -134,6 +135,6 @@ def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, s
         f"adx_no_trend: {settings.adx_no_trend}\n"
         f"adx_latest_data: {latest_data['adx']}\n"
         f"adx_previous_data: {previous_data['adx']}\n"
-        )
-        
+    )
+
     return subject, content

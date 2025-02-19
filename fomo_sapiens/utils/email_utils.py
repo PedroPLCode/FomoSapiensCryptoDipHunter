@@ -2,6 +2,7 @@ from django.core.mail import send_mail
 from .logging import logger
 from .exception_handlers import exception_handler
 
+
 @exception_handler(default_return=False)
 def send_email(email: str, subject: str, body: str) -> bool:
     """
@@ -23,7 +24,7 @@ def send_email(email: str, subject: str, body: str) -> bool:
         Logs any exceptions encountered and notifies the admin.
     """
     try:
-        send_mail(subject, body, 'your-email@example.com', [email])
+        send_mail(subject, body, "your-email@example.com", [email])
         logger.info(f'Email "{subject}" to {email} sent successfully.')
         return True
     except Exception as e:
@@ -55,6 +56,8 @@ def send_admin_email(subject: str, body: str) -> None:
         for user in users:
             success = send_email(user.email, subject, body)
             if not success:
-                logger.error(f"Failed to send admin email to {user.email}. {subject} {body}")
+                logger.error(
+                    f"Failed to send admin email to {user.email}. {subject} {body}"
+                )
     except Exception as e:
         logger.error(f"Exception in send_admin_email: {str(e)}")

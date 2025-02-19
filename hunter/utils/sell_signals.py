@@ -3,6 +3,7 @@ from fomo_sapiens.utils.exception_handlers import exception_handler
 from analysis.utils.calc_utils import is_df_valid
 from typing import Dict
 
+
 @exception_handler(default_return=False)
 def trend_sell_signal(trend: str, hunter_settings: object) -> bool:
     """
@@ -16,7 +17,7 @@ def trend_sell_signal(trend: str, hunter_settings: object) -> bool:
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.trend_signals:
-        return (trend == 'downtrend') 
+        return trend == "downtrend"
     return True
 
 
@@ -33,12 +34,14 @@ def rsi_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -> boo
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.rsi_signals:
-        return float(latest_data['rsi']) >= float(hunter_settings.rsi_sell) 
+        return float(latest_data["rsi"]) >= float(hunter_settings.rsi_sell)
     return True
 
 
 @exception_handler(default_return=False)
-def rsi_divergence_sell_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def rsi_divergence_sell_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on RSI divergence.
 
@@ -51,13 +54,16 @@ def rsi_divergence_sell_signal(latest_data: Dict[str, str], averages: Dict[str, 
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.rsi_divergence_signals:
-        return (float(latest_data['close']) >= float(averages['avg_close']) and
-                float(latest_data['rsi']) <= float(averages['avg_rsi'])) 
+        return float(latest_data["close"]) >= float(averages["avg_close"]) and float(
+            latest_data["rsi"]
+        ) <= float(averages["avg_rsi"])
     return True
 
 
 @exception_handler(default_return=False)
-def macd_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def macd_cross_sell_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on MACD crossover.
 
@@ -70,13 +76,16 @@ def macd_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str,
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.macd_cross_signals:
-        return (float(previous_data['macd']) >= float(previous_data['macd_signal']) and 
-                float(latest_data['macd']) <= float(latest_data['macd_signal'])) 
+        return float(previous_data["macd"]) >= float(
+            previous_data["macd_signal"]
+        ) and float(latest_data["macd"]) <= float(latest_data["macd_signal"])
     return True
 
 
 @exception_handler(default_return=False)
-def macd_histogram_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def macd_histogram_sell_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on MACD histogram.
 
@@ -89,8 +98,10 @@ def macd_histogram_sell_signal(latest_data: Dict[str, str], previous_data: Dict[
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.macd_histogram_signals:
-        return (float(previous_data['macd_histogram']) >= 0 and 
-                float(latest_data['macd_histogram']) <= 0) 
+        return (
+            float(previous_data["macd_histogram"]) >= 0
+            and float(latest_data["macd_histogram"]) <= 0
+        )
     return True
 
 
@@ -107,12 +118,14 @@ def bollinger_sell_signal(latest_data: Dict[str, str], hunter_settings: object) 
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.bollinger_signals:
-        return float(latest_data['close']) >= float(latest_data['upper_band'])
+        return float(latest_data["close"]) >= float(latest_data["upper_band"])
     return True
 
 
 @exception_handler(default_return=False)
-def stoch_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def stoch_sell_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on Stochastic Oscillator crossover.
 
@@ -125,14 +138,18 @@ def stoch_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, str]
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.stoch_signals:
-        return (float(previous_data['stoch_k']) >= float(previous_data['stoch_d']) and
-                float(latest_data['stoch_k']) <= float(latest_data['stoch_d']) and
-                float(latest_data['stoch_k']) >= float(hunter_settings.stoch_sell)) 
+        return (
+            float(previous_data["stoch_k"]) >= float(previous_data["stoch_d"])
+            and float(latest_data["stoch_k"]) <= float(latest_data["stoch_d"])
+            and float(latest_data["stoch_k"]) >= float(hunter_settings.stoch_sell)
+        )
     return True
 
 
 @exception_handler(default_return=False)
-def stoch_divergence_sell_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def stoch_divergence_sell_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on Stochastic Oscillator divergence.
 
@@ -145,8 +162,9 @@ def stoch_divergence_sell_signal(latest_data: Dict[str, str], averages: Dict[str
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.stoch_divergence_signals:
-        return (float(latest_data['stoch_k']) <= float(averages['avg_stoch_k']) and
-                float(latest_data['close']) >= float(averages['avg_close'])) 
+        return float(latest_data["stoch_k"]) <= float(
+            averages["avg_stoch_k"]
+        ) and float(latest_data["close"]) >= float(averages["avg_close"])
     return True
 
 
@@ -163,13 +181,16 @@ def stoch_rsi_sell_signal(latest_data: Dict[str, str], hunter_settings: object) 
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.stoch_rsi_signals:
-        return (float(latest_data['stoch_rsi_k']) >= float(hunter_settings.stoch_sell) and 
-                float(latest_data['stoch_rsi_k']) <= float(latest_data['stoch_rsi_d'])) 
+        return float(latest_data["stoch_rsi_k"]) >= float(
+            hunter_settings.stoch_sell
+        ) and float(latest_data["stoch_rsi_k"]) <= float(latest_data["stoch_rsi_d"])
     return True
 
 
 @exception_handler(default_return=False)
-def ema_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def ema_cross_sell_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on the crossover of two Exponential Moving Averages (EMA).
 
@@ -182,8 +203,9 @@ def ema_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, 
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.ema_cross_signals:
-        return (float(previous_data['ema_fast']) >= float(previous_data['ema_slow']) and
-                float(latest_data['ema_fast']) <= float(latest_data['ema_slow'])) 
+        return float(previous_data["ema_fast"]) >= float(
+            previous_data["ema_slow"]
+        ) and float(latest_data["ema_fast"]) <= float(latest_data["ema_slow"])
     return True
 
 
@@ -200,7 +222,7 @@ def ema_fast_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.ema_fast_signals:
-        return float(latest_data['close']) <= float(latest_data['ema_fast']) 
+        return float(latest_data["close"]) <= float(latest_data["ema_fast"])
     return True
 
 
@@ -217,12 +239,14 @@ def ema_slow_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.ema_slow_signals:
-        return float(latest_data['close']) <= float(latest_data['ema_slow']) 
+        return float(latest_data["close"]) <= float(latest_data["ema_slow"])
     return True
 
 
 @exception_handler(default_return=False)
-def di_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def di_cross_sell_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on the Directional Indicator (DI) crossover.
 
@@ -235,8 +259,9 @@ def di_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, s
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.di_signals:
-        return (float(previous_data['plus_di']) >= float(previous_data['minus_di']) and 
-                float(latest_data['plus_di']) <= float(latest_data['minus_di'])) 
+        return float(previous_data["plus_di"]) >= float(
+            previous_data["minus_di"]
+        ) and float(latest_data["plus_di"]) <= float(latest_data["minus_di"])
     return True
 
 
@@ -253,12 +278,14 @@ def cci_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -> boo
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.cci_signals:
-        return float(latest_data['cci']) >= float(hunter_settings.cci_sell) 
+        return float(latest_data["cci"]) >= float(hunter_settings.cci_sell)
     return True
 
 
 @exception_handler(default_return=False)
-def cci_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def cci_divergence_buy_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a buy signal should be triggered based on CCI divergence.
 
@@ -271,8 +298,9 @@ def cci_divergence_buy_signal(latest_data: Dict[str, str], averages: Dict[str, s
         bool: True if a buy signal should be triggered, otherwise False.
     """
     if hunter_settings.cci_divergence_signals:
-        return (float(latest_data['close']) >= float(averages['avg_close']) and
-                float(latest_data['cci']) <= float(averages['avg_cci'])) 
+        return float(latest_data["close"]) >= float(averages["avg_close"]) and float(
+            latest_data["cci"]
+        ) <= float(averages["avg_cci"])
     return True
 
 
@@ -289,12 +317,14 @@ def mfi_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -> boo
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.mfi_signals:
-        return float(latest_data['mfi']) >= float(hunter_settings.mfi_sell) 
+        return float(latest_data["mfi"]) >= float(hunter_settings.mfi_sell)
     return True
 
 
 @exception_handler(default_return=False)
-def mfi_divergence_sell_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def mfi_divergence_sell_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on MFI divergence.
 
@@ -307,13 +337,16 @@ def mfi_divergence_sell_signal(latest_data: Dict[str, str], averages: Dict[str, 
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.mfi_divergence_signals:
-        return (float(latest_data['close']) >= float(averages['avg_close']) and
-                float(latest_data['mfi']) <= float(averages['avg_mfi'])) 
+        return float(latest_data["close"]) >= float(averages["avg_close"]) and float(
+            latest_data["mfi"]
+        ) <= float(averages["avg_mfi"])
     return True
 
 
 @exception_handler(default_return=False)
-def atr_sell_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object) -> bool:
+def atr_sell_signal(
+    latest_data: Dict[str, str], averages: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on the Average True Range (ATR).
 
@@ -326,7 +359,7 @@ def atr_sell_signal(latest_data: Dict[str, str], averages: Dict[str, str], hunte
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.atr_signals:
-        return float(latest_data['atr']) <= float(averages['avg_atr']) 
+        return float(latest_data["atr"]) <= float(averages["avg_atr"])
     return True
 
 
@@ -343,7 +376,7 @@ def vwap_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -> bo
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.vwap_signals:
-        return float(latest_data['close']) <= float(latest_data['vwap']) 
+        return float(latest_data["close"]) <= float(latest_data["vwap"])
     return True
 
 
@@ -360,7 +393,7 @@ def psar_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -> bo
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.psar_signals:
-        return float(latest_data['close']) <= float(latest_data['psar']) 
+        return float(latest_data["close"]) <= float(latest_data["psar"])
     return True
 
 
@@ -377,7 +410,7 @@ def ma50_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -> bo
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.ma50_signals:
-        return float(latest_data['close']) <= float(latest_data['ma_50']) 
+        return float(latest_data["close"]) <= float(latest_data["ma_50"])
     return True
 
 
@@ -394,12 +427,14 @@ def ma200_sell_signal(latest_data: Dict[str, str], hunter_settings: object) -> b
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.ma200_signals:
-        return float(latest_data['close']) <= float(latest_data['ma_200']) 
+        return float(latest_data["close"]) <= float(latest_data["ma_200"])
     return True
 
 
 @exception_handler(default_return=False)
-def ma_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object) -> bool:
+def ma_cross_sell_signal(
+    latest_data: Dict[str, str], previous_data: Dict[str, str], hunter_settings: object
+) -> bool:
     """
     Determines if a sell signal should be triggered based on the crossover of the 50-period and 200-period Moving Averages (MA50 and MA200).
 
@@ -412,23 +447,24 @@ def ma_cross_sell_signal(latest_data: Dict[str, str], previous_data: Dict[str, s
         bool: True if a sell signal should be triggered, otherwise False.
     """
     if hunter_settings.ma_cross_signals:
-        return (float(previous_data['ma_50']) >= float(previous_data['ma_200']) and
-                float(latest_data['ma_50']) <= float(latest_data['ma_200'])) 
+        return float(previous_data["ma_50"]) >= float(
+            previous_data["ma_200"]
+        ) and float(latest_data["ma_50"]) <= float(latest_data["ma_200"])
     return True
 
 
 @exception_handler(default_return=False)
 def check_classic_ta_sell_signal(
-    df: pd.DataFrame, 
+    df: pd.DataFrame,
     hunter_settings: object,
-    trend: str, 
-    averages: Dict[str, str], 
-    ) -> bool:
+    trend: str,
+    averages: Dict[str, str],
+) -> bool:
     """
     Checks if all classic technical analysis sell signals are triggered based on the provided data.
 
     This function evaluates a series of sell signals including trend, RSI, MACD, Bollinger Bands,
-    Stochastic, EMA, DI, CCI, MFI, ATR, VWAP, PSAR, and moving averages (MA50, MA200). If all signals 
+    Stochastic, EMA, DI, CCI, MFI, ATR, VWAP, PSAR, and moving averages (MA50, MA200). If all signals
     return `True`, a sell signal is triggered. If any of the signals fail, no sell signal is triggered.
 
     Args:
@@ -447,12 +483,12 @@ def check_classic_ta_sell_signal(
     Sends an email notification to the admin in case of an error.
     """
     from hunter.utils.hunter_logic import get_latest_and_previus_data
-    
+
     if not is_df_valid(df):
         return False
-    
+
     latest_data, previous_data = get_latest_and_previus_data(df)
-    
+
     sell_signals = [
         trend_sell_signal(trend, hunter_settings),
         rsi_sell_signal(latest_data, hunter_settings),
@@ -476,12 +512,12 @@ def check_classic_ta_sell_signal(
         psar_sell_signal(latest_data, hunter_settings),
         ma50_sell_signal(latest_data, hunter_settings),
         ma200_sell_signal(latest_data, hunter_settings),
-        ma_cross_sell_signal(latest_data, previous_data, hunter_settings)
+        ma_cross_sell_signal(latest_data, previous_data, hunter_settings),
     ]
 
     signals_to_check = [bool(signal) for signal in sell_signals]
 
     if all(signals_to_check):
         return True
-    
+
     return False

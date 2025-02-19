@@ -3,13 +3,10 @@ from typing import Union, Dict, Optional, Tuple
 from datetime import datetime as dt
 from fomo_sapiens.utils.exception_handlers import exception_handler
 
+
 @exception_handler()
 def generate_hunter_signal_email(
-    signal: str, 
-    hunter: object, 
-    df: DataFrame, 
-    trend: str, 
-    averages: Dict[str, float]
+    signal: str, hunter: object, df: DataFrame, trend: str, averages: Dict[str, float]
 ) -> Union[Tuple[str, str], Optional[int]]:
     """
     Generates an email content for the Hunter signal based on various technical indicators and current market data.
@@ -23,24 +20,24 @@ def generate_hunter_signal_email(
 
     Returns:
         str: A formatted email content with details on the signal and relevant technical indicators.
-    
+
     The email includes information on the following:
         - Hunter's configuration (symbol, interval, lookback, comment)
         - Signal details (signal type, trend, and relevant indicators)
         - The latest and previous market data for each indicator (e.g., close price, volume)
         - Various technical indicators like RSI, CCI, MFI, MACD, Bollinger Bands, etc.
-    
+
     This function constructs a detailed report of the signal, the relevant technical indicator values,
     and sends it via email. The content is dynamically generated based on the signal and current market data.
     """
     from hunter.utils.hunter_logic import get_latest_and_previus_data
-    
+
     now = dt.now()
-    formatted_now = now.strftime('%Y-%m-%d %H:%M:%S')
+    formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
     latest_data, previous_data = get_latest_and_previus_data(df)
-    
+
     subject = f"Hunter {hunter.id} {hunter.symbol} {signal.upper()} signal"
-    
+
     content = (
         f"Hunter {hunter.id} {hunter.symbol}\n"
         f"interval: {hunter.interval}\n"
@@ -169,7 +166,7 @@ def generate_hunter_signal_email(
             f"avg_stoch_rsi_d: {averages['avg_stoch_rsi_d']}\n"
             f"avg_stoch_rsi_k: {averages['avg_stoch_rsi_k']}\n\n"
         )
-        
+
     if hunter.ema_cross_signals or hunter.ema_fast_signals or hunter.ema_slow_signals:
         content += (
             "EMA (Exponential Moving Averages):\n"
@@ -246,7 +243,7 @@ def generate_hunter_signal_email(
             f"ma_50_previous_data: {previous_data['ma_50']}\n"
             f"ma_200_previous_data: {previous_data['ma_200']}\n\n"
         )
-        
+
     if hunter.trend_signals:
         content += (
             "ADX Trend:\n"
@@ -260,5 +257,5 @@ def generate_hunter_signal_email(
             f"adx_previous_data: {previous_data['adx']}\n"
             f"avg_adx: {averages['avg_adx']}\n\n"
         )
-        
+
     return subject, content

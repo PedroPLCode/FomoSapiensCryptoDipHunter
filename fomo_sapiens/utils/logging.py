@@ -3,9 +3,9 @@ Logging configuration for the application.
 
 This module sets up a logging system for the application, enabling the capture of debug-level logs
 to a file (`django.log`) for general application activities. Additional log files can be added for
-specific services (e.g., `gunicorn.log` for Gunicorn-related logs). 
+specific services (e.g., `gunicorn.log` for Gunicorn-related logs).
 
-The main logger is configured to capture logs at the DEBUG level, ensuring that all logs from 
+The main logger is configured to capture logs at the DEBUG level, ensuring that all logs from
 DEBUG level and above (INFO, WARNING, ERROR, CRITICAL) are recorded.
 
 - A `FileHandler` is used to write logs to the specified log file (`django.log`).
@@ -26,18 +26,19 @@ Example usage:
     logger.info("This is an informational message.")
     logger.error("This is an error message.")
 """
+
 import logging
 
-app_log_filename = 'django.log'
-gunicorn_log_filename = 'gunicorn.log'
+app_log_filename = "django.log"
+gunicorn_log_filename = "gunicorn.log"
 logs = [app_log_filename, gunicorn_log_filename]
 
-logger = logging.getLogger('main_logger')
+logger = logging.getLogger("main_logger")
 logger.setLevel(logging.DEBUG)
 
 general_handler = logging.FileHandler(app_log_filename)
 general_handler.setLevel(logging.DEBUG)
-general_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+general_formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
 general_handler.setFormatter(general_formatter)
 
 logger.addHandler(general_handler)

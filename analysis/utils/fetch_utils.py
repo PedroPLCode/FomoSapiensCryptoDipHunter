@@ -9,6 +9,7 @@ from fomo_sapiens.utils.exception_handlers import exception_handler
 
 load_dotenv()
 
+
 def get_binance_api_credentials() -> Tuple[Optional[str], Optional[str]]:
     """
     Retrieves Binance API credentials from environment variables.
@@ -16,9 +17,9 @@ def get_binance_api_credentials() -> Tuple[Optional[str], Optional[str]]:
     Returns:
         tuple: A tuple containing the API key and API secret.
     """
-    api_key = os.environ.get('BINANCE_GENERAL_API_KEY')
-    api_secret = os.environ.get('BINANCE_GENERAL_API_SECRET')
-    
+    api_key = os.environ.get("BINANCE_GENERAL_API_KEY")
+    api_secret = os.environ.get("BINANCE_GENERAL_API_SECRET")
+
     return api_key, api_secret
 
 
@@ -33,7 +34,7 @@ def create_binance_client() -> Union[Client, Optional[int]]:
 
     Returns:
         Client: The Binance client instance.
-    
+
     Raises:
         Exception: If there is an issue creating the client, an exception is logged and an email is sent to the admin.
     """
@@ -42,40 +43,44 @@ def create_binance_client() -> Union[Client, Optional[int]]:
 
 
 @exception_handler()
-def fetch_and_save_df(settings: TechnicalAnalysisSettings) -> Union[bool, Optional[int]]:
+def fetch_and_save_df(
+    settings: TechnicalAnalysisSettings,
+) -> Union[bool, Optional[int]]:
     """
-    Fetches data for a given trading symbol and interval, processes it into JSON format, 
+    Fetches data for a given trading symbol and interval, processes it into JSON format,
     and saves the data along with the timestamp of the last fetch to the provided settings.
 
     Args:
-        settings (TechnicalAnalysisSettings): The settings object containing the user's symbol, 
+        settings (TechnicalAnalysisSettings): The settings object containing the user's symbol,
                                               interval, and other configuration details.
 
-    This function fetches market data using the `fetch_data` function, converts the resulting 
-    DataFrame to JSON format, and stores it in the `df` field of the `settings` model. 
+    This function fetches market data using the `fetch_data` function, converts the resulting
+    DataFrame to JSON format, and stores it in the `df` field of the `settings` model.
     The timestamp of the fetch is also recorded in the `df_last_fetch_time` field.
-    
+
     Returns:
         Union[pd.DataFrame, Optional[int]]: The fetched DataFrame if successful, otherwise None or an integer error code.
     """
-    from datetime import datetime as dt 
-    
+    from datetime import datetime as dt
+
     df_fetched = fetch_data(
-        symbol=settings.symbol, 
-        interval=settings.interval, 
-        lookback=calculate_lookback_extended(settings)
-        )
-    
-    json_data = df_fetched.to_json(orient='records')
+        symbol=settings.symbol,
+        interval=settings.interval,
+        lookback=calculate_lookback_extended(settings),
+    )
+
+    json_data = df_fetched.to_json(orient="records")
     settings.df = json_data
     settings.df_last_fetch_time = dt.now()
     settings.save()
-    
+
     return df_fetched
 
 
 @exception_handler()
-def calculate_lookback_extended(settings: TechnicalAnalysisSettings) -> Union[str, Optional[int]]:
+def calculate_lookback_extended(
+    settings: TechnicalAnalysisSettings,
+) -> Union[str, Optional[int]]:
     """
     Calculates the extended lookback period based on the interval set in the provided settings.
 
@@ -83,23 +88,23 @@ def calculate_lookback_extended(settings: TechnicalAnalysisSettings) -> Union[st
         settings (TechnicalAnalysisSettings): The settings object containing the interval configuration.
 
     Returns:
-        str: The extended lookback period in the format 'xY', where x is the number of units 
+        str: The extended lookback period in the format 'xY', where x is the number of units
              multiplied by 205 (based on the interval), and Y is the time unit (e.g., 'm', 'h', etc.).
 
     Example:
         If the interval is '5m', the function returns '1025m' (5 * 205).
     """
-    lookback_extended = f'{int(settings.interval[:-1]) * 205}{settings.interval[-1:]}'
+    lookback_extended = f"{int(settings.interval[:-1]) * 205}{settings.interval[-1:]}"
     return lookback_extended
 
 
 @exception_handler()
 def fetch_data(
-    symbol: str, 
-    interval: str = '1h', 
-    lookback: str = '2d', 
-    start_str: Optional[str] = None, 
-    end_str: Optional[str] = None
+    symbol: str,
+    interval: str = "1h",
+    lookback: str = "2d",
+    start_str: Optional[str] = None,
+    end_str: Optional[str] = None,
 ) -> Union[pd.DataFrame, Optional[int]]:
     """
     Fetch historical kline (candlestick) data for a specific trading symbol.
@@ -122,52 +127,58 @@ def fetch_data(
         Exception: For any other exception, an email is sent to the admin.
     """
     general_client = create_binance_client()
-    
+
     klines = None
-    
+
     if not start_str and not end_str:
-        if lookback[-1] == 'h':
+        if lookback[-1] == "h":
             hours = int(lookback[:-1])
             start_time = datetime.utcnow() - timedelta(hours=hours)
-        elif lookback[-1] == 'd':
+        elif lookback[-1] == "d":
             days = int(lookback[:-1])
             start_time = datetime.utcnow() - timedelta(days=days)
-        elif lookback[-1] == 'm':
+        elif lookback[-1] == "m":
             minutes = int(lookback[:-1])
             start_time = datetime.utcnow() - timedelta(minutes=minutes)
         else:
             raise ValueError("Unsupported lookback period format.")
-        
-        start_str = start_time.strftime('%Y-%m-%d %H:%M:%S')
-        
+
+        start_str = start_time.strftime("%Y-%m-%d %H:%M:%S")
+
         klines = general_client.get_historical_klines(
-            symbol=symbol, 
-            interval=interval, 
-            start_str=start_str
+            symbol=symbol, interval=interval, start_str=start_str
         )
     else:
         klines = general_client.get_historical_klines(
-            symbol=symbol, 
-            interval=interval, 
-            start_str=str(start_str), 
-            end_str=str(end_str)
+            symbol=symbol,
+            interval=interval,
+            start_str=str(start_str),
+            end_str=str(end_str),
         )
-    
+
     df = pd.DataFrame(
-        klines, 
+        klines,
         columns=[
-            'open_time', 'open', 'high', 'low', 'close', 'volume', 
-            'close_time', 'quote_asset_volume', 'number_of_trades', 
-            'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 
-            'ignore'
-        ]
+            "open_time",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "close_time",
+            "quote_asset_volume",
+            "number_of_trades",
+            "taker_buy_base_asset_volume",
+            "taker_buy_quote_asset_volume",
+            "ignore",
+        ],
     )
-    df['close'] = df['close'].astype(float)
-    df['high'] = df['high'].astype(float)
-    df['low'] = df['low'].astype(float)
-    
+    df["close"] = df["close"].astype(float)
+    df["high"] = df["high"].astype(float)
+    df["low"] = df["low"].astype(float)
+
     return df
-    
+
 
 @exception_handler()
 def fetch_system_status() -> Union[object, Optional[int]]:
