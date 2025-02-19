@@ -19,7 +19,7 @@ def custom_404_view(request: HttpRequest, exception: Exception) -> HttpResponse:
         HttpResponse: A redirect to the home page.
     """
     messages.success(request, "404 > home_page")
-    return redirect("/")
+    return redirect('home_page')
 
 
 def home_page(request: HttpRequest) -> HttpResponse:
