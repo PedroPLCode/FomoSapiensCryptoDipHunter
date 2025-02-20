@@ -1,6 +1,6 @@
 # FomoSapiensCryptoDipHunter
 
-FomoSapiensCryptoDipHunter is a crypto trading bot designed to assist in making trading decisions on the Binance exchange. The bot integrates advanced technical indicators, real-time performance monitoring, and dynamic parameter adjustments to enhance trading efficiency. It provides an intuitive web interface for real-time analysis and sends email alerts for buy or sell signals.
+FomoSapiensCryptoDipHunter is a crypto trading bot designed to assist in making trading decisions on the crypto exchange market. The bot integrates advanced technical indicators, real-time performance monitoring, and dynamic parameter adjustments to enhance trading efficiency. It provides an intuitive web interface for real-time analysis and sends email alerts for buy or sell signals.
 
 ## Features
 
@@ -22,7 +22,7 @@ cd FomoSapiensCryptoDipHunter
 2. Set up a Python virtual environment and activate it:
 ```bash
 python3 -m venv venv
-source venv/bin/activate or . venv/bin/activate
+source venv/bin/activate
 ```
 
 3. Install the required dependencies:
