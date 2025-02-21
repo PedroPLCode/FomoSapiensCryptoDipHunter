@@ -23,11 +23,11 @@ def create_user_profile(
         **kwargs: Additional keyword arguments that may be passed.
     """
     if created:
-        import datetime as dt
+        from datetime import datetime
         from fomo_sapiens.utils.email_utils import send_admin_email
         from fomo_sapiens.utils.logging import logger
 
-        now = dt.now()
+        now = datetime.now()
         formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
 
         logger.info(f"New user created: {instance.username}")

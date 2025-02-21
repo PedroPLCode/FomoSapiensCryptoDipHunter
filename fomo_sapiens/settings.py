@@ -29,7 +29,7 @@ SECRET_KEY = APP_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ropeaccess.pro', 'www.ropeaccess.pro', '192.168.1.101']
 
 ALLOWED_HOSTS = []
 
