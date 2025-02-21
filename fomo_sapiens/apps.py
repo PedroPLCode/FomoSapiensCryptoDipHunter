@@ -45,7 +45,7 @@ class FomoSapiensConfig(AppConfig):
             - Sending daily logs and clearing logs every 24 hours.
         """
         from hunter.utils import hunter_logic
-        from fomo_sapiens.utils import logs_utils
+        from fomo_sapiens.utils import logs_utils, db_utils
 
         if os.path.exists(SCHEDULER_LOCK_FILE):
             logger.info("Scheduler is already running. Skipping initialization.")
@@ -104,6 +104,15 @@ class FomoSapiensConfig(AppConfig):
                 id="every_day_cleaning_task",
                 max_instances=1,
                 misfire_grace_time=900,
+            )
+            
+            scheduler.add_job(
+                db_utils.backup_database,
+                'interval',
+                hours=24,
+                id='every_day_db_backup_task',
+                max_instances=1,
+                misfire_grace_time=900
             )
 
             logger.info("Starting scheduler...")
