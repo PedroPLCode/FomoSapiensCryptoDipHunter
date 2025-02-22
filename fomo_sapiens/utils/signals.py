@@ -36,7 +36,7 @@ def create_user_profile(
             "New user created",
             f"New user has been created and added to db\n"
             f"{formatted_now}\n\n"
-            f"User {instance.username} {instance.email} {instance.is_superuser} {instance.date_joined}",
+            f"New User Data:\nusername: {instance.username}\n email: {instance.email}\nis_superuser: {instance.is_superuser}\ndate_joined: {instance.date_joined}",
         )
 
 
