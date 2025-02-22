@@ -29,7 +29,7 @@ SECRET_KEY = APP_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['fomo.ropeaccess.pro', '*']
+ALLOWED_HOSTS = ["fomo.ropeaccess.pro", "ropeaccess.pro", "*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -189,6 +189,11 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 ACCOUNT_FORMS = {
     "signup": "fomo_sapiens.forms.CustomSignupForm",
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://fomo.ropeaccess.pro",
+    "https://ropeaccess.pro",
+]
 
 LANGUAGE_CODE = "en-us"
 
