@@ -49,7 +49,7 @@ def inject_system_uptime(request) -> Dict[str, str]:
     Injects the system's uptime into the context for use in templates.
     """
     try:
-        uptime = subprocess.check_output(["uptime"], text=True).strip()
+        uptime = subprocess.check_output(["/usr/bin/uptime"], text=True).strip()
     except Exception as e:
         uptime = f"Error retrieving system uptime: {e}"
     return {"system_uptime": uptime}
