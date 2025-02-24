@@ -57,6 +57,10 @@ ul li {
     white-space: nowrap;
 }
 
+body.nav-open .navbar {
+    top: 0 !important;
+}
+
 .navbar-collapse {
     transition: height 0.2s linear;
 }
