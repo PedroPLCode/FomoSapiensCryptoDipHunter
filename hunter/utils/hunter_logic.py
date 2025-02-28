@@ -1,5 +1,13 @@
 from fomo_sapiens.utils.logging import logger
+from django.apps import apps
+import time
+from typing import Tuple, Any
 from fomo_sapiens.utils.exception_handlers import exception_handler
+from hunter.utils.sell_signals import check_classic_ta_sell_signal
+from hunter.utils.buy_signals import check_classic_ta_buy_signal
+from hunter.utils.report_utils import generate_hunter_signal_email
+from fomo_sapiens.utils.email_utils import send_email
+from analysis.utils.calc_utils import is_df_valid
 from analysis.utils.calc_utils import (
     calculate_ta_indicators,
     calculate_ta_averages,
@@ -10,14 +18,6 @@ from analysis.utils.fetch_utils import (
     calculate_lookback_extended,
     fetch_and_save_df,
 )
-from hunter.utils.sell_signals import check_classic_ta_sell_signal
-from hunter.utils.buy_signals import check_classic_ta_buy_signal
-from hunter.utils.report_utils import generate_hunter_signal_email
-from fomo_sapiens.utils.email_utils import send_email
-from analysis.utils.calc_utils import is_df_valid
-from django.apps import apps
-import time
-from typing import Tuple, Any
 
 
 @exception_handler()
@@ -44,6 +44,9 @@ def run_selected_interval_hunters(interval: str = "1h") -> None:
     from hunter.models import TechnicalAnalysisHunter
 
     all_selected_hunters = TechnicalAnalysisHunter.objects.filter(interval=interval)
+    last_hunter = all_selected_hunters.last()
+    last_hunter_id = last_hunter.id if last_hunter else 1
+
 
     if not all_selected_hunters:
         logger.info(
@@ -53,7 +56,7 @@ def run_selected_interval_hunters(interval: str = "1h") -> None:
 
     for hunter in all_selected_hunters:
         try:
-            run_single_hunter_logic(hunter)
+            run_single_hunter_logic(hunter, last_hunter_id)
         except Exception as e:
             logger.error(f"Error running hunter {hunter.id}: {e}")
             continue
@@ -62,7 +65,7 @@ def run_selected_interval_hunters(interval: str = "1h") -> None:
 
 
 @exception_handler()
-def run_single_hunter_logic(hunter: object) -> None:
+def run_single_hunter_logic(hunter: object, last_hunter_id: int) -> None:
     """
     Runs the trading logic for a single bot based on its settings.
 
@@ -136,7 +139,7 @@ def run_single_hunter_logic(hunter: object) -> None:
         f"Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} df fetched and saved in db."
     )
 
-    if hunter.id == 1:
+    if hunter.id == last_hunter_id:
         user_ta_settings = hunter.user.technicalanalysissettings
         fetch_and_save_df(user_ta_settings)
         logger.info(
