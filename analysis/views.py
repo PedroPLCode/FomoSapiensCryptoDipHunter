@@ -123,24 +123,9 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
         user_ta_settings.selected_plot_indicators
     )
     plot_url = plot_selected_ta_indicators(df_calculated, user_ta_settings)
-    indicators_list = [
-        "close",
-        "rsi",
-        "cci",
-        "mfi",
-        "macd",
-        "ema",
-        "boll",
-        "stoch",
-        "stoch_rsi",
-        "ma50",
-        "ma200",
-        "adx",
-        "atr",
-        "psar",
-        "vwap",
-        "di",
-    ]
+    indicators_list = ["close", "rsi", "cci", "mfi", "macd", "ema", "boll",
+                       "stoch", "stoch_rsi", "ma50", "ma200", "adx", "atr",
+                       "psar", "vwap", "di"]
 
     return render(
         request,

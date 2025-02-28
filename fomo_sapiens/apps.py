@@ -61,7 +61,7 @@ class FomoSapiensConfig(AppConfig):
             scheduler.add_job(
                 hunter_logic.run_selected_interval_hunters,
                 "interval",
-                minutes=1,
+                hours=1,
                 id="every_hour_hunter_task",
                 max_instances=1,
                 misfire_grace_time=900,

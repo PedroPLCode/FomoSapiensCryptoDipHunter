@@ -12,13 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         navbar.classList.toggle("fixed-top", !(isScrollingDown && !isNavOpen));
         scrollTopBtn.classList.toggle("fixed-bottom", currentScroll > 200 && !isNavOpen);
+        scrollTopBtn.classList.toggle("d-none", currentScroll < 200 || isNavOpen);
 
         lastScrollTop = Math.max(0, currentScroll);
     });
 
-    navbarToggler.addEventListener("click", () => 
-        document.body.classList.toggle("nav-open")
-    );
+    navbarToggler.addEventListener("click", () => {
+        document.body.classList.toggle("nav-open");
+        const isNavOpen = document.body.classList.contains("nav-open");
+        scrollTopBtn.classList.toggle("d-none", isNavOpen || window.scrollY < 200);
+    });
 
     document.querySelectorAll(".navbar-nav a").forEach(link => {
         link.addEventListener("click", () => {

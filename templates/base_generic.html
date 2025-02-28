@@ -44,6 +44,10 @@
                     <li class="nav-item">
                         <a class="text-center text-dark nav-link {% if request.path|startswith:'/hunter/' %}fw-bold{% endif %}" href="/hunter/">Hunters {% if user.is_authenticated %}({{ user.technicalanalysishunter_set.count }}){% endif %}</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="text-center text-dark nav-link" href="https://stefan.ropeaccess.pro">Stefan</a>
+                    </li>
             
                     {% if user.is_superuser %}
                     <li class="nav-item">
@@ -60,6 +64,15 @@
                             {% endif %}
                         </a>
                     </li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="text-center text-dark nav-link" href="/accounts/logout/">
+                                Sign Out
+                            </a>
+                        </li>
+                    {% endif %}
+
                 </ul>
             </div>            
         </div>
