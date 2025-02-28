@@ -14,7 +14,7 @@
       {% if hunters %}
 
       {% for hunter in hunters %}
-        {% include "hunter_card.html" %}
+        {% include "hunter/hunter_card.html" %}
       {% endfor %}
 
       <a href="{% url 'hunter:start_all_hunters' %}" class="w-100 btn btn-success mb-3">Start All Hunters</a>
