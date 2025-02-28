@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
+from analysis.utils.fetch_utils import fetch_server_time, fetch_system_status
 
 
 def custom_404_view(request: HttpRequest, exception: Exception) -> HttpResponse:
@@ -18,9 +19,14 @@ def custom_404_view(request: HttpRequest, exception: Exception) -> HttpResponse:
     Returns:
         HttpResponse: A redirect to the home page.
     """
-    messages.success(request, "404 > home_page")
-    return redirect('home_page')
-
+    server_time = fetch_server_time()
+    system_status = fetch_system_status()
+    return render(
+        request, 
+        "error_404.html", 
+        {"server_time": server_time, "system_status": system_status},
+        status=404,
+    )
 
 def home_page(request: HttpRequest) -> HttpResponse:
     """
@@ -35,8 +41,6 @@ def home_page(request: HttpRequest) -> HttpResponse:
     Returns:
         HttpResponse: The rendered home page with server time and system status.
     """
-    from analysis.utils.fetch_utils import fetch_server_time, fetch_system_status
-
     server_time = fetch_server_time()
     system_status = fetch_system_status()
     return render(
