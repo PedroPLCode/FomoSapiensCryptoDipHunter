@@ -258,4 +258,6 @@ def generate_hunter_signal_email(
             f"avg_adx: {averages['avg_adx']}\n\n"
         )
 
+    content += "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
+    
     return subject, content

@@ -34,7 +34,7 @@ def create_user_profile(
 
         send_admin_email(
             "New user created",
-            f"New user has been created and added to db\n"
+            f"FomoSapiensCryptoDipHunter\nNew user has been created and added to db\n"
             f"{formatted_now}\n\n"
             f"New User Data:\nusername: {instance.username}\n email: {instance.email}\nis_superuser: {instance.is_superuser}\ndate_joined: {instance.date_joined}",
         )
