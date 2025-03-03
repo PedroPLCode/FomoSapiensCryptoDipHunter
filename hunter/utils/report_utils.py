@@ -39,12 +39,13 @@ def generate_hunter_signal_email(
     subject = f"Hunter {hunter.id} {hunter.symbol} {signal.upper()} signal"
 
     content = (
+        f"FomoSapiensCryptoDipHunter\n"
+        f"{signal.upper()} signal\n"
+        f"{formatted_now}\n\n"
         f"Hunter {hunter.id} {hunter.symbol}\n"
         f"interval: {hunter.interval}\n"
         f"lookback: {hunter.lookback}\n"
-        f"Comment: {hunter.comment}\n"
-        f"Recent {signal.upper()} signal\n"
-        f"{formatted_now}\n\n"
+        f"comment: {hunter.comment}\n\n"
         f"Hunter details:\n\n"
         f"open_time: {latest_data['open_time']}\n"
         f"close_time: {latest_data['close_time']}\n\n"
@@ -258,6 +259,6 @@ def generate_hunter_signal_email(
             f"avg_adx: {averages['avg_adx']}\n\n"
         )
 
-    content += "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
+    content += "-- \n\nFomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
     
     return subject, content
