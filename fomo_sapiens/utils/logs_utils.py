@@ -34,7 +34,7 @@ def send_daily_logs():
 
             send_admin_email(
                 f"{subject}: {log}",
-                f"FomoSapiensCryptoDipHunter daily logs.\n{formatted_now}\n\n{log}\n\n{log_content}",
+                f"FomoSapiensCryptoDipHunter\nDaily logs report\n{formatted_now}\n\n{log}\n\n{log_content}",
             )
             logger.info(f"Successfully sent email with log: {log}")
         else:

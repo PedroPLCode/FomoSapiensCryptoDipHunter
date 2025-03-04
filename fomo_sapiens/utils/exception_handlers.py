@@ -66,7 +66,7 @@ def exception_handler(default_return=None):
                 logger.error(f"{exception_type} in {func.__name__}: {str(e)}")
                 from .email_utils import send_admin_email
 
-                send_admin_email(f"{exception_type} in {func.__name__}", f"FomoSapiensCryptoDipHunter Error\n{exception_type} in {func.__name__}\n\n{str(e)}")
+                send_admin_email(f"{exception_type} in {func.__name__}", f"FomoSapiensCryptoDipHunter\n{exception_type} in {func.__name__}\n\n{str(e)}")
 
             if default_return is exit:
                 logger.error("sys.exit(1) Exiting program due to an error.")

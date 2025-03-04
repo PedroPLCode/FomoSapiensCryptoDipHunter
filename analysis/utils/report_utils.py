@@ -27,6 +27,8 @@ def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, s
     """
     from hunter.utils.hunter_logic import get_latest_and_previus_data
 
+    now = dt.now()
+    formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
     time: dt = settings.df_last_fetch_time
     formatted_time: str = time.strftime("%Y-%m-%d %H:%M:%S")
     latest_data, previous_data = get_latest_and_previus_data(df)
@@ -34,7 +36,10 @@ def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, s
     subject: str = "Technical Analysis report."
 
     content: str = (
-        f"Technical Analysis report.\n"
+        f"FomoSapiensCryptoDipHunter\n"
+        f"Technical Analysis report\n"
+        f"{formatted_now}\n\n"
+        f"Technical Analysis data\n"
         f"symbol: {settings.symbol}\n"
         f"interval: {settings.interval}\n"
         f"lookback: {settings.lookback}\n"
