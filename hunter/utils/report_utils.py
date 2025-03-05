@@ -40,7 +40,7 @@ def generate_hunter_signal_email(
 
     content = (
         f"FomoSapiensCryptoDipHunter\n"
-        f"Current {signal.upper()} signal\n"
+        f"Current {signal.upper()} signal.\n"
         f"{formatted_now}\n\n"
         f"Hunter {hunter.id} {hunter.symbol}\n"
         f"interval: {hunter.interval}\n"

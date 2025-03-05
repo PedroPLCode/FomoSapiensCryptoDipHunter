@@ -37,9 +37,9 @@ def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, s
 
     content: str = (
         f"FomoSapiensCryptoDipHunter\n"
-        f"Technical Analysis report\n"
+        f"Technical Analysis report.\n"
         f"{formatted_now}\n\n"
-        f"Technical Analysis data\n"
+        f"Technical Analysis data:\n"
         f"symbol: {settings.symbol}\n"
         f"interval: {settings.interval}\n"
         f"lookback: {settings.lookback}\n"
