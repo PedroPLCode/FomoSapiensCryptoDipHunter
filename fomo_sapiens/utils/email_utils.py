@@ -1,9 +1,11 @@
 from django.core.mail import send_mail
 from .logging import logger
 from .exception_handlers import exception_handler
+from ..utils.retry_connection import retry_connection
 
 
 @exception_handler(default_return=False)
+@retry_connection()
 def send_email(email: str, subject: str, body: str) -> bool:
     """
     Sends an email to a specified recipient.
@@ -23,13 +25,9 @@ def send_email(email: str, subject: str, body: str) -> bool:
     Raises:
         Logs any exceptions encountered and notifies the admin.
     """
-    try:
-        send_mail(subject, body, "your-email@example.com", [email])
-        logger.info(f'Email "{subject}" to {email} sent successfully.')
-        return True
-    except Exception as e:
-        logger.error(f"Error sending email to {email}. Error: {str(e)}")
-        return False
+    send_mail(subject, body, "fomosapienscryptodiphunter@gmail.com", [email])
+    logger.info(f'Email "{subject}" to {email} sent successfully.')
+    return True
 
 
 def send_admin_email(subject: str, body: str) -> None:

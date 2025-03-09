@@ -1,5 +1,6 @@
 import time
 import requests
+import smtplib
 from binance.exceptions import BinanceAPIException
 from fomo_sapiens.utils.logging import logger
 
@@ -20,7 +21,8 @@ def retry_connection(max_retries=3, delay=1):
                     return func(*args, **kwargs)
                 except (ConnectionError, TimeoutError, 
                         requests.exceptions.RequestException, 
-                        BinanceAPIException, OSError) as e:
+                        BinanceAPIException, smtplib.SMTPException,
+                        OSError) as e:
                     retries += 1
                     logger.warning(
                         f"retry_connection Connection failed (attempt {retries}/{max_retries}). Retrying in {delay} seconds..."
