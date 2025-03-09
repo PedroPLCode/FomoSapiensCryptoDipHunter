@@ -6,6 +6,7 @@ import pandas as pd
 from binance.client import Client
 import os
 from fomo_sapiens.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.retry_connection import retry_connection
 
 load_dotenv()
 
@@ -99,6 +100,7 @@ def calculate_lookback_extended(
 
 
 @exception_handler()
+@retry_connection()
 def fetch_data(
     symbol: str,
     interval: str = "1h",
@@ -181,6 +183,7 @@ def fetch_data(
 
 
 @exception_handler()
+@retry_connection()
 def fetch_system_status() -> Union[object, Optional[int]]:
     """
     Fetches the current system status from the Binance API.
@@ -194,6 +197,7 @@ def fetch_system_status() -> Union[object, Optional[int]]:
 
 
 @exception_handler()
+@retry_connection()
 def fetch_server_time() -> Union[dict, Optional[int]]:
     """
     Fetches the current server time from the Binance API.
