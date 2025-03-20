@@ -25,6 +25,7 @@ def get_binance_api_credentials() -> Tuple[Optional[str], Optional[str]]:
 
 
 @exception_handler()
+@retry_connection()
 def create_binance_client() -> Union[Client, Optional[int]]:
     """
     Creates a Binance client instance using the provided API credentials.
