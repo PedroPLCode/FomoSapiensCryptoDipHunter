@@ -48,7 +48,6 @@ def run_selected_interval_hunters(interval: str = "1h") -> None:
     last_hunter = all_selected_hunters.last()
     last_hunter_id = last_hunter.id if last_hunter else 1
 
-
     if not all_selected_hunters:
         logger.info(
             f"run_selected_interval_hunters interval {interval}. not all_selected_hunters"

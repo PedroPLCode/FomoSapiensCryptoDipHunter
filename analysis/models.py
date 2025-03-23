@@ -19,9 +19,13 @@ from typing import List, Dict, Any
 
 UserProfile = settings.AUTH_USER_MODEL
 
+
 @receiver(post_save, sender=UserProfile)
 def create_user_analysis_settings(
-    sender: type[UserProfile], instance: UserProfile, created: bool, **kwargs: Dict[str, Any]
+    sender: type[UserProfile],
+    instance: UserProfile,
+    created: bool,
+    **kwargs: Dict[str, Any],
 ) -> None:
     if created:
         if instance.is_authenticated:
@@ -42,7 +46,9 @@ def default_df() -> Dict[str, Any]:
 
 
 class TechnicalAnalysisSettings(models.Model):
-    user: models.OneToOneField = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    user: models.OneToOneField = models.OneToOneField(
+        UserProfile, on_delete=models.CASCADE
+    )
 
     symbol: models.CharField = models.CharField(max_length=10, default="BTCUSDC")
     interval: models.CharField = models.CharField(max_length=10, default="1h")

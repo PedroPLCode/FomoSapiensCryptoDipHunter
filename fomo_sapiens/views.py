@@ -22,11 +22,12 @@ def custom_404_view(request: HttpRequest, exception: Exception) -> HttpResponse:
     server_time = fetch_server_time()
     system_status = fetch_system_status()
     return render(
-        request, 
-        "error_404.html", 
+        request,
+        "error_404.html",
         {"server_time": server_time, "system_status": system_status},
         status=404,
     )
+
 
 def home_page(request: HttpRequest) -> HttpResponse:
     """

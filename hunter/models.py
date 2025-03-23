@@ -104,6 +104,7 @@ from analysis.models import default_df
 
 UserProfile = settings.AUTH_USER_MODEL
 
+
 class TechnicalAnalysisHunter(models.Model):
     user: models.ForeignKey = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 

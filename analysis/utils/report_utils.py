@@ -142,5 +142,5 @@ def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, s
         f"adx_previous_data: {previous_data['adx']}\n\n"
         "-- \n\nFomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
     )
-    
+
     return subject, content

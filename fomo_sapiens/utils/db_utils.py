@@ -12,25 +12,28 @@ def backup_database() -> Optional[str]:
     """
     Creates a backup of the database file by copying it to a backup directory.
     The backup file will overwrite any previous backup.
-    
+
     :return: Path to the backup file if successful, None if an error occurs.
     """
     now: datetime = datetime.now()
-    formatted_now: str = now.strftime('%Y-%m-%d %H:%M:%S')
-    db_path: str = 'db.sqlite3'
-    backup_dir: str = 'backup_db'
-    
+    formatted_now: str = now.strftime("%Y-%m-%d %H:%M:%S")
+    db_path: str = "db.sqlite3"
+    backup_dir: str = "backup_db"
+
     if not os.path.exists(db_path):
         raise FileNotFoundError(f"Database file '{db_path}' does not exist.")
-    
+
     if not os.path.exists(backup_dir):
         os.makedirs(backup_dir)
-    
+
     db_name: str = os.path.basename(db_path)
     backup_path: str = os.path.join(backup_dir, f"backup_{db_name}")
-    
+
     shutil.copy2(db_path, backup_path)
     print(f"Database backup saved: {backup_path}")
     logger.info(f"Database backup saved: {backup_path}")
-    send_admin_email('Database backup saved', f"FomoSapiensCryptoDipHunter\nDaily backup_database report\n{formatted_now}\n\nDatabase backup saved successfully.\nDatabase backup path: {backup_path}")
+    send_admin_email(
+        "Database backup saved",
+        f"FomoSapiensCryptoDipHunter\nDaily backup_database report\n{formatted_now}\n\nDatabase backup saved successfully.\nDatabase backup path: {backup_path}",
+    )
     return backup_path

@@ -260,5 +260,5 @@ def generate_hunter_signal_email(
         )
 
     content += "-- \n\nFomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
-    
+
     return subject, content

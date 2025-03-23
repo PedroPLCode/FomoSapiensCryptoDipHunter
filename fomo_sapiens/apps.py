@@ -105,14 +105,14 @@ class FomoSapiensConfig(AppConfig):
                 max_instances=1,
                 misfire_grace_time=900,
             )
-            
+
             scheduler.add_job(
                 db_utils.backup_database,
-                'interval',
+                "interval",
                 hours=24,
-                id='every_day_db_backup_task',
+                id="every_day_db_backup_task",
                 max_instances=1,
-                misfire_grace_time=900
+                misfire_grace_time=900,
             )
 
             logger.info("Starting scheduler...")
