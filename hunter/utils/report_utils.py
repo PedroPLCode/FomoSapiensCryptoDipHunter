@@ -5,7 +5,7 @@ from fomo_sapiens.utils.exception_handlers import exception_handler
 
 
 @exception_handler()
-def generate_hunter_signal_email(
+def generate_hunter_signal_content(
     signal: str, hunter: object, df: DataFrame, trend: str, averages: Dict[str, float]
 ) -> Union[Tuple[str, str], Optional[int]]:
     """
@@ -258,7 +258,5 @@ def generate_hunter_signal_email(
             f"adx_previous_data: {previous_data['adx']}\n"
             f"avg_adx: {averages['avg_adx']}\n\n"
         )
-
-    content += "-- \n\nFomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
 
     return subject, content

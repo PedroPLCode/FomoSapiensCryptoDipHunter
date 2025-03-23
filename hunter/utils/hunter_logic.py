@@ -5,7 +5,7 @@ from typing import Tuple, Any
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from hunter.utils.sell_signals import check_classic_ta_sell_signal
 from hunter.utils.buy_signals import check_classic_ta_buy_signal
-from hunter.utils.report_utils import generate_hunter_signal_email
+from hunter.utils.report_utils import generate_hunter_signal_content
 from fomo_sapiens.utils.email_utils import send_email
 from fomo_sapiens.utils.telegram_utils import send_telegram
 from analysis.utils.calc_utils import is_df_valid
@@ -119,10 +119,11 @@ def run_single_hunter_logic(hunter: object, last_hunter_id: int) -> None:
 
         if buy_singal or sell_singal:
             signal = "buy" if buy_singal else "sell"
-            subject, content = generate_hunter_signal_email(
+            subject, content = generate_hunter_signal_content(
                 signal, hunter, df_calculated, trend, averages
             )
             if hunter.user.email_signals_receiver and hunter.user.email:
+                content += "-- \n\nFomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
                 send_email(hunter.user.email, subject, content)
             if hunter.user.telegram_signals_receiver and hunter.user.telegram_chat_id:
                 send_telegram(chat_id=hunter.user.telegram_chat_id, msg=content)
