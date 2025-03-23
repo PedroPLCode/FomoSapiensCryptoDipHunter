@@ -1,11 +1,11 @@
 # FomoSapiensCryptoDipHunter
 
-FomoSapiensCryptoDipHunter is a crypto trading bot designed to assist in making trading decisions on the crypto exchange market. The bot integrates advanced technical indicators, real-time performance monitoring, and dynamic parameter adjustments to enhance trading efficiency. It provides an intuitive web interface for real-time analysis and sends email alerts for buy or sell signals.
+FomoSapiensCryptoDipHunter is a crypto trading bot designed to assist in making trading decisions on the crypto exchange market. The bot integrates advanced technical indicators, real-time performance monitoring, and dynamic parameter adjustments to enhance trading efficiency. It provides an intuitive web interface for real-time analysis and sends telegram or email alerts for buy or sell signals.
 
 ## Features
 
 - Multiple Independent Dip Hunters: Run different dip hunters with unique currencies and strategies.
-- Automated Email Notifications: Receive email alerts when entering buy or sell zones.
+- Automated Telegram or Email Notifications: Receive telegram or email alerts when entering buy or sell zones.
 - Binance API Integration: Fetch real-time market data.
 - Real-Time Monitoring: View live technical analysis.
 
@@ -30,12 +30,13 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Configure your environment variables by creating a .env file with your Binance API credentials, database URL, and email configuration.
+4. Configure your environment variables by creating a .env file with your Binance API credentials, database URL, and telegram, email configuration.
 ```bash
 APP_SECRET_KEY = 'your_turbo_secret_key'
 CSRF_SECRET_KEY = 'your_total_secret_key'
 GMAIL_USERNAME = 'gmail@username.com'
 GMAIL_APP_PASSWORD="gmail_app_password"
+TELEGRAM_API_SECRET="telegram_api_secret_key"
 RECAPTCHA_PUBLIC_KEY = "recaptcha_public_key"
 RECAPTCHA_PRIVATE_KEY = "recaptcha_private_key"
 BINANCE_GENERAL_API_KEY='binance_general_api_key'
