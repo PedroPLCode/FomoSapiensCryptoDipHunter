@@ -7,6 +7,7 @@ from hunter.utils.sell_signals import check_classic_ta_sell_signal
 from hunter.utils.buy_signals import check_classic_ta_buy_signal
 from hunter.utils.report_utils import generate_hunter_signal_email
 from fomo_sapiens.utils.email_utils import send_email
+from fomo_sapiens.utils.telegram_utils import send_telegram
 from analysis.utils.calc_utils import is_df_valid
 from analysis.utils.calc_utils import (
     calculate_ta_indicators,
@@ -119,11 +120,13 @@ def run_single_hunter_logic(hunter: object, last_hunter_id: int) -> None:
 
         if buy_singal or sell_singal:
             signal = "buy" if buy_singal else "sell"
-            email = hunter.user.email
             subject, content = generate_hunter_signal_email(
                 signal, hunter, df_calculated, trend, averages
             )
-            send_email(email, subject, content)
+            if hunter.user.email_signals_receiver and hunter.user.email:
+                send_email(hunter.user.email, subject, content)
+            if hunter.user.telegram_signals_receiver and hunter.user.telegram_chat_id:
+                send_telegram(chat_id=hunter.user.telegram_chat_id, msg=content)
 
         logger.info(
             f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} {signal.upper() if signal else "NO"} signal.'

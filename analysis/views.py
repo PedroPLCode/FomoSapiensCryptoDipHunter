@@ -5,8 +5,7 @@ from django.http import HttpRequest, HttpResponse
 from io import StringIO
 import pandas as pd
 from .forms import TechnicalAnalysisSettingsForm
-from .models import User, TechnicalAnalysisSettings
-from fomo_sapiens.utils.logging import logger
+from .models import UserProfile, TechnicalAnalysisSettings
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from fomo_sapiens.utils.email_utils import send_email
 from .utils.fetch_utils import fetch_and_save_df
@@ -95,7 +94,7 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
             user=request.user
         )
     else:
-        guest_user, created = User.objects.get_or_create(username="guest")
+        guest_user, created = UserProfile.objects.get_or_create(username="guest")
         user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
             user=guest_user
         )

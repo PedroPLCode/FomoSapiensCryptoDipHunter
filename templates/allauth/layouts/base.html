@@ -28,6 +28,20 @@
 
                             <p class="text-center  p-0 m-0">Username: {{ user.username }}</p>
                             <p class="text-center  p-0 m-0">Email: {{ user.email }}</p>
+
+                            <p class="text-center p-0 m-0">
+                                Signals: 
+                                {% if user.email_signals_receiver %}
+                                  Email
+                                {% endif %}
+                                {% if user.telegram_signals_receiver %}
+                                  Telegram
+                                {% endif %}
+                                {% if not user.telegram_signals_receiver and not user.email_signals_receiver %}
+                                  None
+                                {% endif %}
+                            </p>
+
                             <p class="text-center  p-0 m-0">Superuser: {{ user.is_superuser }}</p>
                             <p class="text-center  p-0 m-0">Last login: {{ user.last_login }}</p>
                             <p class="text-center  p-0 m-0 mb-2">Date joined: {{ user.date_joined }}</p>

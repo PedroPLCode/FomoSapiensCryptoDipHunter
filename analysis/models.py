@@ -11,16 +11,17 @@ This module integrates with Django's `User` model and uses signals to automate s
 """
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from typing import List, Dict, Any
 
+UserProfile = settings.AUTH_USER_MODEL
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=UserProfile)
 def create_user_analysis_settings(
-    sender: type[User], instance: User, created: bool, **kwargs: Dict[str, Any]
+    sender: type[UserProfile], instance: UserProfile, created: bool, **kwargs: Dict[str, Any]
 ) -> None:
     if created:
         if instance.is_authenticated:
@@ -41,7 +42,7 @@ def default_df() -> Dict[str, Any]:
 
 
 class TechnicalAnalysisSettings(models.Model):
-    user: models.OneToOneField = models.OneToOneField(User, on_delete=models.CASCADE)
+    user: models.OneToOneField = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
     symbol: models.CharField = models.CharField(max_length=10, default="BTCUSDC")
     interval: models.CharField = models.CharField(max_length=10, default="1h")
