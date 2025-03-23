@@ -48,9 +48,9 @@ def send_admin_email(subject: str, body: str) -> None:
     from django.apps import apps
 
     if apps.ready:
-        from django.contrib.auth.models import User
+        from fomo_sapiens.models import UserProfile
     try:
-        users = User.objects.filter(is_superuser=True)
+        users = UserProfile.objects.filter(is_superuser=True)
         for user in users:
             success = send_email(user.email, subject, body)
             if not success:

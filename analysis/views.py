@@ -5,7 +5,8 @@ from django.http import HttpRequest, HttpResponse
 from io import StringIO
 import pandas as pd
 from .forms import TechnicalAnalysisSettingsForm
-from .models import UserProfile, TechnicalAnalysisSettings
+from .models import TechnicalAnalysisSettings
+from fomo_sapiens.models import UserProfile
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from fomo_sapiens.utils.email_utils import send_email
 from .utils.fetch_utils import fetch_and_save_df
