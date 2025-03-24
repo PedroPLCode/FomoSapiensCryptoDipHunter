@@ -256,7 +256,7 @@ def generate_hunter_signal_content(
             f"adx_no_trend: {hunter.adx_no_trend}\n"
             f"adx_latest_data: {latest_data['adx']}\n"
             f"adx_previous_data: {previous_data['adx']}\n"
-            f"avg_adx: {averages['avg_adx']}\n\n"
+            f"avg_adx: {averages['avg_adx']}"
         )
 
     return subject, content

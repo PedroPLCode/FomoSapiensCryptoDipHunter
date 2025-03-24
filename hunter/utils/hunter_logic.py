@@ -122,11 +122,11 @@ def run_single_hunter_logic(hunter: object, last_hunter_id: int) -> None:
             subject, content = generate_hunter_signal_content(
                 signal, hunter, df_calculated, trend, averages
             )
-            if hunter.user.email_signals_receiver and hunter.user.email:
-                content += "-- \n\nFomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
-                send_email(hunter.user.email, subject, content)
             if hunter.user.telegram_signals_receiver and hunter.user.telegram_chat_id:
                 send_telegram(chat_id=hunter.user.telegram_chat_id, msg=content)
+            if hunter.user.email_signals_receiver and hunter.user.email:
+                content += "\n\n-- \n\nFomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\nStefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\nCodeCave\nhttps://cave.ropeaccess.pro\n"
+                send_email(hunter.user.email, subject, content)
 
         logger.info(
             f'Hunter {hunter.id} {hunter.symbol} {hunter.interval} {hunter.lookback} {hunter.comment} {signal.upper() if signal else "NO"} signal.'
