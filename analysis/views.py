@@ -5,13 +5,14 @@ from django.http import HttpRequest, HttpResponse
 from io import StringIO
 import pandas as pd
 from .forms import TechnicalAnalysisSettingsForm
-from .models import TechnicalAnalysisSettings
+from .models import TechnicalAnalysisSettings, SentimentAnalysis
 from fomo_sapiens.models import UserProfile
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from fomo_sapiens.utils.email_utils import send_email
 from .utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
 from analysis.utils.report_utils import generate_ta_report_email
+from analysis.utils.sentiment_utils import fetch_and_save_sentiment_analysis
 from .utils.plot_utils import (
     plot_selected_ta_indicators,
     prepare_selected_indicators_list,
@@ -142,6 +143,12 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
         "di",
     ]
 
+    sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+
+    if not sentiment_analysis:
+        fetch_and_save_sentiment_analysis()
+        sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+
     return render(
         request,
         "analysis/show_analysis.html",
@@ -152,6 +159,7 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
             "plot_url": plot_url,
             "selected_indicators_list": selected_indicators_list,
             "indicators_list": indicators_list,
+            "sentiment_analysis": sentiment_analysis,
         },
     )
 

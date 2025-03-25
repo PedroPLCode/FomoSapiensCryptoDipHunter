@@ -46,6 +46,7 @@ class FomoSapiensConfig(AppConfig):
         """
         from hunter.utils import hunter_logic
         from fomo_sapiens.utils import logs_utils, db_utils
+        from analysis.utils import sentiment_utils
 
         if os.path.exists(SCHEDULER_LOCK_FILE):
             logger.info("Scheduler is already running. Skipping initialization.")
@@ -66,6 +67,15 @@ class FomoSapiensConfig(AppConfig):
                 max_instances=1,
                 misfire_grace_time=900,
                 args=["1h"],
+            )
+            
+            scheduler.add_job(
+                sentiment_utils.fetch_and_save_sentiment_analysis,
+                "interval",
+                hours=1,
+                id="every_hour_sentiment_check_task",
+                max_instances=1,
+                misfire_grace_time=900,
             )
 
             scheduler.add_job(

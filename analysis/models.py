@@ -100,3 +100,14 @@ class TechnicalAnalysisSettings(models.Model):
 
     def __str__(self) -> str:
         return f"Technical Analysis settings for {self.user.username}"
+
+
+class SentimentAnalysis(models.Model):
+    sentiment_score: models.FloatField = models.FloatField(default=0)
+    sentiment_label: models.CharField = models.CharField(max_length=16)
+    sentiment_last_update_time: models.DateTimeField = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.sentiment_label} ({self.sentiment_score})"

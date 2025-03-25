@@ -1,6 +1,8 @@
 from pandas import DataFrame
 from typing import Union, Dict, Optional, Tuple
 from datetime import datetime as dt
+from analysis.models import SentimentAnalysis
+from analysis.utils.sentiment_utils import fetch_and_save_sentiment_analysis
 from fomo_sapiens.utils.exception_handlers import exception_handler
 
 
@@ -35,6 +37,18 @@ def generate_hunter_signal_content(
     now = dt.now()
     formatted_now = now.strftime("%Y-%m-%d %H:%M:%S")
     latest_data, previous_data = get_latest_and_previus_data(df)
+
+    sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+
+    if not sentiment_analysis:
+        fetch_and_save_sentiment_analysis()
+        sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+
+    sentiment_last_update = (
+        sentiment_analysis.sentiment_last_update_time.strftime("%Y-%m-%d %H:%M:%S")
+        if sentiment_analysis
+        else None
+    )
 
     subject = f"Hunter {hunter.id} {hunter.symbol} {signal.upper()} signal"
 
@@ -259,6 +273,13 @@ def generate_hunter_signal_content(
             f"adx_latest_data: {latest_data['adx']}\n"
             f"adx_previous_data: {previous_data['adx']}\n"
             f"avg_adx: {averages['avg_adx']}"
+        )
+
+    if sentiment_analysis:
+        content += (
+            f"\n\nOverall Sentiment Analysis.\n"
+            f"{sentiment_last_update}\n"
+            f"Current Sentiment: {sentiment_analysis.sentiment_score} {sentiment_analysis.sentiment_label}"
         )
 
     return subject, content

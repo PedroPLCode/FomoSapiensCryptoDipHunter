@@ -1,13 +1,13 @@
 # FomoSapiensCryptoDipHunter
 
-FomoSapiensCryptoDipHunter is a crypto trading bot designed to assist in making trading decisions on the crypto exchange market. The bot integrates advanced technical indicators, real-time performance monitoring, and dynamic parameter adjustments to enhance trading efficiency. It provides an intuitive web interface for real-time analysis and sends telegram or email alerts for buy or sell signals.
+FomoSapiensCryptoDipHunter is a crypto trading bot designed to assist in making trading decisions on the crypto exchange market. The bot integrates advanced technical indicators, real-time performance monitoring, and dynamic parameter adjustments to enhance trading efficiency. It provides an intuitive web interface for real-time market analysis and sends telegram or email alerts for buy or sell signals.
 
 ## Features
 
 - Multiple Independent Dip Hunters: Run different dip hunters with unique currencies and strategies.
 - Automated Telegram or Email Notifications: Receive telegram or email alerts when entering buy or sell zones.
 - Binance API Integration: Fetch real-time market data.
-- Real-Time Monitoring: View live technical analysis.
+- Real-Time Monitoring: View live technical analysis and market sentiment.
 
 ## Installation
 

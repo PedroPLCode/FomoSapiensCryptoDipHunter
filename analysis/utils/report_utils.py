@@ -1,4 +1,6 @@
 from datetime import datetime as dt
+from analysis.models import SentimentAnalysis
+from analysis.utils.sentiment_utils import fetch_and_save_sentiment_analysis
 from fomo_sapiens.utils.exception_handlers import exception_handler
 import pandas as pd
 
@@ -33,10 +35,26 @@ def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, s
     formatted_time: str = time.strftime("%Y-%m-%d %H:%M:%S")
     latest_data, previous_data = get_latest_and_previus_data(df)
 
+    sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+
+    if not sentiment_analysis:
+        fetch_and_save_sentiment_analysis()
+        sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+
+    sentiment_last_update = (
+        sentiment_analysis.sentiment_last_update_time.strftime("%Y-%m-%d %H:%M:%S")
+        if sentiment_analysis
+        else None
+    )
+
     subject: str = "Technical Analysis report."
 
     content: str = (
         f"FomoSapiensCryptoDipHunter\n"
+        f"https://fomo.ropeaccess.pro\n\n"
+        f"Overall Sentiment Analysis.\n"
+        f"{sentiment_last_update}\n"
+        f"Current Sentiment: {sentiment_analysis.sentiment_score} {sentiment_analysis.sentiment_label}\n\n"
         f"Technical Analysis report.\n"
         f"{formatted_now}\n\n"
         f"Technical Analysis data:\n"
