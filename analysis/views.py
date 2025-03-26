@@ -76,7 +76,6 @@ def refresh_data(request: HttpRequest) -> HttpResponse:
 
 
 @exception_handler(default_return=lambda: redirect("show_technical_analysis"))
-@login_required
 def refresh_sentiment(request: HttpRequest) -> HttpResponse:
     """
     Refreshes the market sentiment analysis data.
