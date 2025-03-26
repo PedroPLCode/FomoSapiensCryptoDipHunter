@@ -2,34 +2,6 @@
 
 {% block body %}
 
-    {% if sentiment_analysis %}
-    <div class="col-12 col-md-6 card text-center text-dark rounded-3 {% if messages %}mt-0{% else %}mt-5{% endif %} mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
-            
-        <div class="card-header">
-            <h4 class="text-center">Sentiment Analysis</h4>
-        </div>
-
-        <div class="card-body">         
-            <div class="text-center  d-flex flex-column justify-content-center align-item-center">
-                <p class="p-0 m-0">
-                    Current sentiment:
-                    <span class="{% if sentiment_analysis.sentiment_score > 0.05 %}text-success
-                                 {% elif sentiment_analysis.sentiment_score < -0.05 %}text-danger
-                                 {% else %}text-warning{% endif %}">
-                        {{ sentiment_analysis.sentiment_score|floatformat:2 }} {{ sentiment_analysis.sentiment_label }}
-                    </span><br>
-                    Last update: {{ sentiment_analysis.sentiment_last_update_time }}<br>
-                    Analysed last {{ sentiment_analysis.sentiment_news_amount }} news articles from:<br>
-                    {% for source in sentiment_analysis.sentiment_news_sources %}
-                        {{ source }}<br>
-                    {% endfor %}
-                </p>                
-            </div>
-        </div>
-
-    </div>
-    {% endif %}
-
     <div class="col-12 col-md-6 card text-center text-dark rounded-3 mt-2 mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
         
         <div class="card-header">
@@ -403,4 +375,33 @@
         {% endif %}
 
     </div>
+
+    {% if sentiment_analysis %}
+    <div class="col-12 col-md-6 card text-center text-dark rounded-3 {% if messages %}mt-0{% else %}mt-5{% endif %} mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
+            
+        <div class="card-header">
+            <h4 class="text-center">Sentiment Analysis</h4>
+        </div>
+
+        <div class="card-body">         
+            <div class="text-center  d-flex flex-column justify-content-center align-item-center">
+                <p class="p-0 m-0">
+                    Current sentiment:
+                    <span class="{% if sentiment_analysis.sentiment_score > 0.05 %}text-success
+                                 {% elif sentiment_analysis.sentiment_score < -0.05 %}text-danger
+                                 {% else %}text-warning{% endif %}">
+                        {{ sentiment_analysis.sentiment_score|floatformat:2 }} {{ sentiment_analysis.sentiment_label }}
+                    </span><br>
+                    Last update: {{ sentiment_analysis.sentiment_last_update_time }}<br>
+                    Analysed last {{ sentiment_analysis.sentiment_news_amount }} news articles from:<br>
+                    {% for source in sentiment_analysis.sentiment_news_sources %}
+                        {{ source }}<br>
+                    {% endfor %}
+                </p>                
+            </div>
+        </div>
+
+    </div>
+    {% endif %}
+    
 {% endblock %}
