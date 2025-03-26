@@ -19,7 +19,10 @@
                         {{ sentiment_analysis.sentiment_score|floatformat:2 }} {{ sentiment_analysis.sentiment_label }}
                     </span><br>
                     Last update: {{ sentiment_analysis.sentiment_last_update_time }}<br>
-                    Analysed last 50 news from:<br>coindesk.com and cointelegraph.com<br>
+                    Analysed last {{ sentiment_analysis.sentiment_news_amount }} news articles from:<br>
+                    {% for source in sentiment_analysis.sentiment_news_sources %}
+                        {{ source }}<br>
+                    {% endfor %}
                 </p>                
             </div>
         </div>
