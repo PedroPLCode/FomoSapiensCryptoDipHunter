@@ -71,7 +71,29 @@ def refresh_data(request: HttpRequest) -> HttpResponse:
         user=request.user
     )
     fetch_and_save_df(user_ta_settings)
-    messages.success(request, "Data refreshed successfully")
+    messages.success(request, "Technical Analysis refreshed successfully")
+    return redirect("show_technical_analysis")
+
+
+@exception_handler(default_return=lambda: redirect("show_technical_analysis"))
+@login_required
+def refresh_sentiment(request: HttpRequest) -> HttpResponse:
+    """
+    Refreshes the market sentiment analysis data.
+
+    This view triggers the sentiment analysis update by fetching new 
+    cryptocurrency news, analyzing their sentiment, and updating the database. 
+    After the process is completed, the user is redirected to the 
+    technical analysis page with a success message.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the technical analysis page after refreshing the sentiment data.
+    """
+    fetch_and_save_sentiment_analysis()
+    messages.success(request, "Sentiment Analysis refreshed successfully.")
     return redirect("show_technical_analysis")
 
 

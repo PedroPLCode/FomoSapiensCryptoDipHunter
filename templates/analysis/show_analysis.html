@@ -357,8 +357,7 @@
                             </p>
                         </div>
 
-                        <div class="text-center w-100 m-0 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
-                            
+                        <div class="text-center w-100 m-0 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">    
                             {% if user.is_authenticated %}
                             <a href="{% url 'refresh_data' %}" class="btn btn-primary">Refresh Data</a>
                             <a href="{% url 'update_technical_analysis_settings' %}" class="btn btn-primary">Analysis Settings</a>
@@ -397,7 +396,12 @@
                     {% for source in sentiment_analysis.sentiment_news_sources %}
                         {{ source }}<br>
                     {% endfor %}
-                </p>                
+                </p>    
+                
+                <div class="text-center w-100 m-0 mt-2 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
+                    <a href="{% url 'refresh_sentiment' %}" class="btn btn-primary">Refresh Sentiment Analysis</a>
+                </div>
+
             </div>
         </div>
 

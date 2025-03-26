@@ -19,6 +19,7 @@ urlpatterns = [
         name="update_technical_analysis_settings",
     ),
     path("refresh/", views.refresh_data, name="refresh_data"),
+    path("sentiement/", views.refresh_sentiment, name="refresh_sentiment"),
     path(
         "report/", views.send_email_analysis_report, name="send_email_analysis_report"
     ),
