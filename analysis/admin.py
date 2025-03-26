@@ -13,6 +13,19 @@ Model:
 """
 
 from django.contrib import admin
-from .models import TechnicalAnalysisSettings
+from .models import TechnicalAnalysisSettings, SentimentAnalysis
 
 admin.site.register(TechnicalAnalysisSettings)
+
+
+@admin.register(SentimentAnalysis)
+class SentimentAnalysisAdmin(admin.ModelAdmin):
+    list_display = (
+        "sentiment_news_sources",
+        "sentiment_news_amount",
+        "sentiment_score",
+        "sentiment_label",
+        "sentiment_last_update_time",
+    )
+    readonly_fields = ("sentiment_last_update_time",)
+    ordering = ("-sentiment_last_update_time",)

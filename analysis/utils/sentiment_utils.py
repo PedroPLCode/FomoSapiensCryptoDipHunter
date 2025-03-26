@@ -11,27 +11,25 @@ from fomo_sapiens.utils.retry_connection import retry_connection
 nltk.download("vader_lexicon")
 
 
-@exception_handler()
+@exception_handler(default_return=[])
 @retry_connection()
-def get_crypto_news_rss(url: str) -> List[str]:
+def get_crypto_news_rss(url: str, news_amount: int) -> List[str]:
     """
     Fetches the latest cryptocurrency news from an RSS feed.
 
-    This function sends a request to the given RSS feed URL, parses the XML response,
-    extracts the first 30 news items, and combines their titles and descriptions.
-
     Args:
         url (str): The URL of the RSS feed.
+        news_amount (int): The number of news articles to fetch.
 
     Returns:
-        List[str]: A list of strings, each containing the title and description of a news item.
+        List[str]: A list of news titles and descriptions.
     """
     headers = {"User-Agent": "Mozilla/5.0"}
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.content, "xml")
 
     news_items: List[str] = []
-    for item in soup.find_all("item")[:30]:
+    for item in soup.find_all("item")[:news_amount]:
         title: str = item.title.text
         description: str = item.description.text
         news_items.append(f"{title} {description}")
@@ -39,22 +37,16 @@ def get_crypto_news_rss(url: str) -> List[str]:
     return news_items
 
 
-@exception_handler()
+@exception_handler(default_return=(0, "Unknown"))
 def analyze_sentiment(text: str) -> Tuple[float, str]:
     """
-    Analyzes the sentiment of a given text using the VADER sentiment analysis tool.
-
-    This function calculates the sentiment score of the input text and classifies it
-    as "Positive", "Negative", or "Neutral" based on the compound score.
+    Analyzes the sentiment of a text using VADER.
 
     Args:
-        text (str): The text to be analyzed.
+        text (str): The text to analyze.
 
     Returns:
-        Tuple[float, str]: A tuple containing the sentiment score (float) and its label (str).
-                           - Score > 0.05 → "Positive"
-                           - Score < -0.05 → "Negative"
-                           - Otherwise → "Neutral"
+        Tuple[float, str]: The sentiment score and label ("Positive", "Negative", "Neutral").
     """
     sia = SentimentIntensityAnalyzer()
     score: float = sia.polarity_scores(text)["compound"]
@@ -72,42 +64,40 @@ def analyze_sentiment(text: str) -> Tuple[float, str]:
 @exception_handler()
 def fetch_and_save_sentiment_analysis() -> None:
     """
-    Fetches cryptocurrency news from multiple sources, analyzes their sentiment,
-    and updates or creates a single database entry with the latest sentiment analysis.
-
-    This function retrieves news articles from Cointelegraph and Coindesk,
-    calculates their sentiment scores, and updates the database entry with ID=1
-    to store the most recent sentiment data.
+    Fetches cryptocurrency news from various sources, analyzes their sentiment, and updates the database.
 
     Returns:
         None
     """
-    cointelegraph_news = get_crypto_news_rss("https://cointelegraph.com/rss")[:25]
-    coindesk_news = get_crypto_news_rss(
-        "https://www.coindesk.com/arc/outboundfeeds/rss/"
-    )[:25]
-    all_news = cointelegraph_news + coindesk_news
+    sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+    if not sentiment_analysis:
+        sentiment_analysis = SentimentAnalysis.objects.create()
+
+    all_news = []
+    news_urls = sentiment_analysis.sentiment_news_sources
+    news_amount = sentiment_analysis.sentiment_news_amount
+    
+    for url in news_urls:
+        news = get_crypto_news_rss(url, news_amount)
+        all_news.extend(news[:sentiment_analysis.sentiment_news_amount])
 
     if not all_news:
         logger.warning("No news articles found for sentiment analysis.")
         return
 
-    total_sentiment_score = 0
-    for news_text in all_news:
-        sentiment_score, _ = analyze_sentiment(news_text)
-        total_sentiment_score += sentiment_score
-
+    total_sentiment_score = sum(
+        analyze_sentiment(news_text)[0] for news_text in all_news
+    )
     avg_sentiment_score = total_sentiment_score / len(all_news)
 
-    if avg_sentiment_score >= 0.05:
-        avg_sentiment_label = "Positive"
-    elif avg_sentiment_score <= -0.05:
-        avg_sentiment_label = "Negative"
-    else:
-        avg_sentiment_label = "Neutral"
+    avg_sentiment_label = (
+        "Positive"
+        if avg_sentiment_score >= 0.05
+        else "Negative" if avg_sentiment_score <= -0.05 else "Neutral"
+    )
 
     SentimentAnalysis.objects.update_or_create(
-        id=1,
+        pk=1,
         defaults={
             "sentiment_score": avg_sentiment_score,
             "sentiment_label": avg_sentiment_label,

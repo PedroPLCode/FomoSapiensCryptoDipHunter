@@ -54,7 +54,7 @@ def generate_ta_report_email(settings: object, df: pd.DataFrame) -> tuple[str, s
         f"https://fomo.ropeaccess.pro\n\n"
         f"Overall Sentiment Analysis.\n"
         f"{sentiment_last_update}\n"
-        f"Current Sentiment: {sentiment_analysis.sentiment_score} {sentiment_analysis.sentiment_label}\n\n"
+        f"Current Sentiment: {sentiment_analysis.sentiment_score:.2f} {sentiment_analysis.sentiment_label}\n\n"
         f"Technical Analysis report.\n"
         f"{formatted_now}\n\n"
         f"Technical Analysis data:\n"

@@ -279,7 +279,7 @@ def generate_hunter_signal_content(
         content += (
             f"\n\nOverall Sentiment Analysis.\n"
             f"{sentiment_last_update}\n"
-            f"Current Sentiment: {sentiment_analysis.sentiment_score} {sentiment_analysis.sentiment_label}"
+            f"Current Sentiment: {sentiment_analysis.sentiment_score:.2f} {sentiment_analysis.sentiment_label}"
         )
 
     return subject, content

@@ -16,7 +16,7 @@
                     <span class="{% if sentiment_analysis.sentiment_score > 0.05 %}text-success
                                  {% elif sentiment_analysis.sentiment_score < -0.05 %}text-danger
                                  {% else %}text-warning{% endif %}">
-                        {{ sentiment_analysis.sentiment_score }} {{ sentiment_analysis.sentiment_label }}
+                        {{ sentiment_analysis.sentiment_score|floatformat:2 }} {{ sentiment_analysis.sentiment_label }}
                     </span><br>
                     Last update: {{ sentiment_analysis.sentiment_last_update_time }}<br>
                     Analysed last 50 news from:<br>coindesk.com and cointelegraph.com<br>

@@ -37,6 +37,21 @@ def default_plot_indicators() -> List[str]:
     return ["rsi", "macd"]
 
 
+def default_sentiment_urls():
+    return [
+        "https://cointelegraph.com/rss",
+        "https://www.coindesk.com/rss",
+        "https://www.crYPTO.news/rss",
+        "https://decrypt.co/feed",
+        "https://www.theblock.co/rss",
+        "https://www.newsbtc.com/feed/",
+        "https://www.bitcoinist.com/feed",
+        "https://www.cryptopotato.com/feed/",
+        "https://cryptobriefing.com/feed/",
+        "https://www.cryptovibes.com/feed/",
+    ]
+
+
 def default_df() -> Dict[str, Any]:
     from .utils.fetch_utils import fetch_data
 
@@ -103,11 +118,14 @@ class TechnicalAnalysisSettings(models.Model):
 
 
 class SentimentAnalysis(models.Model):
-    sentiment_score: models.FloatField = models.FloatField(default=0)
-    sentiment_label: models.CharField = models.CharField(max_length=16)
-    sentiment_last_update_time: models.DateTimeField = models.DateTimeField(
-        auto_now=True
-    )
+    sentiment_news_amount = models.IntegerField(default=25)
+    sentiment_news_sources = models.JSONField(default=default_sentiment_urls)
+    sentiment_score = models.FloatField(default=0)
+    sentiment_label = models.CharField(max_length=16, default="Neutral")
+    sentiment_last_update_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.sentiment_label} ({self.sentiment_score})"
+
+    def get_sources_list(self):
+        return self.sentiment_news_sources if self.sentiment_news_sources else []
