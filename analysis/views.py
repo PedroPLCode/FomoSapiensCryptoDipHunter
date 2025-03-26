@@ -54,7 +54,7 @@ def update_technical_analysis_settings(request: HttpRequest) -> HttpResponse:
 
 @exception_handler(default_return=lambda: redirect("show_technical_analysis"))
 @login_required
-def refresh_data(request: HttpRequest) -> HttpResponse:
+def refresh_technical_analysis(request: HttpRequest) -> HttpResponse:
     """
     View function to refresh the user's technical analysis data.
 
@@ -76,7 +76,7 @@ def refresh_data(request: HttpRequest) -> HttpResponse:
 
 
 @exception_handler(default_return=lambda: redirect("show_technical_analysis"))
-def refresh_sentiment(request: HttpRequest) -> HttpResponse:
+def refresh_sentiment_analysis(request: HttpRequest) -> HttpResponse:
     """
     Refreshes the market sentiment analysis data.
 
