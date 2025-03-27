@@ -28,11 +28,11 @@
 
                             <p class="text-center  p-0 m-0">Username: {{ user.username }}</p>
                             {% if user.first_name or user.last_name %}
-                                <p class="text-muted m-0 p-0">Name: {{ user.get_full_name|default:user.username }}</p>
+                                <p class="text-center m-0 p-0">Name: {{ user.get_full_name|default:user.username }}</p>
                             {% endif %}
                             <p class="text-center  p-0 m-0">Email: {{ user.email }}</p>
                             {% if user.telegram_chat_id %}
-                                <p class="text-muted m-0 p-0">Telegram: {{ user.telegram_chat_id }}</p>
+                                <p class="text-center m-0 p-0">Telegram ChatID: {{ user.telegram_chat_id }}</p>
                             {% endif %}
 
                             <p class="text-center p-0 m-0">
