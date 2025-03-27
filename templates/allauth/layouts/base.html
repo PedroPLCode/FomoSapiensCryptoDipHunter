@@ -27,19 +27,20 @@
                             {% if user.is_authenticated %}
 
                             <p class="text-center  p-0 m-0">Username: {{ user.username }}</p>
+                            {% if user.first_name or user.last_name %}
+                                <p class="text-muted m-0 p-0">Name: {{ user.get_full_name|default:user.username }}</p>
+                            {% endif %}
                             <p class="text-center  p-0 m-0">Email: {{ user.email }}</p>
+                            {% if user.telegram_chat_id %}
+                                <p class="text-muted m-0 p-0">Telegram: {{ user.telegram_chat_id }}</p>
+                            {% endif %}
 
                             <p class="text-center p-0 m-0">
-                                Signals: 
-                                {% if user.email_signals_receiver %}
-                                  Email
-                                {% endif %}
-                                {% if user.telegram_signals_receiver %}
-                                  Telegram
-                                {% endif %}
-                                {% if not user.telegram_signals_receiver and not user.email_signals_receiver %}
-                                  None
-                                {% endif %}
+                                Trade Signals: 
+                                {% if user.email_signals_receiver %}Email{% endif %}
+                                {% if user.email_signals_receiver and user.telegram_signals_receiver %}, {% endif %}
+                                {% if user.telegram_signals_receiver %}Telegram{% endif %}
+                                {% if not user.telegram_signals_receiver and not user.email_signals_receiver %}None{% endif %}
                             </p>
 
                             <p class="text-center  p-0 m-0">Superuser: {{ user.is_superuser }}</p>

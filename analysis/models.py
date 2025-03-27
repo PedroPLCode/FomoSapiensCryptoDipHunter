@@ -96,12 +96,12 @@ class TechnicalAnalysisSettings(models.Model):
 
     rsi_buy: models.IntegerField = models.IntegerField(default=30)
     rsi_sell: models.IntegerField = models.IntegerField(default=70)
-    cci_buy: models.IntegerField = models.IntegerField(default=30)
-    cci_sell: models.IntegerField = models.IntegerField(default=70)
-    mfi_buy: models.IntegerField = models.IntegerField(default=30)
-    mfi_sell: models.IntegerField = models.IntegerField(default=70)
-    stoch_buy: models.IntegerField = models.IntegerField(default=30)
-    stoch_sell: models.IntegerField = models.IntegerField(default=70)
+    cci_buy: models.IntegerField = models.IntegerField(default=-100)
+    cci_sell: models.IntegerField = models.IntegerField(default=100)
+    mfi_buy: models.IntegerField = models.IntegerField(default=20)
+    mfi_sell: models.IntegerField = models.IntegerField(default=80)
+    stoch_buy: models.IntegerField = models.IntegerField(default=20)
+    stoch_sell: models.IntegerField = models.IntegerField(default=80)
     atr_buy_threshold: models.FloatField = models.FloatField(default=0.005)
 
     selected_plot_indicators: models.JSONField = models.JSONField(
@@ -118,7 +118,7 @@ class TechnicalAnalysisSettings(models.Model):
 
 
 class SentimentAnalysis(models.Model):
-    sentiment_news_amount = models.IntegerField(default=25)
+    sentiment_news_amount = models.IntegerField(default=10)
     sentiment_news_sources = models.JSONField(default=default_sentiment_urls)
     sentiment_score = models.FloatField(default=0)
     sentiment_label = models.CharField(max_length=16, default="Neutral")
