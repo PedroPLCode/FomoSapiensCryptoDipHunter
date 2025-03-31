@@ -68,14 +68,14 @@ def generate_hunter_signal_content(
         f"trend: {trend}\n\n"
         f"price_signals: {hunter.price_signals}\n"
         f"avg_close_period: {hunter.avg_close_period}\n"
-        f"close_latest_data: {latest_data['close']}\n"
-        f"close_previous_data: {previous_data['close']}\n"
-        f"avg_close: {averages['avg_close']}\n\n"
+        f"close_latest_data: {latest_data['close']:.2f}\n"
+        f"close_previous_data: {previous_data['close']:.2f}\n"
+        f"avg_close: {averages['avg_close']:.2f}\n\n"
         f"vol_signals: {hunter.vol_signals}\n"
         f"avg_volume_period: {hunter.avg_volume_period}\n"
-        f"volume_latest_data: {latest_data['volume']}\n"
-        f"volume_previous_data: {previous_data['volume']}\n"
-        f"avg_volume: {averages['avg_volume']}"
+        f"volume_latest_data: {latest_data['volume']:.2f}\n"
+        f"volume_previous_data: {previous_data['volume']:.2f}\n"
+        f"avg_volume: {averages['avg_volume']:.2f}"
     )
 
     if hunter.rsi_signals or hunter.rsi_divergence_signals:
@@ -85,9 +85,9 @@ def generate_hunter_signal_content(
             f"rsi_divergence_signals: {hunter.rsi_divergence_signals}\n"
             f"rsi_timeperiod: {hunter.rsi_timeperiod}\n"
             f"avg_rsi_period: {hunter.avg_rsi_period}\n"
-            f"rsi_latest_data: {latest_data['rsi']}\n"
-            f"rsi_previous_data: {previous_data['rsi']}\n"
-            f"avg_rsi: {averages['avg_rsi']}\n"
+            f"rsi_latest_data: {latest_data['rsi']:.2f}\n"
+            f"rsi_previous_data: {previous_data['rsi']:.2f}\n"
+            f"avg_rsi: {averages['avg_rsi']:.2f}\n"
             f"rsi_buy: {hunter.rsi_buy}\n"
             f"rsi_sell: {hunter.rsi_sell}"
         )
@@ -99,9 +99,9 @@ def generate_hunter_signal_content(
             f"cci_divergence_signals: {hunter.cci_divergence_signals}\n"
             f"cci_timeperiod: {hunter.cci_timeperiod}\n"
             f"avg_cci_period: {hunter.avg_cci_period}\n"
-            f"cci_latest_data: {latest_data['cci']}\n"
-            f"cci_previous_data: {previous_data['cci']}\n"
-            f"avg_cci: {averages['avg_cci']}\n"
+            f"cci_latest_data: {latest_data['cci']:.2f}\n"
+            f"cci_previous_data: {previous_data['cci']:.2f}\n"
+            f"avg_cci: {averages['avg_cci']:.2f}\n"
             f"cci_buy: {hunter.cci_buy}\n"
             f"cci_sell: {hunter.cci_sell}"
         )
@@ -113,9 +113,9 @@ def generate_hunter_signal_content(
             f"mfi_divergence_signals: {hunter.mfi_divergence_signals}\n"
             f"mfi_timeperiod: {hunter.mfi_timeperiod}\n"
             f"avg_mfi_period: {hunter.avg_mfi_period}\n"
-            f"mfi_latest_data: {latest_data['mfi']}\n"
-            f"mfi_previous_data: {previous_data['mfi']}\n"
-            f"avg_mfi: {averages['avg_mfi']}\n"
+            f"mfi_latest_data: {latest_data['mfi']:.2f}\n"
+            f"mfi_previous_data: {previous_data['mfi']:.2f}\n"
+            f"avg_mfi: {averages['avg_mfi']:.2f}\n"
             f"mfi_buy: {hunter.mfi_buy}\n"
             f"mfi_sell: {hunter.mfi_sell}"
         )
@@ -128,12 +128,12 @@ def generate_hunter_signal_content(
             f"macd_timeperiod: {hunter.macd_timeperiod}\n"
             f"macd_signalperiod: {hunter.macd_signalperiod}\n"
             f"avg_macd_period: {hunter.avg_macd_period}\n"
-            f"macd_latest_data: {latest_data['macd']}\n"
-            f"macd_signal_latest_data: {latest_data['macd_signal']}\n"
-            f"macd_previous_data: {previous_data['macd']}\n"
-            f"macd_signal_previous_data: {previous_data['macd_signal']}\n"
-            f"avg_macd: {averages['avg_macd']}\n"
-            f"avg_macd_signal: {averages['avg_macd_signal']}"
+            f"macd_latest_data: {latest_data['macd']:.2f}\n"
+            f"macd_signal_latest_data: {latest_data['macd_signal']:.2f}\n"
+            f"macd_previous_data: {previous_data['macd']:.2f}\n"
+            f"macd_signal_previous_data: {previous_data['macd_signal']:.2f}\n"
+            f"avg_macd: {averages['avg_macd']:.2f}\n"
+            f"avg_macd_signal: {averages['avg_macd_signal']:.2f}"
         )
 
     if hunter.bollinger_signals:
@@ -142,12 +142,12 @@ def generate_hunter_signal_content(
             f"bollinger_signals: {hunter.bollinger_signals}\n"
             f"bollinger_timeperiod: {hunter.bollinger_timeperiod}\n"
             f"bollinger_nbdev: {hunter.bollinger_nbdev}\n"
-            f"upper_band_latest_data: {latest_data['upper_band']}\n"
-            f"middle_band_latest_data: {latest_data['middle_band']}\n"
-            f"lower_band_latest_data: {latest_data['lower_band']}\n"
-            f"upper_band_previous_data: {previous_data['upper_band']}\n"
-            f"middle_band_previous_data: {previous_data['middle_band']}\n"
-            f"lower_band_previous_data: {previous_data['lower_band']}"
+            f"upper_band_latest_data: {latest_data['upper_band']:.2f}\n"
+            f"middle_band_latest_data: {latest_data['middle_band']:.2f}\n"
+            f"lower_band_latest_data: {latest_data['lower_band']:.2f}\n"
+            f"upper_band_previous_data: {previous_data['upper_band']:.2f}\n"
+            f"middle_band_previous_data: {previous_data['middle_band']:.2f}\n"
+            f"lower_band_previous_data: {previous_data['lower_band']:.2f}"
         )
 
     if hunter.stoch_signals or hunter.stoch_divergence_signals:
@@ -158,12 +158,12 @@ def generate_hunter_signal_content(
             f"stoch_k_timeperiod: {hunter.stoch_k_timeperiod}\n"
             f"stoch_d_timeperiod: {hunter.stoch_d_timeperiod}\n"
             f"avg_stoch_period: {hunter.avg_stoch_period}\n"
-            f"stoch_k_latest_data: {latest_data['stoch_k']}\n"
-            f"stoch_d_latest_data: {latest_data['stoch_d']}\n"
-            f"stoch_k_previous_data: {previous_data['stoch_k']}\n"
-            f"stoch_d_previous_data: {previous_data['stoch_d']}\n"
-            f"avg_stoch_k: {averages['avg_stoch_k']}\n"
-            f"avg_stoch_d: {averages['avg_stoch_d']}\n"
+            f"stoch_k_latest_data: {latest_data['stoch_k']:.2f}\n"
+            f"stoch_d_latest_data: {latest_data['stoch_d']:.2f}\n"
+            f"stoch_k_previous_data: {previous_data['stoch_k']:.2f}\n"
+            f"stoch_d_previous_data: {previous_data['stoch_d']:.2f}\n"
+            f"avg_stoch_k: {averages['avg_stoch_k']:.2f}\n"
+            f"avg_stoch_d: {averages['avg_stoch_d']:.2f}\n"
             f"stoch_buy: {hunter.stoch_buy}\n"
             f"stoch_sell: {hunter.stoch_sell}"
         )
@@ -176,12 +176,12 @@ def generate_hunter_signal_content(
             f"stoch_rsi_k_timeperiod: {hunter.stoch_rsi_k_timeperiod}\n"
             f"stoch_rsi_d_timeperiod: {hunter.stoch_rsi_d_timeperiod}\n"
             f"avg_stoch_rsi_period: {hunter.avg_stoch_rsi_period}\n"
-            f"stoch_rsi_d_latest_data: {latest_data['stoch_rsi_d']}\n"
-            f"stoch_rsi_k_latest_data: {latest_data['stoch_rsi_k']}\n"
-            f"stoch_rsi_d_previous_data: {previous_data['stoch_rsi_d']}\n"
-            f"stoch_rsi_k_previous_data: {previous_data['stoch_rsi_k']}\n"
-            f"avg_stoch_rsi_d: {averages['avg_stoch_rsi_d']}\n"
-            f"avg_stoch_rsi_k: {averages['avg_stoch_rsi_k']}"
+            f"stoch_rsi_d_latest_data: {latest_data['stoch_rsi_d']:.2f}\n"
+            f"stoch_rsi_k_latest_data: {latest_data['stoch_rsi_k']:.2f}\n"
+            f"stoch_rsi_d_previous_data: {previous_data['stoch_rsi_d']:.2f}\n"
+            f"stoch_rsi_k_previous_data: {previous_data['stoch_rsi_k']:.2f}\n"
+            f"avg_stoch_rsi_d: {averages['avg_stoch_rsi_d']:.2f}\n"
+            f"avg_stoch_rsi_k: {averages['avg_stoch_rsi_k']:.2f}"
         )
 
     if hunter.ema_cross_signals or hunter.ema_fast_signals or hunter.ema_slow_signals:
@@ -193,12 +193,12 @@ def generate_hunter_signal_content(
             f"ema_fast_timeperiod: {hunter.ema_fast_timeperiod}\n"
             f"ema_slow_timeperiod: {hunter.ema_slow_timeperiod}\n"
             f"avg_ema_period: {hunter.avg_ema_period}\n"
-            f"ema_fast_latest_data: {latest_data['ema_fast']}\n"
-            f"ema_slow_latest_data: {latest_data['ema_slow']}\n"
-            f"ema_fast_previous_data: {previous_data['ema_fast']}\n"
-            f"ema_slow_previous_data: {previous_data['ema_slow']}\n"
-            f"avg_ema_fast: {averages['avg_ema_fast']}\n"
-            f"avg_ema_slow: {averages['avg_ema_slow']}"
+            f"ema_fast_latest_data: {latest_data['ema_fast']:.2f}\n"
+            f"ema_slow_latest_data: {latest_data['ema_slow']:.2f}\n"
+            f"ema_fast_previous_data: {previous_data['ema_fast']:.2f}\n"
+            f"ema_slow_previous_data: {previous_data['ema_slow']:.2f}\n"
+            f"avg_ema_fast: {averages['avg_ema_fast']:.2f}\n"
+            f"avg_ema_slow: {averages['avg_ema_slow']:.2f}"
         )
 
     if hunter.di_signals:
@@ -207,12 +207,12 @@ def generate_hunter_signal_content(
             f"di_signals: {hunter.di_signals}\n"
             f"di_timeperiod: {hunter.di_timeperiod}\n"
             f"avg_di_period: {hunter.avg_di_period}\n"
-            f"plus_di_latest_data: {latest_data['plus_di']}\n"
-            f"minus_di_latest_data: {latest_data['minus_di']}\n"
-            f"plus_di_previous_data: {previous_data['plus_di']}\n"
-            f"minus_di_previous_data: {previous_data['minus_di']}\n"
-            f"avg_plus_di: {averages['avg_plus_di']}\n"
-            f"avg_minus_di: {averages['avg_minus_di']}"
+            f"plus_di_latest_data: {latest_data['plus_di']:.2f}\n"
+            f"minus_di_latest_data: {latest_data['minus_di']:.2f}\n"
+            f"plus_di_previous_data: {previous_data['plus_di']:.2f}\n"
+            f"minus_di_previous_data: {previous_data['minus_di']:.2f}\n"
+            f"avg_plus_di: {averages['avg_plus_di']:.2f}\n"
+            f"avg_minus_di: {averages['avg_minus_di']:.2f}"
         )
 
     if hunter.atr_signals:
@@ -221,9 +221,9 @@ def generate_hunter_signal_content(
             f"atr_signals: {hunter.atr_signals}\n"
             f"atr_timeperiod: {hunter.atr_timeperiod}\n"
             f"avg_atr_period: {hunter.avg_atr_period}\n"
-            f"atr_latest_data: {latest_data['atr']}\n"
-            f"atr_previous_data: {previous_data['atr']}\n"
-            f"avg_atr: {averages['avg_atr']}\n"
+            f"atr_latest_data: {latest_data['atr']:.2f}\n"
+            f"atr_previous_data: {previous_data['atr']:.2f}\n"
+            f"avg_atr: {averages['avg_atr']:.2f}\n"
             f"atr_buy_threshold: {hunter.atr_buy_threshold}"
         )
 
@@ -232,9 +232,9 @@ def generate_hunter_signal_content(
             "\n\nVWAP (Volume Weighted Average Price):\n"
             f"vwap_signals: {hunter.vwap_signals}\n"
             f"avg_vwap_period: {hunter.avg_vwap_period}\n"
-            f"vwap_latest_data: {latest_data['vwap']}\n"
-            f"vwap_previous_data: {previous_data['vwap']}\n"
-            f"avg_vwap: {averages['avg_vwap']}"
+            f"vwap_latest_data: {latest_data['vwap']:.2f}\n"
+            f"vwap_previous_data: {previous_data['vwap']:.2f}\n"
+            f"avg_vwap: {averages['avg_vwap']:.2f}"
         )
 
     if hunter.psar_signals:
@@ -244,9 +244,9 @@ def generate_hunter_signal_content(
             f"psar_acceleration: {hunter.psar_acceleration}\n"
             f"psar_maximum: {hunter.psar_maximum}\n"
             f"avg_psar_period: {hunter.avg_psar_period}\n"
-            f"psar_latest_data: {latest_data['psar']}\n"
-            f"psar_previous_data: {previous_data['psar']}\n"
-            f"avg_psar: {averages['avg_psar']}"
+            f"psar_latest_data: {latest_data['psar']:.2f}\n"
+            f"psar_previous_data: {previous_data['psar']:.2f}\n"
+            f"avg_psar: {averages['avg_psar']:.2f}"
         )
 
     if hunter.ma50_signals or hunter.ma200_signals or hunter.ma_cross_signals:
@@ -255,10 +255,10 @@ def generate_hunter_signal_content(
             f"ma50_signals: {hunter.ma50_signals}\n"
             f"ma200_signals: {hunter.ma200_signals}\n"
             f"ma_cross_signals: {hunter.ma_cross_signals}\n"
-            f"ma_50_latest_data: {latest_data['ma_50']}\n"
-            f"ma_200_latest_data: {latest_data['ma_200']}\n"
-            f"ma_50_previous_data: {previous_data['ma_50']}\n"
-            f"ma_200_previous_data: {previous_data['ma_200']}"
+            f"ma_50_latest_data: {latest_data['ma_50']:.2f}\n"
+            f"ma_200_latest_data: {latest_data['ma_200']:.2f}\n"
+            f"ma_50_previous_data: {previous_data['ma_50']:.2f}\n"
+            f"ma_200_previous_data: {previous_data['ma_200']:.2f}"
         )
 
     if hunter.trend_signals:
@@ -270,9 +270,9 @@ def generate_hunter_signal_content(
             f"adx_strong_trend: {hunter.adx_strong_trend}\n"
             f"adx_weak_trend: {hunter.adx_weak_trend}\n"
             f"adx_no_trend: {hunter.adx_no_trend}\n"
-            f"adx_latest_data: {latest_data['adx']}\n"
-            f"adx_previous_data: {previous_data['adx']}\n"
-            f"avg_adx: {averages['avg_adx']}"
+            f"adx_latest_data: {latest_data['adx']:.2f}\n"
+            f"adx_previous_data: {previous_data['adx']:.2f}\n"
+            f"avg_adx: {averages['avg_adx']:.2f}"
         )
 
     if sentiment_analysis:
