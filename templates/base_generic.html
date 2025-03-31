@@ -21,7 +21,9 @@
                 <a class="text-dark fs-6 navbar-brand p-0 m-0" href="/">FomoSapiensCryptoDipHunter</a>
                 <p class="text-dark p-0 m-0">{{ date_and_time }}</p>
                 {% if user.is_authenticated %}
-                    <p class='text-dark p-0 m-0'>{{ user.email }}</p>
+                    <p class='text-dark p-0 m-0'>Logged in as 
+                        <a href="/accounts/">{{ user.username }}</a>
+                    </p>
                     {% else %}
                     <p class='text-dark p-0 m-0'>guest not logged in 
                         <a href="/accounts/">(Sign In)</a>

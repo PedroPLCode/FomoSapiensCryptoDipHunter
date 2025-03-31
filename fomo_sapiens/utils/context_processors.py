@@ -17,7 +17,7 @@ def inject_date_and_time(request) -> Dict[str, str]:
         date_and_time = date_and_time.replace(tzinfo=None)
     except Exception as e:
         date_and_time = f"Error retrieving current time: {e}"
-    return {"date_and_time": str(date_and_time)}
+    return {"date_and_time": str(date_and_time.strftime('%Y-%m-%d %H:%M:%S'))}
 
 
 def inject_user_agent(request) -> Dict[str, str]:
