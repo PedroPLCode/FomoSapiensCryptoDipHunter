@@ -58,7 +58,7 @@
                             <p class="p-0 m-0 mb-2">Typical Price:<br>
                             Latest: {{ latest_data.typical_price|floatformat:2 }}<br>
                             Previous: {{ previous_data.typical_price|floatformat:2 }}<br>
-                                <span class="text {% if typical_price.open > previous_data.typical_price %}text-success{% else %}text-danger{% endif %}">
+                                <span class="text {% if latest_data.typical_price > previous_data.typical_price %}text-success{% else %}text-danger{% endif %}">
                                     {% if latest_data.typical_price > previous_data.typical_price %} RISING {% else %} DROPPING {% endif %}
                                 </span>
                             </p>
@@ -72,14 +72,14 @@
                             <p class="p-0 m-0 mb-2">High:<br>
                             Latest: {{ latest_data.high|floatformat:2 }}<br>
                             Previous: {{ previous_data.high|floatformat:2 }}<br>
-                                <span class="text {% if previous_data.high > previous_data.high %}text-success{% else %}text-danger{% endif %}">
+                                <span class="text {% if latest_data.high > previous_data.high %}text-success{% else %}text-danger{% endif %}">
                                     {% if latest_data.high > previous_data.high %} RISING {% else %} DROPPING {% endif %}
                                 </span>
                             </p>
                             <p class="p-0 m-0 mb-2">Low:<br>
                             Latest: {{ latest_data.low|floatformat:2 }}<br>
                             Previous: {{ previous_data.low|floatformat:2 }}<br>
-                                <span class="text {% if previous_data.low > previous_data.low %}text-success{% else %}text-danger{% endif %}">
+                                <span class="text {% if latest_data.low > previous_data.low %}text-success{% else %}text-danger{% endif %}">
                                     {% if latest_data.low > previous_data.low %} RISING {% else %} DROPPING {% endif %}
                                 </span>
                             </p>
