@@ -3,6 +3,8 @@ import subprocess
 import sys
 import numpy as np
 import pandas as pd
+from datetime import datetime as dt
+import pytz
 from django.db import connection
 from django.utils import timezone
 from typing import Dict
@@ -18,6 +20,16 @@ def inject_date_and_time(request) -> Dict[str, str]:
     except Exception as e:
         date_and_time = f"Error retrieving current time: {e}"
     return {"date_and_time": str(date_and_time.strftime('%Y-%m-%d %H:%M:%S'))}
+
+
+
+def inject_date_and_time_isoformat(request) -> Dict[str, str]:
+    """
+    Injects the current date and time ISO format including timezone into the context for use in templates.
+    """
+    tz = pytz.timezone('Europe/Warsaw')
+    current_time = dt.now(tz)
+    return dict(date_and_time_isoformat=current_time.isoformat())
 
 
 def inject_user_agent(request) -> Dict[str, str]:

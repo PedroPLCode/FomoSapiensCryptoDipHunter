@@ -84,6 +84,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "fomo_sapiens.utils.context_processors.inject_date_and_time",
+                "fomo_sapiens.utils.context_processors.inject_date_and_time_isoformat",
                 "fomo_sapiens.utils.context_processors.inject_user_agent",
                 "fomo_sapiens.utils.context_processors.inject_system_info",
                 "fomo_sapiens.utils.context_processors.inject_system_uptime",
