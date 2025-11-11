@@ -13,6 +13,7 @@ from .utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
 from analysis.utils.report_utils import generate_ta_report_email
 from analysis.utils.sentiment_utils import fetch_and_save_sentiment_analysis
+from analysis.utils.gpt_utils import get_and_save_gpt_analysis
 from .utils.plot_utils import (
     plot_selected_ta_indicators,
     prepare_selected_indicators_list,
@@ -165,10 +166,24 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
     ]
 
     sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
-
     if not sentiment_analysis:
         fetch_and_save_sentiment_analysis()
         sentiment_analysis = SentimentAnalysis.objects.filter(id=1).first()
+        
+    gpt_analysis = user_ta_settings.gpt_response
+    if not gpt_analysis:
+        fetch_and_save_sentiment_analysis()
+        get_and_save_gpt_analysis()
+        if request.user.is_authenticated:
+            user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+                user=request.user
+            )
+        else:
+            guest_user, created = UserProfile.objects.get_or_create(username="guest")
+            user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
+                user=guest_user
+            )
+        gpt_analysis = user_ta_settings.gpt_response
 
     return render(
         request,
@@ -181,6 +196,7 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
             "selected_indicators_list": selected_indicators_list,
             "indicators_list": indicators_list,
             "sentiment_analysis": sentiment_analysis,
+            "gpt_analysis": gpt_analysis
         },
     )
 

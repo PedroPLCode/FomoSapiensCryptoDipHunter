@@ -104,6 +104,11 @@ class TechnicalAnalysisSettings(models.Model):
     stoch_sell: models.IntegerField = models.IntegerField(default=80)
     atr_buy_threshold: models.FloatField = models.FloatField(default=0.005)
 
+    gpt_prompt: models.CharField = models.CharField(max_length=2048, default="You are an advanced crypto trading signal analyzer. You will receive a pandas DataFrame containing cryptocurrency price data with technical indicators (RSI, MACD, MFI, ATR, CCI) and a short summary of current geopolitical news. Analyze the indicators and the news, then RETURN ONLY a valid JSON object with this exact structure: {'timestamp':'(string) ISO 8601 timestamp','symbol':'(string) currency symbol, e.g., BTCUSDC','interval':'(string) data interval, e.g., 1m, 1h, 1d','model':'(string) GPT model used for this analysis','analysis':'(string) concise 3–4 sentence explanation describing the current situation and whether it is an opportunity to BUY or better to HOLD'}. Rules: 1) Be concise, objective and data-driven. 2) Do NOT include any text outside the JSON object. 3) Do NOT use greetings, markdown, or commentary. 4) Ensure the JSON is always valid and parsable. ANALYZE CAREFULLY and return ONLY the JSON object following the specified format.")
+    gpt_model: models.CharField = models.CharField(max_length=128, default="gpt-4o-mini")
+    gpt_response: models.JSONField = models.JSONField(default=list)
+    gpt_last_update_time: models.DateTimeField = models.DateTimeField(auto_now=True)
+        
     selected_plot_indicators: models.JSONField = models.JSONField(
         default=default_plot_indicators
     )
@@ -123,6 +128,7 @@ class SentimentAnalysis(models.Model):
     sentiment_score = models.FloatField(default=0)
     sentiment_label = models.CharField(max_length=16, default="Neutral")
     sentiment_last_update_time = models.DateTimeField(auto_now=True)
+    sentiment_news_content = models.JSONField(default=list)
 
     def __str__(self):
         return f"{self.sentiment_label} ({self.sentiment_score})"

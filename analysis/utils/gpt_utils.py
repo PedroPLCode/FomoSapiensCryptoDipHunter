@@ -1,0 +1,92 @@
+import os
+import json
+import pandas as pd
+from io import StringIO
+from openai import OpenAI
+from django.utils import timezone
+from dotenv import load_dotenv
+from typing import Any
+from fomo_sapiens.utils.logging import logger
+from ..models import TechnicalAnalysisSettings, SentimentAnalysis
+from ..utils.fetch_utils import fetch_and_save_df
+from analysis.utils.calc_utils import calculate_ta_indicators
+from fomo_sapiens.utils.exception_handlers import exception_handler
+from fomo_sapiens.utils.retry_connection import retry_connection
+from fomo_sapiens.utils.email_utils import send_email
+from fomo_sapiens.utils.telegram_utils import send_telegram
+
+load_dotenv()
+
+
+@exception_handler()
+@retry_connection()
+def get_and_save_gpt_analysis() -> None:
+    """
+    Fetches the latest cryptocurrency data and news for all users, calculates technical indicators,
+    sends the data to the GPT model for analysis, and stores the GPT response in the database.
+
+    The function performs the following steps for each user with TechnicalAnalysisSettings:
+    1. Fetches and updates the user's cryptocurrency price data.
+    2. Converts the stored DataFrame JSON to a Pandas DataFrame and calculates technical indicators.
+    3. Retrieves the latest crypto news headlines from the SentimentAnalysis model.
+    4. Constructs a prompt including the user's GPT prompt, recent crypto news, and calculated indicators.
+    5. Sends the prompt to OpenAI GPT via the API and parses the JSON response.
+    6. Saves the GPT response and the timestamp in the user's TechnicalAnalysisSettings.
+    7. Optionally sends the analysis via Telegram or email if the user has enabled notifications.
+
+    Raises:
+        Any exceptions related to database operations or API calls are handled by the
+        `@exception_handler` and `@retry_connection` decorators.
+    """
+    all_users_ta_settings = TechnicalAnalysisSettings.objects.all()
+    sentiment_analysis: SentimentAnalysis | None = SentimentAnalysis.objects.filter(id=1).first()
+    crypto_news = (
+        getattr(sentiment_analysis, "sentiment_news_content", [])
+        if sentiment_analysis
+        else []
+    )
+
+    api_key = os.environ.get("OPENAI_API_KEY")
+    client = OpenAI(api_key=api_key)
+
+    for user_ta_settings in all_users_ta_settings:
+        fetch_and_save_df(user_ta_settings)
+        df_loaded: pd.DataFrame = pd.read_json(StringIO(user_ta_settings.df))
+        df_calculated: pd.DataFrame = calculate_ta_indicators(df_loaded, user_ta_settings)
+        gpt_prompt: str = getattr(user_ta_settings, "gpt_prompt", "")
+        gpt_model: str = getattr(user_ta_settings, "gpt_model", "gpt-4o-mini")
+
+        content = (
+            f"{gpt_prompt}\n\n"
+            f"Recent crypto headlines:\n{crypto_news}\n\n"
+            f"Technical indicators data:\n{df_calculated.tail(10)}"
+        )
+        #logger.info(f"content: {content}\n\n") #DEBUG ONLY
+
+        response: Any = client.chat.completions.create(
+            model=gpt_model,
+            messages=[{"role": "user", "content": content}],
+        )
+
+        choice = response.choices[0]
+        content_text: str | None = getattr(choice.message, "content", None)
+        response_extracted: str = content_text.strip() if content_text else "{}"
+        response_json: dict = json.loads(response_extracted)
+
+        user_ta_settings.gpt_response = response_json
+        user_ta_settings.gpt_last_update_time = timezone.now()
+        user_ta_settings.save()
+
+        email_content: str = ""
+        if user_ta_settings.user.telegram_signals_receiver and user_ta_settings.user.telegram_chat_id:
+            send_telegram(chat_id=user_ta_settings.user.telegram_chat_id, msg=response_json)
+        if user_ta_settings.user.email_signals_receiver and user_ta_settings.user.email:
+            email_content += (
+                f"{response_json}\n\n-- \n\n"
+                "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\n"
+                "StefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\n"
+                "CodeCave\nhttps://cave.ropeaccess.pro\n"
+            )
+            send_email(user_ta_settings.user.email, "GPT Daily Analysis", email_content)
+
+        #logger.info(f"response_json: {response_json}\n\n") #DEBUG ONLY

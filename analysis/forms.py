@@ -45,6 +45,8 @@ class TechnicalAnalysisSettingsForm(forms.ModelForm):
             "atr_timeperiod",
             "di_timeperiod",
             "adx_timeperiod",
+            "gpt_model",
+            "gpt_prompt"
         ]
 
         widgets = {
@@ -99,4 +101,6 @@ class TechnicalAnalysisSettingsForm(forms.ModelForm):
             "cci_buy": forms.NumberInput(attrs={"class": "form-control w-100"}),
             "mfi_sell": forms.NumberInput(attrs={"class": "form-control w-100"}),
             "mfi_buy": forms.NumberInput(attrs={"class": "form-control w-100"}),
+            "gpt_model": forms.TextInput(attrs={"class": "form-control w-100"}),
+            "gpt_prompt": forms.TextInput(attrs={"class": "form-control w-100"}),
         }

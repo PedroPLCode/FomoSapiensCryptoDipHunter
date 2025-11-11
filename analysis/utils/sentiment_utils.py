@@ -3,6 +3,8 @@ from typing import List, Tuple
 from bs4 import BeautifulSoup
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
+from typing import List, Dict
+from bs4 import BeautifulSoup
 from analysis.models import SentimentAnalysis
 from fomo_sapiens.utils.logging import logger
 from fomo_sapiens.utils.exception_handlers import exception_handler
@@ -61,6 +63,37 @@ def analyze_sentiment(text: str) -> Tuple[float, str]:
     return score, label
 
 
+def extract_news_headlines(raw_news_list: List[str]) -> List[Dict[str, str]]:
+    """
+    Extracts the title and description from a list of raw HTML news strings.
+
+    Each news string may contain HTML tags, such as <p> for paragraphs and <img> for images.
+    The function takes the text before the first HTML tag as the title and the last paragraph
+    as the description.
+
+    Args:
+        raw_news_list (List[str]): A list of raw news HTML strings.
+
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries, each containing:
+            - 'title' (str): The extracted news title.
+            - 'description' (str): The extracted description text from the last paragraph.
+    """
+    cleaned_news = []
+    for news_html in raw_news_list:
+        title_end = news_html.find('<')
+        title = news_html[:title_end].strip() if title_end > 0 else news_html.strip()
+        soup = BeautifulSoup(news_html, "html.parser")
+        paragraphs = soup.find_all('p')
+        description = paragraphs[-1].get_text(strip=True) if paragraphs else ""
+
+        cleaned_news.append({
+            "title": title,
+            "description": description
+        })
+    return cleaned_news
+
+
 @exception_handler()
 def fetch_and_save_sentiment_analysis() -> None:
     """
@@ -101,7 +134,8 @@ def fetch_and_save_sentiment_analysis() -> None:
         defaults={
             "sentiment_score": avg_sentiment_score,
             "sentiment_label": avg_sentiment_label,
+            "sentiment_news_content": extract_news_headlines(all_news)
         },
     )
 
-    logger.info(f"Sentiment updated: {avg_sentiment_label} ({avg_sentiment_score})")
+    logger.info(f"News and sentiment updated: {avg_sentiment_label} ({avg_sentiment_score})")

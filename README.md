@@ -8,6 +8,7 @@ FomoSapiensCryptoDipHunter is a crypto trading bot designed to assist in making 
 - Automated Telegram or Email Notifications: Receive telegram or email alerts when entering buy or sell zones.
 - Binance API Integration: Fetch real-time market data.
 - Real-Time Monitoring: View live technical analysis and market sentiment.
+- GPT-Powered Market Analysis: Automatically generate in-depth market analyses using OpenAI GPT models. The bot combines technical indicators (RSI, MACD, MFI, ATR, CCI) with the latest geopolitical news headlines. GPT analyzes this data daily to provide concise market summaries and trading insights. Results are stored in the database and displayed in the web interface, enhancing decision-making through AI-driven reasoning.
 
 ## Installation
 
@@ -85,6 +86,7 @@ gunicorn -c gunicorn_config.py wsgi:app
 - **Django**: A web framework used for building the application interface.
 - **Binance API**: For fetching market data and executing trades.
 - **NumPy, Pandas and TALib**: Libraries used for implementing trading algorithms and data processing.
+- **OpenAI**: Libary user for GPT analise.
 
 ## Important! 
 Familiarize yourself thoroughly with the source code. Understand its operation. Only then will you be able to customize and adjust scripts to your own needs, preferences, and requirements. Only then will you be able to use it correctly and avoid potential issues. Knowledge of the underlying code is essential for making informed decisions and ensuring the successful implementation of the bot for your specific use case. Make sure to review all components and dependencies before running the scripts.
