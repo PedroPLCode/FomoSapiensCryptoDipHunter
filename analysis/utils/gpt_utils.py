@@ -12,6 +12,7 @@ from ..utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
 from fomo_sapiens.utils.exception_handlers import exception_handler
 from fomo_sapiens.utils.retry_connection import retry_connection
+from .msg_utils import generate_gpt_analyse_msg_content
 from fomo_sapiens.utils.email_utils import send_email
 from fomo_sapiens.utils.telegram_utils import send_telegram
 
@@ -43,7 +44,7 @@ def get_and_save_gpt_analysis() -> None:
     crypto_news = (
         getattr(sentiment_analysis, "sentiment_news_content", [])
         if sentiment_analysis
-        else []
+        else "Not available"
     )
 
     api_key = os.environ.get("OPENAI_API_KEY")
@@ -59,9 +60,9 @@ def get_and_save_gpt_analysis() -> None:
         content = (
             f"{gpt_prompt}\n\n"
             f"Recent crypto headlines:\n{crypto_news}\n\n"
-            f"Technical indicators data:\n{df_calculated.tail(10)}"
+            f"Technical indicators data:\n{df_calculated}"
         )
-        #logger.info(f"content: {content}\n\n") #DEBUG ONLY
+        #logger.info(f"content: {content}\n\n") #DEBUG
 
         response: Any = client.chat.completions.create(
             model=gpt_model,
@@ -77,16 +78,16 @@ def get_and_save_gpt_analysis() -> None:
         user_ta_settings.gpt_last_update_time = timezone.now()
         user_ta_settings.save()
 
-        email_content: str = ""
+        msg_subject, msg_content = generate_gpt_analyse_msg_content(response_json)
         if user_ta_settings.user.telegram_signals_receiver and user_ta_settings.user.telegram_chat_id:
-            send_telegram(chat_id=user_ta_settings.user.telegram_chat_id, msg=response_json)
+            send_telegram(chat_id=user_ta_settings.user.telegram_chat_id, msg=msg_content)
         if user_ta_settings.user.email_signals_receiver and user_ta_settings.user.email:
-            email_content += (
+            msg_content += (
                 f"{response_json}\n\n-- \n\n"
                 "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\n"
                 "StefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\n"
                 "CodeCave\nhttps://cave.ropeaccess.pro\n"
             )
-            send_email(user_ta_settings.user.email, "GPT Daily Analysis", email_content)
+            send_email(user_ta_settings.user.email, msg_subject, msg_content)
 
-        #logger.info(f"response_json: {response_json}\n\n") #DEBUG ONLY
+        #logger.info(f"response_json: {response_json}\n\n") #DEBUG
