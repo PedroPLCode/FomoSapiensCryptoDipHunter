@@ -33,7 +33,7 @@ def generate_gpt_analyse_msg_content(response_json: dict) -> Union[Tuple[str, st
         f"model: {response_json.get('model', 'N/A')}\n"
         f"symbol: {response_json.get('symbol', 'N/A')}\n"
         f"interval: {response_json.get('interval', 'N/A')}\n"
-        f"analysis:\n{response_json.get('analyse', 'N/A')}"
+        f"analysis:\n{response_json.get('analysis', 'N/A')}"
     )
 
     return subject, content
