@@ -81,7 +81,7 @@ def get_and_save_gpt_analysis() -> None:
             send_telegram(chat_id=user_ta_settings.user.telegram_chat_id, msg=msg_content)
         if user_ta_settings.user.email_signals_receiver and user_ta_settings.user.email:
             msg_content += (
-                f"{response_json}\n\n-- \n\n"
+                f"\n\n-- \n\n"
                 "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\n"
                 "StefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\n"
                 "CodeCave\nhttps://cave.ropeaccess.pro\n"

@@ -12,6 +12,7 @@ from fomo_sapiens.utils.email_utils import send_email
 from .utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
 from analysis.utils.report_utils import generate_ta_report_email
+from analysis.utils.msg_utils import generate_gpt_analyse_msg_content
 from analysis.utils.sentiment_utils import fetch_and_save_sentiment_analysis
 from analysis.utils.gpt_utils import get_and_save_gpt_analysis
 from .utils.plot_utils import (
@@ -233,9 +234,19 @@ def send_email_analysis_report(request: HttpRequest) -> HttpResponse:
         messages.success(request, "Error calculating Technical Analysis.")
         return render(request, "analysis/show_analysis.html")
 
-    email = user_ta_settings.user.email
-    subject, content = generate_ta_report_email(user_ta_settings, df_calculated)
-    send_email(email, subject, content)
+    if user_ta_settings.user.email_signals_receiver and user_ta_settings.user.email:
+        email = user_ta_settings.user.email
+        ai_response = user_ta_settings.gpt_response
+        ta_subject, ta_content = generate_ta_report_email(user_ta_settings, df_calculated)
+        ai_subject, ai_subject = generate_gpt_analyse_msg_content(ai_response)
+        ai_subject += (
+            f"\n\n-- \n\n"
+            "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\n"
+            "StefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\n"
+            "CodeCave\nhttps://cave.ropeaccess.pro\n"
+        )
+        send_email(email, ta_subject, ta_content)
+        send_email(email, ai_subject, ai_subject)
 
     messages.success(request, "Email sent successfully.")
     return redirect("show_technical_analysis")
