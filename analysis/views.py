@@ -99,6 +99,27 @@ def refresh_sentiment_analysis(request: HttpRequest) -> HttpResponse:
 
 
 @exception_handler(default_return=lambda: redirect("show_technical_analysis"))
+def refresh_gpt_analysis(request: HttpRequest) -> HttpResponse:
+    """
+    Refreshes the AI-GPT market analysis.
+
+    This view triggers the gpt analysis update by fetching new 
+    gpt response and updating the database. 
+    After the process is completed, the user is redirected to the 
+    technical analysis page with a success message.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the technical analysis page after refreshing the gpt analysis data.
+    """
+    get_and_save_gpt_analysis()
+    messages.success(request, "AI-GPT Analysis refreshed successfully.")
+    return redirect("show_technical_analysis")
+
+
+@exception_handler(default_return=lambda: redirect("show_technical_analysis"))
 def show_technical_analysis(request: HttpRequest) -> HttpResponse:
     """
     View function to display technical analysis data.

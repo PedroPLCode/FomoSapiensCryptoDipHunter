@@ -16,6 +16,13 @@
                 <p class="p-0 m-0">symbol: {{ gpt_analysis.symbol }}</p>
                 <p class="p-0 m-0">interval: {{ gpt_analysis.interval }}</p>
                 <p class="p-0 m-0 border-top border-muted border-1 pt-2 mt-2">analysis: {{ gpt_analysis.analysis }}</p>
+
+                {% if user.is_authenticated %}
+                <div class="text-center w-100 m-0 mt-2 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
+                    <a href="{% url 'refresh_gpt_analysis' %}" class="btn btn-primary">Refresh AI-GPT Analysis</a>
+                </div>
+                {% endif %}
+
             </div>
         </div>
 
@@ -381,7 +388,7 @@
                             {% if user.is_authenticated %}
                             <a href="{% url 'refresh_technical_analysis' %}" class="btn btn-primary">Refresh Technical Analysis</a>
                             <a href="{% url 'update_technical_analysis_settings' %}" class="btn btn-primary">Technical Analysis Settings</a>
-                            <a href="{% url 'send_email_analysis_report' %}" class="btn btn-primary">Send Email Analysis Report</a>
+                            <a href="{% url 'send_email_analysis_report' %}" class="btn btn-primary">Send Email Analysis Reports</a>
                             {% else %}
                             <a class="btn btn-primary" href="/accounts/">Sing in to access setting and hunters</a>
                             {% endif %}
@@ -418,7 +425,7 @@
                     {% endfor %}
                 </p>    
 
-                {% if user.is_authenticated and user.is_superuser %}
+                {% if user.is_authenticated %}
                 <div class="text-center w-100 m-0 mt-2 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
                     <a href="{% url 'refresh_sentiment_analysis' %}" class="btn btn-primary">Refresh Sentiment Analysis</a>
                 </div>
