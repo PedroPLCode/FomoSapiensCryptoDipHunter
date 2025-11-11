@@ -58,8 +58,10 @@ def get_and_save_gpt_analysis() -> None:
 
         content = (
             f"{gpt_prompt}\n\n"
-            f"Recent crypto headlines:\n{crypto_news}\n\n"
-            f"Technical indicators data:\n{df_calculated}"
+            f"Symbol to analyse:\n{user_ta_settings.symbol}\n\n"
+            f"Interval to analyse:\n{user_ta_settings.interval}\n\n"
+            f"Recent crypto news headlines:\n{crypto_news}\n\n"
+            f"Technical indicators data calculated with timeperiod {user_ta_settings.general_timeperiod}:\n{df_calculated}"
         )
 
         response: Any = client.chat.completions.create(
