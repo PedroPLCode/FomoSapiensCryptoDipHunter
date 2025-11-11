@@ -234,19 +234,19 @@ def send_email_analysis_report(request: HttpRequest) -> HttpResponse:
         messages.success(request, "Error calculating Technical Analysis.")
         return render(request, "analysis/show_analysis.html")
 
-    if user_ta_settings.user.email_signals_receiver and user_ta_settings.user.email:
+    if user_ta_settings.user.email:
         email = user_ta_settings.user.email
         ai_response = user_ta_settings.gpt_response
         ta_subject, ta_content = generate_ta_report_email(user_ta_settings, df_calculated)
-        ai_subject, ai_subject = generate_gpt_analyse_msg_content(ai_response)
-        ai_subject += (
+        ai_subject, ai_content = generate_gpt_analyse_msg_content(ai_response)
+        ai_content += (
             f"\n\n-- \n\n"
             "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\n"
             "StefanCryptoTradingBot\nhttps://stefan.ropeaccess.pro\n\n"
             "CodeCave\nhttps://cave.ropeaccess.pro\n"
         )
         send_email(email, ta_subject, ta_content)
-        send_email(email, ai_subject, ai_subject)
+        send_email(email, ai_subject, ai_content)
 
     messages.success(request, "Email sent successfully.")
     return redirect("show_technical_analysis")
