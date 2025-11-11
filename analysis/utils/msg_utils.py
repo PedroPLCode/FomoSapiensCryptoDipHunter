@@ -29,10 +29,10 @@ def generate_gpt_analyse_msg_content(response_json: dict) -> Union[Tuple[str, st
         f"https://fomo.ropeaccess.pro\n\n"
         f"Daily AI-GPT Market Analysis.\n"
         f"{formatted_now}\n\n"
-        f"timestamp: {response_json.get('timestamp', 'N/A')}\n"
         f"model: {response_json.get('model', 'N/A')}\n"
+        f"timestamp: {response_json.get('timestamp', 'N/A')}\n"
         f"symbol: {response_json.get('symbol', 'N/A')}\n"
-        f"interval: {response_json.get('interval', 'N/A')}\n"
+        f"interval: {response_json.get('interval', 'N/A')}\n\n"
         f"analysis:\n{response_json.get('analysis', 'N/A')}"
     )
 
