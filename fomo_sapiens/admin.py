@@ -10,7 +10,9 @@ class UserProfileAdmin(UserAdmin):
             {
                 "fields": (
                     "email_signals_receiver",
+                    "email_gpt_analysis_receiver",
                     "telegram_signals_receiver",
+                    "telegram_gpt_analysis_receiver",
                     "telegram_chat_id",
                 )
             },

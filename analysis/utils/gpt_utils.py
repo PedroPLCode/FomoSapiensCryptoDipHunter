@@ -77,9 +77,9 @@ def get_and_save_gpt_analysis() -> None:
         user_ta_settings.save()
 
         msg_subject, msg_content = generate_gpt_analyse_msg_content(response_json)
-        if user_ta_settings.user.telegram_signals_receiver and user_ta_settings.user.telegram_chat_id:
+        if user_ta_settings.user.telegram_gpt_analysis_receiver and user_ta_settings.user.telegram_chat_id:
             send_telegram(chat_id=user_ta_settings.user.telegram_chat_id, msg=msg_content)
-        if user_ta_settings.user.email_signals_receiver and user_ta_settings.user.email:
+        if user_ta_settings.user.email_gpt_analysis_receiver and user_ta_settings.user.email:
             msg_content += (
                 f"\n\n-- \n\n"
                 "FomoSapiensCryptoDipHunter\nhttps://fomo.ropeaccess.pro\n\n"
