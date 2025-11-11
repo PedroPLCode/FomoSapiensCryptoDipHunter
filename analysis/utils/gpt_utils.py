@@ -6,7 +6,6 @@ from openai import OpenAI
 from django.utils import timezone
 from dotenv import load_dotenv
 from typing import Any
-from fomo_sapiens.utils.logging import logger
 from ..models import TechnicalAnalysisSettings, SentimentAnalysis
 from ..utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
@@ -62,7 +61,6 @@ def get_and_save_gpt_analysis() -> None:
             f"Recent crypto headlines:\n{crypto_news}\n\n"
             f"Technical indicators data:\n{df_calculated}"
         )
-        #logger.info(f"content: {content}\n\n") #DEBUG
 
         response: Any = client.chat.completions.create(
             model=gpt_model,
@@ -89,5 +87,3 @@ def get_and_save_gpt_analysis() -> None:
                 "CodeCave\nhttps://cave.ropeaccess.pro\n"
             )
             send_email(user_ta_settings.user.email, msg_subject, msg_content)
-
-        #logger.info(f"response_json: {response_json}\n\n") #DEBUG
