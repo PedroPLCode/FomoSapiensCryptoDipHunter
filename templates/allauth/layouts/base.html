@@ -43,6 +43,14 @@
                                 {% if not user.telegram_signals_receiver and not user.email_signals_receiver %}None{% endif %}
                             </p>
 
+                            <p class="text-center p-0 m-0">
+                                AI-GPT Analysis: 
+                                {% if user.email_gpt_analysis_receiver %}Email{% endif %}
+                                {% if user.email_gpt_analysis_receiver and user.telegram_gpt_analysis_receiver %}, {% endif %}
+                                {% if user.telegram_gpt_analysis_receiver %}Telegram{% endif %}
+                                {% if not user.telegram_gpt_analysis_receiver and not user.email_gpt_analysis_receiver %}None{% endif %}
+                            </p>
+
                             <p class="text-center  p-0 m-0">Superuser: {{ user.is_superuser }}</p>
                             <p class="text-center  p-0 m-0">Last login: {{ user.last_login }}</p>
                             <p class="text-center  p-0 m-0 mb-2">Date joined: {{ user.date_joined }}</p>
