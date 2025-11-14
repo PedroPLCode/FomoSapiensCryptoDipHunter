@@ -30,11 +30,11 @@ def format_openai_error(e: Exception) -> Dict[str, Any]:
     error_message = str(e)
 
     analysis_message = (
-        "N/A\n\nException: OpenAI Response Error\n"
-        f"type: {error_type}\n"
-        f"http_status: {http_status}\n"
-        f"code: {error_code}\n"
-        f"message: {error_message}"
+        "N/A<br>Exception: OpenAI Response Error"
+        f"<br>type: {error_type}"
+        f"<br>http_status: {http_status}"
+        f"<br>code: {error_code}"
+        f"<br>message: {error_message}"
     )
 
     return {
@@ -91,6 +91,8 @@ def get_and_save_gpt_analysis() -> None:
             f"Recent crypto news headlines:\n{crypto_news}\n\n"
             f"Technical indicators data calculated with timeperiod {user_ta_settings.general_timeperiod}:\n{df_calculated}"
         )
+
+        response_json = None
 
         try:
             response: Any = client.chat.completions.create(
