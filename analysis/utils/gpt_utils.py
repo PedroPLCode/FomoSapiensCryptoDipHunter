@@ -5,7 +5,7 @@ from io import StringIO
 from openai import OpenAI
 from django.utils import timezone
 from dotenv import load_dotenv
-from typing import Any
+from typing import Dict, Any
 from ..models import TechnicalAnalysisSettings, SentimentAnalysis
 from ..utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
@@ -17,6 +17,34 @@ from fomo_sapiens.utils.telegram_utils import send_telegram
 
 load_dotenv()
 
+
+@exception_handler()
+def format_openai_error(e: Exception) -> Dict[str, Any]:
+    """
+    Converts any OpenAI-related exception into a clean JSON-ready structure.
+    The function is 100% safe: no KeyErrors, no missing attributes.
+    """
+    http_status = getattr(e, "http_status", "N/A")
+    error_code = getattr(e, "code", "N/A")
+    error_type = getattr(e, "type", e.__class__.__name__)
+    error_message = str(e)
+
+    analysis_message = (
+        "N/A\n\nException: OpenAI Response Error\n"
+        f"type: {error_type}\n"
+        f"http_status: {http_status}\n"
+        f"code: {error_code}\n"
+        f"message: {error_message}"
+    )
+
+    return {
+        "model": "N/A",
+        "timestamp": timezone.now(),
+        "symbol": "N/A",
+        "interval": "N/A",
+        "analysis": analysis_message,
+    }
+    
 
 @exception_handler()
 @retry_connection()
@@ -64,17 +92,32 @@ def get_and_save_gpt_analysis() -> None:
             f"Technical indicators data calculated with timeperiod {user_ta_settings.general_timeperiod}:\n{df_calculated}"
         )
 
-        response: Any = client.chat.completions.create(
-            model=gpt_model,
-            messages=[{"role": "user", "content": content}],
-        )
+        try:
+            response: Any = client.chat.completions.create(
+                model=gpt_model,
+                messages=[{"role": "user", "content": content}],
+            )
 
-        choice = response.choices[0]
-        content_text: str | None = getattr(choice.message, "content", None)
-        response_extracted: str = content_text.strip() if content_text else "{}"
-        response_json: dict = json.loads(response_extracted)
+            choice = response.choices[0]
+            content_text: str | None = getattr(choice.message, "content", None)
+            response_extracted: str = content_text.strip() if content_text else "{}"
+            
+            try:
+                response_json: dict = json.loads(response_extracted)
+            except json.JSONDecodeError:
+                response_json = {
+                    "model": gpt_model,
+                    "timestamp": timezone.now(),
+                    "symbol": "N/A",
+                    "interval": "N/A",
+                    "analysis": "json.JSONDecodeError: Invalid JSON returned from GPT model."
+                }
+                
+            user_ta_settings.gpt_response = response_json
 
-        user_ta_settings.gpt_response = response_json
+        except Exception as e:
+            user_ta_settings.gpt_response = format_openai_error(e)
+
         user_ta_settings.gpt_last_update_time = timezone.now()
         user_ta_settings.save()
 
