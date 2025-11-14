@@ -29,7 +29,7 @@
     </div>
     {% endif %}
 
-    <div class="col-12 col-md-6 card text-center text-dark rounded-3 mt-2 mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
+    <div class="col-12 col-md-6 card text-center text-dark rounded-3 {% if not sentiment_analysis.use_gpt_analysis and messages %}mt-0{% elif not sentiment_analysis.use_gpt_analysis and not messages %}mt-5{% else %}mt-2{% endif %} mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
         
         <div class="card-header">
             <h4 class="text-center">Technical Analysis</h4>
