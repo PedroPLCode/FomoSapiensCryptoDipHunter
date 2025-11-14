@@ -39,7 +39,7 @@ def format_openai_error(e: Exception) -> Dict[str, Any]:
 
     return {
         "model": "N/A",
-        "timestamp": timezone.now(),
+        "timestamp": timezone.now().isoformat(),
         "symbol": "N/A",
         "interval": "N/A",
         "analysis": analysis_message,
@@ -107,7 +107,7 @@ def get_and_save_gpt_analysis() -> None:
             except json.JSONDecodeError:
                 response_json = {
                     "model": gpt_model,
-                    "timestamp": timezone.now(),
+                    "timestamp": timezone.now().isoformat(),
                     "symbol": "N/A",
                     "interval": "N/A",
                     "analysis": "json.JSONDecodeError: Invalid JSON returned from GPT model."
