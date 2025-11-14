@@ -66,8 +66,12 @@ def get_and_save_gpt_analysis() -> None:
         Any exceptions related to database operations or API calls are handled by the
         `@exception_handler` and `@retry_connection` decorators.
     """
-    all_users_ta_settings = TechnicalAnalysisSettings.objects.all()
     sentiment_analysis: SentimentAnalysis | None = SentimentAnalysis.objects.filter(id=1).first()
+    if not sentiment_analysis.use_gpt_analysis:
+        return
+
+    all_users_ta_settings = TechnicalAnalysisSettings.objects.all()
+
     crypto_news = (
         getattr(sentiment_analysis, "sentiment_news_content", [])
         if sentiment_analysis

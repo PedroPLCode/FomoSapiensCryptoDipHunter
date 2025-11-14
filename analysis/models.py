@@ -129,6 +129,7 @@ class SentimentAnalysis(models.Model):
     sentiment_label = models.CharField(max_length=16, default="Neutral")
     sentiment_last_update_time = models.DateTimeField(auto_now=True)
     sentiment_news_content = models.JSONField(default=list)
+    use_gpt_analysis = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.sentiment_label} ({self.sentiment_score})"
