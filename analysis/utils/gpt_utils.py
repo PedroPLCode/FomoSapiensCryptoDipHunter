@@ -30,10 +30,10 @@ def format_openai_error(e: Exception) -> Dict[str, Any]:
     error_message = str(e)
 
     analysis_message = (
-        "Analysis Not Available: OpenAI Response Error occured."
-        f"error_type: {error_type},"
-        f"http_status: {http_status},"
-        f"error_code: {error_code},"
+        "Analysis Not Available: OpenAI Response Error occured. "
+        f"error_type: {error_type}, "
+        f"http_status: {http_status}, "
+        f"error_code: {error_code}, "
         f"error_message: {error_message}."
     )
 
