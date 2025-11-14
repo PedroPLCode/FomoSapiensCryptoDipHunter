@@ -30,11 +30,11 @@ def format_openai_error(e: Exception) -> Dict[str, Any]:
     error_message = str(e)
 
     analysis_message = (
-        "N/A<br>Exception: OpenAI Response Error"
-        f"<br>type: {error_type}"
-        f"<br>http_status: {http_status}"
-        f"<br>code: {error_code}"
-        f"<br>message: {error_message}"
+        "Analysis Not Available: OpenAI Response Error occured."
+        f"error_type: {error_type},"
+        f"http_status: {http_status},"
+        f"error_code: {error_code},"
+        f"error_message: {error_message}."
     )
 
     return {
@@ -114,12 +114,11 @@ def get_and_save_gpt_analysis() -> None:
                     "interval": "N/A",
                     "analysis": "json.JSONDecodeError: Invalid JSON returned from GPT model."
                 }
-                
-            user_ta_settings.gpt_response = response_json
 
         except Exception as e:
-            user_ta_settings.gpt_response = format_openai_error(e)
+            response_json = format_openai_error(e)
 
+        user_ta_settings.gpt_response = response_json
         user_ta_settings.gpt_last_update_time = timezone.now()
         user_ta_settings.save()
 
