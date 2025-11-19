@@ -96,8 +96,24 @@ def calculate_lookback_extended(
     Example:
         If the interval is '5m', the function returns '1025m' (5 * 205).
     """
-    lookback_extended = f"{int(settings.interval[:-1]) * 205}{settings.interval[-1:]}"
-    return lookback_extended
+    interval = settings.interval
+    number = int(interval[:-1])
+    unit = interval[-1]
+    multiplier = number * 205
+
+    if unit == "m":
+        return f"{multiplier}m"
+    elif unit == "h":
+        return f"{multiplier}h"
+    elif unit == "d":
+        return f"{multiplier}d"
+    elif unit == "w":
+        return f"{multiplier * 7}d"
+    elif unit == "M":
+        return f"{multiplier * 30}d"
+
+    else:
+        raise ValueError(f"Unsupported interval unit: {unit}")
 
 
 @exception_handler()
@@ -143,6 +159,13 @@ def fetch_data(
         elif lookback[-1] == "m":
             minutes = int(lookback[:-1])
             start_time = datetime.utcnow() - timedelta(minutes=minutes)
+        elif lookback[-1] == "w":
+            weeks = int(lookback[:-1])
+            start_time = datetime.utcnow() - timedelta(weeks=weeks)
+        elif lookback[-1] == "M":
+            months = int(lookback[:-1])
+            days = months * 30
+            start_time = datetime.utcnow() - timedelta(days=days)
         else:
             raise ValueError("Unsupported lookback period format.")
 
