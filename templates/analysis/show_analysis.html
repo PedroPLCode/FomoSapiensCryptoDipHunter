@@ -11,7 +11,7 @@
 
         <div class="card-body">         
             <div class="text-center  d-flex flex-column justify-content-center align-item-center">
-                <p class="p-0 m-0">model: {{ gpt_analysis.gpt_model|default:user_ta_settings.gpt_model }}</p>
+                <p class="p-0 m-0">model: {{ gpt_analysis.model|default:user_ta_settings.gpt_model }}</p>
                 <p class="p-0 m-0">timestamp: {{ gpt_analysis.timestamp }}</p>
                 <p class="p-0 m-0">symbol: {{ gpt_analysis.symbol }}</p>
                 <p class="p-0 m-0">interval: {{ gpt_analysis.interval }}</p>
