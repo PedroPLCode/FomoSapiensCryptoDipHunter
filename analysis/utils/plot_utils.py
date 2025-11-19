@@ -320,6 +320,7 @@ def parse_lookback(lookback: str) -> timedelta:
         if match:
             value, unit = match.groups()
             value = int(value)
+
             if unit == "d":
                 return timedelta(days=value)
             elif unit == "h":
@@ -328,6 +329,10 @@ def parse_lookback(lookback: str) -> timedelta:
                 return timedelta(minutes=value)
             elif unit == "s":
                 return timedelta(seconds=value)
+            elif unit == "w":
+                return timedelta(days=value * 7)
+            elif unit == "M":
+                return timedelta(days=value * 30)
             else:
                 raise ValueError(f"Unknown time unit: {unit}")
         else:
