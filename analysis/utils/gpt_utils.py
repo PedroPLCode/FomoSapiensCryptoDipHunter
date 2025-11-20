@@ -77,7 +77,7 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
     )
     
     if username:
-        selected_users_ta_settings = selected_users_ta_settings.filter(username=username)
+        selected_users_ta_settings = selected_users_ta_settings.filter(user__username=username)
 
     crypto_news = (
         getattr(sentiment_analysis, "sentiment_news_content", [])
