@@ -14,7 +14,7 @@ from analysis.utils.calc_utils import calculate_ta_indicators
 from analysis.utils.report_utils import generate_ta_report_email
 from analysis.utils.msg_utils import generate_gpt_analyse_msg_content
 from analysis.utils.sentiment_utils import fetch_and_save_sentiment_analysis
-from analysis.utils.gpt_utils import get_and_save_gpt_analysis
+from analysis.utils.gpt_utils import fetch_save_and_send_gpt_analysis
 from .utils.plot_utils import (
     plot_selected_ta_indicators,
     prepare_selected_indicators_list,
@@ -99,7 +99,7 @@ def refresh_sentiment_analysis(request: HttpRequest) -> HttpResponse:
 
 
 @exception_handler(default_return=lambda: redirect("show_technical_analysis"))
-def refresh_gpt_analysis(request: HttpRequest) -> HttpResponse:
+def refresh_gpt_analysis_all_users(request: HttpRequest) -> HttpResponse:
     """
     Refreshes the AI-GPT market analysis.
 
@@ -114,8 +114,30 @@ def refresh_gpt_analysis(request: HttpRequest) -> HttpResponse:
     Returns:
         HttpResponseRedirect: Redirects to the technical analysis page after refreshing the gpt analysis data.
     """
-    get_and_save_gpt_analysis()
-    messages.success(request, "AI-GPT Analysis refreshed successfully.")
+    if not request.user.is_superuser:
+        messages.error(request, "You do not have permission to refresh AI-GPT Analysis for all users.")
+        return redirect("show_technical_analysis")
+    
+    fetch_save_and_send_gpt_analysis()
+    messages.success(request, "AI-GPT Analysis for all users refreshed successfully.")
+    return redirect("show_technical_analysis")
+
+
+@exception_handler(default_return=lambda: redirect("show_technical_analysis"))
+def refresh_gpt_analysis_selected_user(request: HttpRequest) -> HttpResponse:
+    """
+    Refreshes the AI-GPT market analysis for the logged-in user.
+    This view triggers the gpt analysis update by fetching new 
+    gpt response for the logged-in user and updating the database. 
+    After the process is completed, the user is redirected to the 
+    technical analysis page with a success message.
+    """
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to refresh your AI-GPT Analysis.")
+        return redirect("show_technical_analysis")
+    
+    fetch_save_and_send_gpt_analysis(username=request.user.username)
+    messages.success(request, f"AI-GPT Analysis for {request.user.username} refreshed successfully.")
     return redirect("show_technical_analysis")
 
 
@@ -195,7 +217,7 @@ def show_technical_analysis(request: HttpRequest) -> HttpResponse:
     gpt_analysis = user_ta_settings.gpt_response
     if not gpt_analysis:
         fetch_and_save_sentiment_analysis()
-        get_and_save_gpt_analysis()
+        fetch_save_and_send_gpt_analysis()
         if request.user.is_authenticated:
             user_ta_settings, created = TechnicalAnalysisSettings.objects.get_or_create(
                 user=request.user

@@ -20,7 +20,8 @@ urlpatterns = [
     ),
     path("refresh/", views.refresh_technical_analysis, name="refresh_technical_analysis"),
     path("sentiement/", views.refresh_sentiment_analysis, name="refresh_sentiment_analysis"),
-    path("gpt/", views.refresh_gpt_analysis, name="refresh_gpt_analysis"),
+    path("gpt/all", views.refresh_gpt_analysis_all_users, name="refresh_gpt_analysis_all_users"),
+    path("gpt/selected/", views.refresh_gpt_analysis_selected_user, name="refresh_gpt_analysis_selected_user"),
     path(
         "report/", views.send_email_analysis_report, name="send_email_analysis_report"
     ),

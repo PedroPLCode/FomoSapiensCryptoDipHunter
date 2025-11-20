@@ -31,24 +31,28 @@ def plot_selected_ta_indicators(df: pd.DataFrame, settings: object) -> Optional[
     Returns:
         str: A base64-encoded PNG image of the chart.
     """
-
-    indicators: List[str] = []
-
     selected_indicators = getattr(settings, "selected_plot_indicators", None)
     if selected_indicators:
-        indicators = prepare_selected_indicators_list(settings.selected_plot_indicators)
+        indicators = prepare_selected_indicators_list(selected_indicators)
     else:
         indicators = get_bot_specific_plot_indicators(settings) or ["rsi", "macd"]
 
     validate_indicators(df, indicators)
-
     if not is_df_valid(df):
         return None
+
+    min_bars_required = get_min_bars_required(indicators)
 
     if settings.lookback is not None:
         lookback_duration = parse_lookback(settings.lookback)
         cutoff_time = df["open_time"].max() - lookback_duration
         df = df[df["open_time"] >= cutoff_time]
+
+    if len(df) < min_bars_required:
+        df = df.tail(min_bars_required)
+    elif len(df) > min_bars_required:
+        extra_bars_needed = min_bars_required
+        df = df.tail(len(df) + extra_bars_needed)
 
     fig = go.Figure()
     add_price_traces(fig, df, indicators)
@@ -56,6 +60,33 @@ def plot_selected_ta_indicators(df: pd.DataFrame, settings: object) -> Optional[
     format_chart(fig)
 
     return generate_plot_image(fig)
+
+
+@exception_handler()
+def get_min_bars_required(indicators: list) -> int:
+    """
+    Returns the minimum number of bars required to properly calculate all selected indicators.
+    """
+    indicator_requirements = {
+        "ma200": 200,
+        "ma50": 50,
+        "ema": 50,
+        "rsi": 14,
+        "macd": 26,
+        "boll": 20,
+        "atr": 14,
+        "cci": 20,
+        "mfi": 14,
+        "stoch": 14,
+        "stoch_rsi": 14,
+        "psar": 5,
+        "vwap": 1,
+        "adx": 14,
+        "di": 14,
+        "close": 1,
+    }
+
+    return max([indicator_requirements.get(ind, 0) for ind in indicators])
 
 
 @exception_handler(default_return=False)

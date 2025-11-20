@@ -48,9 +48,9 @@ def format_openai_error(e: Exception) -> Dict[str, Any]:
 
 @exception_handler()
 @retry_connection()
-def get_and_save_gpt_analysis() -> None:
+def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
     """
-    Fetches the latest cryptocurrency data and news for all users, calculates technical indicators,
+    Fetches the latest cryptocurrency data and news for a specific user or all users, calculates technical indicators,
     sends the data to the GPT model for analysis, and stores the GPT response in the database.
 
     The function performs the following steps for each user with TechnicalAnalysisSettings:
@@ -70,7 +70,14 @@ def get_and_save_gpt_analysis() -> None:
     if not sentiment_analysis.use_gpt_analysis:
         return
 
-    all_users_ta_settings = TechnicalAnalysisSettings.objects.all()
+    selected_users_ta_settings = TechnicalAnalysisSettings.objects.filter(
+        use_gpt_analysis=True, 
+        model__isnull=False, 
+        gpt_prompt__isnull=False
+    )
+    
+    if username:
+        selected_users_ta_settings = selected_users_ta_settings.filter(username=username)
 
     crypto_news = (
         getattr(sentiment_analysis, "sentiment_news_content", [])
@@ -81,7 +88,7 @@ def get_and_save_gpt_analysis() -> None:
     api_key = os.environ.get("OPENAI_API_KEY")
     client = OpenAI(api_key=api_key)
 
-    for user_ta_settings in all_users_ta_settings:
+    for user_ta_settings in selected_users_ta_settings:
         fetch_and_save_df(user_ta_settings)
         df_loaded: pd.DataFrame = pd.read_json(StringIO(user_ta_settings.df))
         df_calculated: pd.DataFrame = calculate_ta_indicators(df_loaded, user_ta_settings)

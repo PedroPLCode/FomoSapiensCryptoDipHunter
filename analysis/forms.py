@@ -45,6 +45,7 @@ class TechnicalAnalysisSettingsForm(forms.ModelForm):
             "atr_timeperiod",
             "di_timeperiod",
             "adx_timeperiod",
+            "use_gpt_analysis",
             "gpt_model",
             "gpt_prompt"
         ]
@@ -101,6 +102,7 @@ class TechnicalAnalysisSettingsForm(forms.ModelForm):
             "cci_buy": forms.NumberInput(attrs={"class": "form-control w-100"}),
             "mfi_sell": forms.NumberInput(attrs={"class": "form-control w-100"}),
             "mfi_buy": forms.NumberInput(attrs={"class": "form-control w-100"}),
+            "use_gpt_analysis": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "gpt_model": forms.TextInput(attrs={"class": "form-control w-100"}),
             "gpt_prompt": forms.TextInput(attrs={"class": "form-control w-100"}),
         }

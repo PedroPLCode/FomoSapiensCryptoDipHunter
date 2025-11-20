@@ -99,7 +99,7 @@ class FomoSapiensConfig(AppConfig):
             )
             
             scheduler.add_job(
-                gpt_utils.get_and_save_gpt_analysis,
+                gpt_utils.fetch_save_and_send_gpt_analysis,
                 "interval",
                 hours=24,
                 id="every_day_gpt_analysis_task",
