@@ -72,7 +72,7 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
 
     selected_users_ta_settings = TechnicalAnalysisSettings.objects.filter(
         use_gpt_analysis=True, 
-        model__isnull=False, 
+        gpt_model__isnull=False, 
         gpt_prompt__isnull=False
     )
     
