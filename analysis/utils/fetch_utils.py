@@ -84,36 +84,17 @@ def calculate_lookback_extended(
     settings: TechnicalAnalysisSettings,
 ) -> Union[str, Optional[int]]:
     """
-    Calculates the extended lookback period based on the interval set in the provided settings.
-
+    Calculates an extended lookback period by adding 200 units to the original lookback period.
     Args:
-        settings (TechnicalAnalysisSettings): The settings object containing the interval configuration.
-
+        settings (TechnicalAnalysisSettings): The settings object containing the user's lookback configuration.
+        
     Returns:
-        str: The extended lookback period in the format 'xY', where x is the number of units
-             multiplied by 205 (based on the interval), and Y is the time unit (e.g., 'm', 'h', etc.).
-
-    Example:
-        If the interval is '5m', the function returns '1025m' (5 * 205).
-    """
-    interval = settings.interval
-    number = int(interval[:-1])
-    unit = interval[-1]
-    multiplier = number * 205
-
-    if unit == "m":
-        return f"{multiplier}m"
-    elif unit == "h":
-        return f"{multiplier}h"
-    elif unit == "d":
-        return f"{multiplier}d"
-    elif unit == "w":
-        return f"{multiplier * 7}d"
-    elif unit == "M":
-        return f"{multiplier * 30}d"
-
-    else:
-        raise ValueError(f"Unsupported interval unit: {unit}")
+        str: The extended lookback period in the same format as the original (e.g., '300m', '10h', '50d').
+    """    
+    lookback = settings.lookback
+    num = int(lookback[:-1])
+    unit = lookback[-1]
+    return f"{num + 200}{unit}"
 
 
 @exception_handler()

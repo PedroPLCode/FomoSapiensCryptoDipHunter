@@ -42,17 +42,8 @@ def plot_selected_ta_indicators(df: pd.DataFrame, settings: object) -> Optional[
         return None
 
     min_bars_required = get_min_bars_required(indicators)
-
-    if settings.lookback is not None:
-        lookback_duration = parse_lookback(settings.lookback)
-        cutoff_time = df["open_time"].max() - lookback_duration
-        df = df[df["open_time"] >= cutoff_time]
-
     if len(df) < min_bars_required:
         df = df.tail(min_bars_required)
-    elif len(df) > min_bars_required:
-        extra_bars_needed = min_bars_required
-        df = df.tail(len(df) + extra_bars_needed)
 
     fig = go.Figure()
     add_price_traces(fig, df, indicators)

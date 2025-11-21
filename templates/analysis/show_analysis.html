@@ -21,7 +21,7 @@
                     <div class="text-center w-100 m-0 mt-2 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
                         <a href="{% url 'refresh_gpt_analysis_selected_user' %}" class="btn btn-primary">Refresh AI-GPT Analysis for {{ user.username }}</a>
                         {% if user.is_superuser %}
-                            <a href="{% url 'refresh_gpt_analysis_all_users' %}" class="btn btn-primary">Refresh AI-GPT Analysis for All Users</a>
+                            <a href="{% url 'refresh_gpt_analysis_all_users' %}" class="btn btn-primary">Refresh All AI-GPT Analysis</a>
                         {% endif %}
                     </div>
                 {% endif %}
