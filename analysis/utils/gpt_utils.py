@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import pandas as pd
 from io import StringIO
 from openai import OpenAI
@@ -144,3 +145,5 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
                 "CodeCave\nhttps://cave.ropeaccess.pro\n"
             )
             send_email(user_ta_settings.user.email, msg_subject, msg_content)
+
+        time.sleep(3)
