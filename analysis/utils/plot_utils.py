@@ -44,13 +44,41 @@ def plot_selected_ta_indicators(df: pd.DataFrame, settings: object) -> Optional[
     min_bars_required = get_min_bars_required(indicators)
     if len(df) < min_bars_required:
         df = df.tail(min_bars_required)
+        
+    visible_lookback = settings.lookback
+    df_visible = trim_df_to_lookback(df, visible_lookback)
 
     fig = go.Figure()
-    add_price_traces(fig, df, indicators)
-    add_ta_traces(fig, df, indicators, settings)
+    add_price_traces(fig, df_visible, indicators)
+    add_ta_traces(fig, df_visible, indicators, settings)
     format_chart(fig)
 
     return generate_plot_image(fig)
+
+
+def trim_df_to_lookback(df: pd.DataFrame, lookback: str) -> pd.DataFrame:
+    """
+    Cuts the DataFrame to match the user's lookback setting (e.g., '2d', '8h', '100m').
+    Works based on time — df['open_time'] must be datetime.
+    """
+    number = int(lookback[:-1])
+    unit = lookback[-1]
+
+    if unit == "m":
+        delta = timedelta(minutes=number)
+    elif unit == "h":
+        delta = timedelta(hours=number)
+    elif unit == "d":
+        delta = timedelta(days=number)
+    elif unit == "w":
+        delta = timedelta(weeks=number)
+    elif unit == "M":
+        delta = timedelta(days=number * 30)
+    else:
+        raise ValueError("Unsupported lookback format")
+
+    cutoff = df["open_time"].max() - delta
+    return df[df["open_time"] >= cutoff]
 
 
 @exception_handler()
@@ -125,7 +153,10 @@ def add_price_traces(fig: go.Figure, df: pd.DataFrame, indicators: List[str]) ->
     if "ma50" in indicators:
         fig.add_trace(
             go.Scatter(
-                x=df["open_time"], y=df["ma_50"], name="MA50", line=dict(color="orange")
+                x=df["open_time"], 
+                y=df["ma_50"], 
+                name="MA50", 
+                line=dict(color="orange")
             )
         )
     if "ma200" in indicators:
