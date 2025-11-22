@@ -1,5 +1,4 @@
 import os
-import json
 import time
 import pandas as pd
 from io import StringIO
@@ -8,6 +7,7 @@ from django.utils import timezone
 from dotenv import load_dotenv
 from typing import Dict, Any
 from ..models import TechnicalAnalysisSettings, SentimentAnalysis
+from fomo_sapiens.utils.logging import logger
 from ..utils.fetch_utils import fetch_and_save_df
 from analysis.utils.calc_utils import calculate_ta_indicators
 from fomo_sapiens.utils.exception_handlers import exception_handler
@@ -87,7 +87,7 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
     )
 
     api_key = os.environ.get("OPENAI_API_KEY")
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key, timeout=900)
 
     for user_ta_settings in selected_users_ta_settings:
         fetch_and_save_df(user_ta_settings)
@@ -106,29 +106,22 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
 
         response_json = None
 
-        try:
-            response: Any = client.chat.completions.create(
-                model=gpt_model,
-                messages=[{"role": "user", "content": content}],
-            )
-
-            choice = response.choices[0]
-            content_text: str | None = getattr(choice.message, "content", None)
-            response_extracted: str = content_text.strip() if content_text else "{}"
-            
+        for i in range(3):
             try:
-                response_json: dict = json.loads(response_extracted)
-            except json.JSONDecodeError:
-                response_json = {
-                    "model": gpt_model,
-                    "timestamp": timezone.now().isoformat(),
-                    "symbol": "N/A",
-                    "interval": "N/A",
-                    "analysis": "json.JSONDecodeError: Invalid JSON returned from GPT model."
-                }
+                response = client.chat.completions.create(
+                    model=gpt_model,
+                    messages=[{"role": "user", "content": content}],
+                    response_format={"type": "json_object"}
+                )
+                response_json = response.choices[0].message.parsed
+                break
 
-        except Exception as e:
-            response_json = format_openai_error(e)
+            except Exception as e:
+                logger.warning(f"Attempt {i+1}: GPT request failed for user {user_ta_settings.user.username}: {e}")
+                if i < 2:
+                    time.sleep(3)
+                else:
+                    response_json = format_openai_error(e)
 
         user_ta_settings.gpt_response = response_json
         user_ta_settings.gpt_last_update_time = timezone.now()
