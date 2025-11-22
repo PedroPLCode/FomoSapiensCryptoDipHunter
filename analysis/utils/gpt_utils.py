@@ -167,3 +167,7 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
             send_email(user_ta_settings.user.email, msg_subject, msg_content)
 
         time.sleep(3)
+        
+        logger.info(f"fetch_save_and_send_gpt_analysis: Processing successful for user {user_ta_settings.user.username}.")
+    
+    logger.info("fetch_save_and_send_gpt_analysis: All users processed successfully.")

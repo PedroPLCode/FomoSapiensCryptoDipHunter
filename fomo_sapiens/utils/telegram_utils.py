@@ -39,7 +39,7 @@ def send_telegram(chat_id: str, msg: str) -> bool:
 
     if telegram_bot:
         asyncio.run(telegram_bot.send_message(chat_id=chat_id, text=msg))
-        logger.info(f"Telegram {chat_id}: {msg}, sent succesfully.")
+        logger.info(f"Telegram {chat_id}: sent successfully.")
         return True
 
     return False
