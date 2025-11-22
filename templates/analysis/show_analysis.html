@@ -379,8 +379,8 @@
                             {% endif %}
                         {% endfor %}
 
-                        <div class="text-center border-top border-muted border-1 p-3 pt-2 pb-2 mb-0 d-flex flex-column justify-content-center align-item-center">
-                            <p class="p-0 m-0">Volume:<br>
+                        <div class="text-center border-top border-muted border-1 p-3 pt-2 pb-2 mt-2 mb-0 d-flex flex-column justify-content-center align-item-center">
+                            <p class="p-0 m-0 mb-2">Volume:<br>
                             Latest: {{ latest_data.volume|floatformat:2 }}<br>
                             Previous: {{ previous_data.volume|floatformat:2 }}<br>
                             <span class="text {% if latest_data.volume > previous_data.volume %}text-success{% else %}text-danger{% endif %}">

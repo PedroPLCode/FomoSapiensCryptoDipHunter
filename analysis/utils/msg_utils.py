@@ -30,7 +30,7 @@ def generate_gpt_analyse_msg_content(response_json: dict) -> Union[Tuple[str, st
         f"Daily AI-GPT Market Analysis.\n"
         f"{formatted_now}\n\n"
         f"Model: {response_json.get('model', 'N/A')}\n"
-        f"Timestamp: {response_json.get('timestamp', 'N/A')}\n"
+        f"Timestamp: {response_json.get('timestamp', 'N/A')}\n\n"
         f"Symbol: {response_json.get('symbol', 'N/A')}\n"
         f"Interval: {response_json.get('interval', 'N/A')}\n\n"
         f"Situation: {response_json.get('situation', 'N/A')}\n\n"
