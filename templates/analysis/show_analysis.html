@@ -20,7 +20,7 @@
                 <p class="p-0 m-0">Recommendation: <span class="{% if gpt_analysis.recommendation == 'BUY' %}text-success{% elif gpt_analysis.recommendation == 'SELL' %}text-danger{% elif gpt_analysis.recommendation == 'HOLD' %}text-warning{% else %}text-muted{% endif %}">{{ gpt_analysis.recommendation }}</span></p>
 
                 {% if user.is_authenticated %}
-                    <div class="text-center w-100 m-0 mt-4 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
+                    <div class="text-center w-100 m-0 mt-3 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
                         <a href="{% url 'refresh_gpt_analysis_selected_user' %}" class="btn btn-primary">Refresh AI-GPT Analysis for {{ user.username }}</a>
                         {% if user.is_superuser %}
                             <a href="{% url 'refresh_gpt_analysis_all_users' %}" class="btn btn-primary">Refresh All AI-GPT Analysis</a>
@@ -85,7 +85,7 @@
                 <div class="">
                     {% if selected_indicators_list and latest_data and previous_data %}
                             
-                        <div class="text-center mt-2 d-flex flex-column justify-content-center align-item-center">
+                        <div class="text-center mt-3 d-flex flex-column justify-content-center align-item-center">
                             <p class="p-0 m-0 mb-2">Price:</p>
                             <p class="p-0 m-0 mb-2">Typical Price:<br>
                             Latest: {{ latest_data.typical_price|floatformat:2 }}<br>
@@ -431,7 +431,7 @@
                 </p>    
 
                 {% if user.is_authenticated %}
-                <div class="text-center w-100 m-0 mt-4 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
+                <div class="text-center w-100 m-0 mt-3 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
                     <a href="{% url 'refresh_sentiment_analysis' %}" class="btn btn-primary">Refresh Sentiment Analysis</a>
                 </div>
                 {% endif %}
