@@ -1,4 +1,5 @@
 import os
+import json
 import time
 import pandas as pd
 from io import StringIO
@@ -113,7 +114,7 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
                     messages=[{"role": "user", "content": content}],
                     response_format={"type": "json_object"}
                 )
-                response_json = response.choices[0].message.parsed
+                response_json = json.loads(response.choices[0].message["content"])
                 break
 
             except Exception as e:
