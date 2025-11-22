@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import time
 import pandas as pd
@@ -114,8 +115,33 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
                     messages=[{"role": "user", "content": content}],
                     response_format={"type": "json_object"}
                 )
-                response_json = json.loads(response.choices[0].message["content"])
-                break
+                choice = response.choices[0]
+                content_text: str | None = getattr(choice.message, "content", None)
+                response_extracted: str = content_text.strip() if content_text else "{}"
+                
+                try:
+                    response_json: dict = json.loads(response_extracted)
+                    break
+                except json.JSONDecodeError:
+                    match = re.search(r"\{.*\}", response_extracted, re.DOTALL)
+                    if match:
+                        try:
+                            response_json = json.loads(match.group(0))
+                            break
+                        except:
+                            pass
+                
+                    if i < 2:
+                        time.sleep(3)
+                        continue
+
+                    response_json = {
+                        "model": gpt_model,
+                        "timestamp": timezone.now().isoformat(),
+                        "symbol": "N/A",
+                        "interval": "N/A",
+                        "analysis": "json.JSONDecodeError: Invalid JSON returned from GPT model."
+                    }
 
             except Exception as e:
                 logger.warning(f"Attempt {i+1}: GPT request failed for user {user_ta_settings.user.username}: {e}")
