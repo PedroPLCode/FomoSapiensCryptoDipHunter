@@ -13,9 +13,11 @@
             <div class="text-center  d-flex flex-column justify-content-center align-item-center">
                 <p class="p-0 m-0">model: {{ gpt_analysis.model|default:user_ta_settings.gpt_model }}</p>
                 <p class="p-0 m-0">timestamp: {{ gpt_analysis.timestamp }}</p>
-                <p class="p-0 m-0">symbol: {{ gpt_analysis.symbol }}</p>
+                <p class="p-0 m-0">symbol: <span class="{% if gpt_analysis.color == 'GREEN' %}text-success{% elif gpt_analysis.color == 'RED' %}text-danger{% elif gpt_analysis.color == 'YELLOW' %}text-warning{% else %}text-muted{% endif %}">{{ gpt_analysis.symbol }}</span></p>
                 <p class="p-0 m-0">interval: {{ gpt_analysis.interval }}</p>
-                <p class="p-0 m-0 border-top border-muted border-1 pt-2 mt-2">analysis: {{ gpt_analysis.analysis }}</p>
+                <p class="p-0 m-0 border-top border-muted border-1 pt-2 mt-2">situation: <span class="{% if gpt_analysis.color == 'GREEN' %}text-success{% elif gpt_analysis.color == 'RED' %}text-danger{% elif gpt_analysis.color == 'YELLOW' %}text-warning{% else %}text-muted{% endif %}">{{ gpt_analysis.situation }}</span></p>
+                <p class="p-0 m-0">analysis: {{ gpt_analysis.analysis }}</p>
+                <p class="p-0 m-0">recommendation: <span class="{% if gpt_analysis.recommendation == 'BUY' %}text-success{% elif gpt_analysis.recommendation == 'SELL' %}text-danger{% elif gpt_analysis.recommendation == 'HOLD' %}text-warning{% else %}text-muted{% endif %}">{{ gpt_analysis.recommendation }}</span></p>
 
                 {% if user.is_authenticated %}
                     <div class="text-center w-100 m-0 mt-2 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">

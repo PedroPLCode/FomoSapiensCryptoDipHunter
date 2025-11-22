@@ -45,7 +45,10 @@ def format_openai_error(e: Exception) -> Dict[str, Any]:
         "timestamp": timezone.now().isoformat(),
         "symbol": "N/A",
         "interval": "N/A",
+        "situation": "N/A",
+        "color": "N/A",
         "analysis": analysis_message,
+        "recommendation": "N/A",
     }
     
 
@@ -140,7 +143,10 @@ def fetch_save_and_send_gpt_analysis(username: str | None = None) -> None:
                         "timestamp": timezone.now().isoformat(),
                         "symbol": "N/A",
                         "interval": "N/A",
-                        "analysis": "json.JSONDecodeError: Invalid JSON returned from GPT model."
+                        "situation": "N/A",
+                        "color": "N/A",
+                        "analysis": "json.JSONDecodeError: Invalid JSON returned from GPT model.",
+                        "recommendation": "N/A",
                     }
 
             except Exception as e:
