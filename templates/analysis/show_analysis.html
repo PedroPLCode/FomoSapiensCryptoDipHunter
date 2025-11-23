@@ -12,7 +12,7 @@
         <div class="card-body">         
             <div class="text-center  d-flex flex-column justify-content-center align-item-center">
 
-                {% if gpt_analysis%}
+                {% if gpt_analysis.timestamp %}
                     <p class="p-0 m-0">Model: {{ gpt_analysis.model|default:user_ta_settings.gpt_model }}</p>
                     <p class="p-0 m-0">Timestamp: {{ gpt_analysis.timestamp }}</p>
                     <p class="p-0 m-0">Symbol: <span class="{% if gpt_analysis.color == 'GREEN' %}text-success{% elif gpt_analysis.color == 'RED' %}text-danger{% elif gpt_analysis.color == 'YELLOW' %}text-warning{% else %}text-dark{% endif %}">{{ gpt_analysis.symbol }}</span></p>
