@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    {% if sentiment_analysis.use_gpt_analysis and gpt_analysis %}
+    {% if sentiment_analysis.use_gpt_analysis %}
     <div class="col-12 col-md-6 card text-center text-dark rounded-3 {% if messages %}mt-0{% else %}mt-5{% endif %} mb-2 d-flex flex-column justify-content-center align-item-center bg-light">
             
         <div class="card-header">
@@ -11,13 +11,20 @@
 
         <div class="card-body">         
             <div class="text-center  d-flex flex-column justify-content-center align-item-center">
-                <p class="p-0 m-0">Model: {{ gpt_analysis.model|default:user_ta_settings.gpt_model }}</p>
-                <p class="p-0 m-0">Timestamp: {{ gpt_analysis.timestamp }}</p>
-                <p class="p-0 m-0">Symbol: <span class="{% if gpt_analysis.color == 'GREEN' %}text-success{% elif gpt_analysis.color == 'RED' %}text-danger{% elif gpt_analysis.color == 'YELLOW' %}text-warning{% else %}text-dark{% endif %}">{{ gpt_analysis.symbol }}</span></p>
-                <p class="p-0 m-0">Interval: {{ gpt_analysis.interval }}</p>
-                <p class="p-0 m-0 border-top border-muted border-1 pt-3 mt-3">Situation: <span class="{% if gpt_analysis.color == 'GREEN' %}text-success{% elif gpt_analysis.color == 'RED' %}text-danger{% elif gpt_analysis.color == 'YELLOW' %}text-warning{% else %}text-dark{% endif %}">{{ gpt_analysis.situation }}</span></p>
-                <p class="p-0 m-0 mt-2 mb-2">Analysis: {{ gpt_analysis.analysis }}</p>
-                <p class="p-0 m-0">Recommendation: <span class="{% if gpt_analysis.recommendation == 'BUY' %}text-success{% elif gpt_analysis.recommendation == 'SELL' %}text-danger{% elif gpt_analysis.recommendation == 'HOLD' %}text-warning{% else %}text-dark{% endif %}">{{ gpt_analysis.recommendation }}</span></p>
+
+                {% if gpt_analysis%}
+                    <p class="p-0 m-0">Model: {{ gpt_analysis.model|default:user_ta_settings.gpt_model }}</p>
+                    <p class="p-0 m-0">Timestamp: {{ gpt_analysis.timestamp }}</p>
+                    <p class="p-0 m-0">Symbol: <span class="{% if gpt_analysis.color == 'GREEN' %}text-success{% elif gpt_analysis.color == 'RED' %}text-danger{% elif gpt_analysis.color == 'YELLOW' %}text-warning{% else %}text-dark{% endif %}">{{ gpt_analysis.symbol }}</span></p>
+                    <p class="p-0 m-0">Interval: {{ gpt_analysis.interval }}</p>
+                    <p class="p-0 m-0 border-top border-muted border-1 pt-3 mt-3">Situation: <span class="{% if gpt_analysis.color == 'GREEN' %}text-success{% elif gpt_analysis.color == 'RED' %}text-danger{% elif gpt_analysis.color == 'YELLOW' %}text-warning{% else %}text-dark{% endif %}">{{ gpt_analysis.situation }}</span></p>
+                    <p class="p-0 m-0 mt-2 mb-2">Analysis: {{ gpt_analysis.analysis }}</p>
+                    <p class="p-0 m-0">Recommendation: <span class="{% if gpt_analysis.recommendation == 'BUY' %}text-success{% elif gpt_analysis.recommendation == 'SELL' %}text-danger{% elif gpt_analysis.recommendation == 'HOLD' %}text-warning{% else %}text-dark{% endif %}">{{ gpt_analysis.recommendation }}</span></p>
+                {% else %}
+                    <p class="p-0 m-0">No AI-GPT Analysis available.</p>
+                    <p class="p-0 m-0 border-top border-muted border-1 pt-3 mt-3">Please check again later.</p>
+                    <p class="p-0 m-0">Or contact admin for assistance.</p>
+                {% endif %}
 
                 {% if user.is_authenticated %}
                     <div class="text-center w-100 m-0 mt-3 p-0 d-flex flex-column gap-3 justify-content-center align-item-center">
